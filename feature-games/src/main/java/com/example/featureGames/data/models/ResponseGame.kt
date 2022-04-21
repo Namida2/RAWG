@@ -16,7 +16,7 @@ class ResponseGame {
 
     @SerializedName("rating_top")
     var ratingTop = 0
-    var ratings: ArrayList<Rating>? = null
+    var ratings: List<Rating>? = null
 
     @SerializedName("ratings_count")
     var ratingsCount = 0
@@ -47,18 +47,22 @@ class ResponseGame {
     var dominantColor: String? = null
 
     @SerializedName("platforms")
-    var platformsInfo: ArrayList<PlatformInfo>? = null
+    var platformsInfo: List<PlatformInfo>? = null
 
     @SerializedName("parent_platforms")
-    var parentPlatforms: ArrayList<ParentPlatform>? = null
-    var genres: ArrayList<Genre>? = null
-    var stores: ArrayList<StoreInfo>? = null
+    var parentPlatforms: List<ParentPlatform>? = null
+    var genres: List<Genre>? = null
+    var stores: List<StoreInfo>? = null
     var clip: Any? = null
-    var tags: ArrayList<Tag>? = null
+    var tags: List<Tag>? = null
 
     @SerializedName("esrb_rating")
     var esrbRating: EsrbRating? = null
 
     @SerializedName("short_screenshots")
-    var shortScreenshots: ArrayList<ShortScreenshot>? = null
+    var shortScreenshots: List<ShortScreenshot>? = null
+
+    interface Mapper<T> {
+        fun map(response: ResponseGame): T
+    }
 }

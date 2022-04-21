@@ -4,6 +4,8 @@ import android.app.Application
 import com.example.core.domain.tools.Messages
 import com.example.core.domain.tools.Messages.API_KEY
 import com.example.core.domain.tools.Messages.RAWG_BASE_URL
+import com.example.featureGames.domain.di.GamesDepsStore
+import com.example.featureGames.presentation.delegates.GamesDelegate
 import com.example.rawg.domain.di.AppComponent
 import com.example.rawg.domain.di.DaggerAppComponent
 import okhttp3.HttpUrl
@@ -22,6 +24,7 @@ class MyApplication: Application() {
         _appComponent = DaggerAppComponent.builder().provideRetrofit(
             configureRetrofit()
         ).build()
+        provideFeatureGamesDeps()
         super.onCreate()
     }
 
@@ -41,5 +44,9 @@ class MyApplication: Application() {
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
+    }
+
+    private fun provideFeatureGamesDeps() {
+        GamesDepsStore.deps = _appComponent
     }
 }

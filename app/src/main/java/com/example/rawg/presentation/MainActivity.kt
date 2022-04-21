@@ -12,10 +12,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
-
         supportFragmentManager.beginTransaction().add(binding.navHostFragment.id, GamesFragment())
             .commit()
-
     }
 }
 
