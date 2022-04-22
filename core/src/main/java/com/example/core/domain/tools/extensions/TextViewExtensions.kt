@@ -8,12 +8,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-fun TextView.precomputeAndSetText(text: String) {
+fun TextView.precomputeAndSetText(text: String?) {
+    val contentText = text ?: ""
     val params: PrecomputedTextCompat.Params =
         TextViewCompat.getTextMetricsParams(this)
     CoroutineScope(Dispatchers.Unconfined).launch {
         val precomputedText =
-            PrecomputedTextCompat.create(text, params)
+            PrecomputedTextCompat.create(contentText, params)
         withContext(Dispatchers.Main) {
             TextViewCompat.setPrecomputedText(this@precomputeAndSetText, precomputedText)
         }

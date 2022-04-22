@@ -3,7 +3,7 @@ package com.example.featureGames.data.models
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
-class ResponseGame {
+class RAWGame {
     var id = 0
     var slug: String? = null
     var name: String? = null
@@ -32,7 +32,7 @@ class ResponseGame {
 
     @SerializedName("suggestions_count")
     var suggestionsCount = 0
-    var updated: Date? = null
+    var updated: String? = null
 
     @SerializedName("user_game")
     var userGame: Any? = null
@@ -63,6 +63,6 @@ class ResponseGame {
     var shortScreenshots: List<ShortScreenshot>? = null
 
     interface Mapper<T> {
-        fun map(response: ResponseGame): T
+        fun map(RAW: RAWGame): T
     }
 }

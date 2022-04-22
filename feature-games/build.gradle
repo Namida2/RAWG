@@ -34,6 +34,7 @@ android {
 
 dependencies {
     implementation project(':core')
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
 

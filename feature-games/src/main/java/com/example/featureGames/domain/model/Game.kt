@@ -19,18 +19,18 @@ data class Game(
     var genres: List<Genre>?,
     var stores: List<StoreInfo>?,
     var tags: List<Tag>?,
-    var shortScreenshots: List<ShortScreenshot>?,
+    var shortScreenshots: List<Bitmap>? = null,
     var backgroundImage: Bitmap? = null
 ) : BaseRecyclerViewType {
-    class GameMapper @Inject constructor() : ResponseGame.Mapper<Game> {
-        override fun map(response: ResponseGame): Game =
-            with(response) {
+    class GameMapper @Inject constructor() : RAWGame.Mapper<Game> {
+        override fun map(RAW: RAWGame): Game =
+            with(RAW) {
                 Game(
                     id, name, released, rating,
                     ratingTop, ratings, added,
                     addedByStatus, metacritic,
                     platformsInfo, genres,
-                    stores, tags, shortScreenshots
+                    stores, tags
                 )
             }
     }

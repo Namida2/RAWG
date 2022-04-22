@@ -9,18 +9,24 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
+import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
 import com.example.featureGames.databinding.FragmentGamesBinding
 import com.example.featureGames.domain.ViewModelFactory
 import com.example.featureGames.domain.di.modules.UseCasesImpNames.ALL_GAMES
-import com.example.featureGames.domain.model.Game
+import com.example.featureGames.domain.model.GamePlaceHolder
 import com.example.featureGames.presentation.delegates.GamesDelegate
+import com.example.featureGames.presentation.delegates.GamesPlaceholderDelegate
 
 class GamesFragment : Fragment() {
     private val spanCount = 2
+    private val placeholdersCount = 20
     private lateinit var binding: FragmentGamesBinding
     private lateinit var viewModel: GamesViewModel
     private val adapter = BaseRecyclerViewAdapter(
-        listOf(GamesDelegate())
+        listOf(
+            GamesDelegate(),
+            GamesPlaceholderDelegate()
+        )
     )
 
     override fun onAttach(context: Context) {
@@ -43,16 +49,7 @@ class GamesFragment : Fragment() {
             gamesContainerRecyclerView.layoutManager =
                 GridLayoutManager(requireContext(), spanCount)
             gamesContainerRecyclerView.adapter = adapter.also {
-                it.submitList(
-                    listOf(
-                        Game(0), Game(1),
-                        Game(2), Game(3),
-                        Game(4), Game(5),
-                        Game(6), Game(7),
-                        Game(8), Game(9),
-                        Game(10), Game(11),
-                    )
-                )
+                it.submitList(getPlaceholders())
             }
         }
         observeNewGamesEvent()
@@ -64,6 +61,15 @@ class GamesFragment : Fragment() {
                 adapter.submitList(games)
             }
         }
+    }
+
+    private fun getPlaceholders(): List<GamePlaceHolder> {
+        val placeHolder = GamePlaceHolder()
+        val result = mutableListOf<GamePlaceHolder>()
+        return repeat(placeholdersCount) {
+            result.add(placeHolder)
+        }.run { result }
+
     }
 
 }

@@ -8,6 +8,12 @@ import com.example.core.domain.Event
 import com.example.featureGames.domain.model.Game
 import com.example.featureGames.domain.useCase.GamesUseCase
 import kotlinx.coroutines.launch
+import okhttp3.Call
+import okhttp3.Connection
+import okhttp3.Request
+import okhttp3.Response
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 typealias NewGamesListEvent = Event<List<Game>>
 
@@ -23,5 +29,7 @@ class GamesViewModel(
             val games = gamesUseCase.getGames()
             _newGamesEvent.value = Event(games)
         }
+
     }
 }
+
