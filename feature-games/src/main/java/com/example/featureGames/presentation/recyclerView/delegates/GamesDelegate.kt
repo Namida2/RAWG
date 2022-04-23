@@ -1,4 +1,4 @@
-package com.example.featureGames.presentation.delegates
+package com.example.featureGames.presentation.recyclerView.delegates
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -30,9 +30,8 @@ class GamesDelegate : BaseRecyclerViewDelegate<Game, LayoutGameBinding> {
     private val diffItemCallback = object : DiffUtil.ItemCallback<Game>() {
         override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean =
             newItem.id == oldItem.id
-
         override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean =
-            newItem.id == oldItem.id
+            newItem == oldItem
     }
 }
 
@@ -45,6 +44,7 @@ class GamesViewGolder(
             gameName.precomputeAndSetText(item.name)
             addedCount.precomputeAndSetText(item.added.toString())
             metacriticRating.precomputeAndSetText(item.metacritic.toString())
+            gamePreviewImage.setImageBitmap(item.backgroundImage)
         }
     }
 }

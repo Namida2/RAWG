@@ -10,7 +10,8 @@ class ViewModelFactory(val type: String): ViewModelProvider.Factory  {
        val viewModel = when(modelClass) {
            GamesViewModel::class.java -> {
                GamesViewModel(
-                   gamesAppComponent!!.provideAllGamesUseCase()
+                   gamesAppComponent!!.provideAllGamesUseCase(),
+                   gamesAppComponent!!.provideGamesHolder()
                )
            }
            else -> throw IllegalArgumentException()

@@ -1,4 +1,4 @@
-package com.example.core.domain
+package com.example.core.domain.tools
 
 data class Event<T>(val value: T?) {
     private var isHandled = false

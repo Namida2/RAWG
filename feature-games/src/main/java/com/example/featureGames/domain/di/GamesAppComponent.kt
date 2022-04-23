@@ -1,9 +1,11 @@
 package com.example.featureGames.domain.di
 
+import android.content.Context
 import com.example.featureGames.domain.di.modules.RemoteRepositoryModule
 import com.example.featureGames.domain.di.modules.UseCasesImpNames.ALL_GAMES
 import com.example.featureGames.domain.di.modules.UseCasesImpNames.NEAREST_FUTURE_GAMES
 import com.example.featureGames.domain.di.modules.UseCasesModule
+import com.example.featureGames.domain.model.GamesHolder
 import com.example.featureGames.domain.repositories.RAWGamesService
 import com.example.featureGames.domain.useCase.GamesUseCase
 import dagger.Component
@@ -22,8 +24,10 @@ interface GamesAppComponent {
     fun provideAllGamesUseCase(): GamesUseCase
     @Named(NEAREST_FUTURE_GAMES)
     fun provideUseCase(): GamesUseCase
+    fun provideGamesHolder(): GamesHolder
 }
 
 interface GamesAppComponentDeps {
+    val applicationContext: Context
     val retrofit: Retrofit
 }

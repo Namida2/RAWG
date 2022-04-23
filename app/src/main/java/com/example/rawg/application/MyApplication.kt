@@ -20,9 +20,10 @@ class MyApplication: Application() {
     lateinit var _appComponent: AppComponent
 
     override fun onCreate() {
-        _appComponent = DaggerAppComponent.builder().provideRetrofit(
-            configureRetrofit()
-        ).build()
+        _appComponent = DaggerAppComponent.builder()
+            .putRetrofit(configureRetrofit())
+            .putContext(applicationContext)
+            .build()
         provideFeatureGamesDeps()
         super.onCreate()
     }

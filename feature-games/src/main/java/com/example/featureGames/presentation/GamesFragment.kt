@@ -7,18 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.core.domain.tools.Constants.GAMES_SPAN_COUNT
+import com.example.core.domain.tools.extensions.logD
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
 import com.example.featureGames.databinding.FragmentGamesBinding
 import com.example.featureGames.domain.ViewModelFactory
 import com.example.featureGames.domain.di.modules.UseCasesImpNames.ALL_GAMES
 import com.example.featureGames.domain.model.GamePlaceHolder
-import com.example.featureGames.presentation.delegates.GamesDelegate
-import com.example.featureGames.presentation.delegates.GamesPlaceholderDelegate
+import com.example.featureGames.presentation.recyclerView.RecyclerViewScrollListener
+import com.example.featureGames.presentation.recyclerView.delegates.GamesDelegate
+import com.example.featureGames.presentation.recyclerView.delegates.GamesPlaceholderDelegate
 
 class GamesFragment : Fragment() {
-    private val spanCount = 2
     private val placeholdersCount = 20
     private lateinit var binding: FragmentGamesBinding
     private lateinit var viewModel: GamesViewModel
@@ -32,6 +33,7 @@ class GamesFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         viewModel = ViewModelFactory(ALL_GAMES).create(GamesViewModel::class.java).also {
+            it.screenTag = ALL_GAMES
             it.readGames()
         }
     }
@@ -46,11 +48,12 @@ class GamesFragment : Fragment() {
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
         with(binding) {
-            gamesContainerRecyclerView.layoutManager =
-                GridLayoutManager(requireContext(), spanCount)
-            gamesContainerRecyclerView.adapter = adapter.also {
-                it.submitList(getPlaceholders())
-            }
+            gamesRecyclerView.layoutManager =
+                StaggeredGridLayoutManager(GAMES_SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL).also {
+                    it.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
+                }
+            gamesRecyclerView.adapter = adapter.also { it.submitList(getPlaceholders()) }
+            RecyclerViewScrollListener(gamesRecyclerView, viewModel)
         }
         observeNewGamesEvent()
     }
@@ -58,6 +61,7 @@ class GamesFragment : Fragment() {
     private fun observeNewGamesEvent() {
         viewModel.newGamesEvent.observe(viewLifecycleOwner) {
             it.getData()?.let { games ->
+                logD("fragment: submitList")
                 adapter.submitList(games)
             }
         }

@@ -8,7 +8,7 @@ class GamesResponse {
     var previous: Any? = null
 
     @SerializedName("results")
-    var RAWGames: List<RAWGame>? = null
+    var rawGames: List<RAWGame>? = null
 
     @SerializedName("seo_title")
     var seoTitle: String? = null

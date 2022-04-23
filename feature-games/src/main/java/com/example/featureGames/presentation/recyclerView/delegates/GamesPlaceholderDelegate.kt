@@ -1,4 +1,4 @@
-package com.example.featureGames.presentation.delegates
+package com.example.featureGames.presentation.recyclerView.delegates
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +8,6 @@ import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.BaseViewHolder
 import com.example.featureGames.R
 import com.example.featureGames.databinding.LayoutGamePlaceholderBinding
-import com.example.featureGames.domain.model.Game
 import com.example.featureGames.domain.model.GamePlaceHolder
 
 class GamesPlaceholderDelegate: BaseRecyclerViewDelegate<GamePlaceHolder, LayoutGamePlaceholderBinding> {

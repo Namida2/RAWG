@@ -1,5 +1,6 @@
 package com.example.rawg.domain.di
 
+import android.content.Context
 import com.example.featureGames.domain.di.GamesAppComponentDeps
 import dagger.BindsInstance
 import dagger.Component
@@ -11,7 +12,8 @@ import javax.inject.Singleton
 interface AppComponent: GamesAppComponentDeps {
     @Component.Builder
     interface Builder {
-        fun provideRetrofit(@BindsInstance retrofit: Retrofit): Builder
+        fun putRetrofit(@BindsInstance retrofit: Retrofit): Builder
+        fun putContext(@BindsInstance applicationContext: Context): Builder
         // TODO: Add Room database
         fun build(): AppComponent
     }
