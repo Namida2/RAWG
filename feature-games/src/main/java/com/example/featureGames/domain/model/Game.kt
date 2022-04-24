@@ -20,7 +20,8 @@ data class Game(
     var stores: List<StoreInfo>?,
     var tags: List<Tag>?,
     var shortScreenshots: List<Bitmap>? = null,
-    var backgroundImage: Bitmap? = null
+    var backgroundImage: Bitmap? = null,
+    var isLiked: Boolean = false
 ) : BaseRecyclerViewType {
     class GameMapper @Inject constructor() : RAWGame.Mapper<Game> {
         override fun map(RAW: RAWGame): Game =

@@ -2,16 +2,10 @@ package com.example.featureGames.domain.model
 
 import android.graphics.Bitmap
 import com.example.core.domain.tools.extensions.logD
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.delay
+import com.example.featureGames.domain.tools.GameScreens
+import com.example.featureGames.domain.tools.TopPicksDameScreenSetting.defaultRequestForTopPicksScreen
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,21 +13,29 @@ import javax.inject.Singleton
 class GamesHolder @Inject constructor() {
     private val gameNotFountMessage = "Game not found. Id: "
     private val games = mutableListOf<Game>()
-    private val screensInfo = mutableMapOf<String, GameScreenInfo>()
+    private val screensInfo = mutableMapOf<GameScreens, GameScreenInfo>()
 
-    private val _gameScreenChanges = MutableSharedFlow<String>(1)
-    val gameScreenChanges: SharedFlow<String> = _gameScreenChanges
+    private val _gameScreenChanges = MutableSharedFlow<GameScreens>(1)
+    val gameScreenChanges: SharedFlow<GameScreens> = _gameScreenChanges
 
-    private fun getScreenInfo(tag: String): GameScreenInfo =
-        screensInfo[tag] ?: run { GameScreenInfo(tag).also {
-            screensInfo[tag] = it
-        } }
+    fun getScreenInfo(screenTag: GameScreens): GameScreenInfo =
+        screensInfo[screenTag] ?: run {
+            val defaultRequest: GamesRequest? = when (screenTag) {
+                GameScreens.TOP_PICKS -> defaultRequestForTopPicksScreen
+                GameScreens.BEST_OF_THE_YER -> null
+                GameScreens.NEW_RELEASES -> null
+                GameScreens.ALL_GAMES -> null
+            }
+            GameScreenInfo(screenTag, defaultRequest!!).also {
+                screensInfo[screenTag] = it
+            }
+        }
 
     fun setBitmapForGameById(gameId: Int, bitmap: Bitmap) {
         games.indexOfFirst {
             it.id == gameId
         }.let {
-            if(it == -1) {
+            if (it == -1) {
                 logD(gameNotFountMessage + gameId)
                 return
             }
@@ -42,15 +44,20 @@ class GamesHolder @Inject constructor() {
         }
     }
 
-    fun addGames(screenTag: String, newGames: List<Game>) {
-        games.removeIf { game ->
-            newGames.find { it.id == game.id} != null
+    fun addGames(screenTag: GameScreens, newGames: List<Game>) {
+        newGames.forEach { newGame ->
+            val indexOnExistingGame = games.indexOfFirst { it.id == newGame.id }
+            if (indexOnExistingGame == -1) {
+                games.add(newGame)
+            } else {
+                games[indexOnExistingGame] =
+                    newGame.copy(isLiked = games[indexOnExistingGame].isLiked)
+            }
         }
         getScreenInfo(screenTag).gameIds.addAll(newGames.map { it.id })
-        games.addAll(newGames)
     }
 
-    fun getGamesBuScreenTag(screenTag: String): List<Game>  {
+    fun getGamesBuScreenTag(screenTag: GameScreens): List<Game> {
         val screenGameIds = getScreenInfo(screenTag).gameIds
         return games.filter { game ->
             screenGameIds.contains(game.id)
@@ -59,7 +66,7 @@ class GamesHolder @Inject constructor() {
 
     private fun notifyGameScreens(gameId: Int) {
         screensInfo.forEach { (tag, info) ->
-            if(info.gameIds.contains(gameId))
+            if (info.gameIds.contains(gameId))
                 _gameScreenChanges.tryEmit(tag)
         }
     }
