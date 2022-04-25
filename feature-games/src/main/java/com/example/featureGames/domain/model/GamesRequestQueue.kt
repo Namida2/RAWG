@@ -6,6 +6,9 @@ import com.example.featureGames.domain.repositories.RAWGamesService
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import retrofit2.HttpException
+import java.lang.Exception
+import java.security.cert.Extension
 import java.util.*
 import javax.inject.Inject
 
@@ -28,8 +31,14 @@ class GamesRequestQueue @Inject constructor(
         if (requests.isEmpty() || request.getPage() < minRequestPage)
             minRequestPage = request.getPage()
         requests[request.getPage()] = GameRequestInfo(request)
+        // TODO: Add coroutine exception handler //STOPPED//
         CoroutineScope(Dispatchers.IO).launch {
-            requests[request.getPage()]?.setResponse(gamesService.getGames(request.getParams()))
+            try {
+                requests[request.getPage()]?.setResponse(gamesService.getGames(request.getParams()))
+            } catch (e: HttpException) {
+                e.printStackTrace()
+                logD("code: ${e.code()}")
+            }
             //Go to the Main thread to use tryEmit synchronized
             withContext(Dispatchers.Main) {
                 onRequestComplete(request)

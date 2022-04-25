@@ -14,7 +14,7 @@ interface GetRequest {
 }
 
 class GamesGetRequest: GetRequest {
-    private var page: Int = 1
+    private var page: Int = FIRST_PAGE
     private var params = mutableMapOf<String, Any>()
     override fun next(): GamesGetRequest =
         this.copy().also {

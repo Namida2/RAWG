@@ -61,12 +61,11 @@ class AllGamesUseCase @Inject constructor(
     private suspend fun loadImage(game: RAWGame) {
         game.backgroundImage ?: return
         val bitmap = Glide.with(applicationContext).asBitmap()
-            .apply(RequestOptions().override(200, 300))
+            .apply(RequestOptions().override(120, 220))
             .load(game.backgroundImage).submit()
             .get()
         withContext(Main) {
-
+            gamesHolder.setBitmapForGameById(game.id, bitmap)
         }
-
     }
 }
