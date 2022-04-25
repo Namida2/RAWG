@@ -1,8 +1,9 @@
 package com.example.featureGames.data.models
 
+import com.example.featureGames.domain.model.Response
 import com.google.gson.annotations.SerializedName
 
-class GamesResponse {
+class GamesResponse: Response {
     var count: Int = 0
     var next: String? = null
     var previous: Any? = null

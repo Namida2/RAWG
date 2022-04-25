@@ -4,6 +4,6 @@ import com.example.featureGames.domain.tools.GameScreens
 
 data class GameScreenInfo(
     val tag: GameScreens,
-    var request: GamesRequest,
+    var request: GamesGetRequest,
     val gameIds: MutableList<Int> = mutableListOf()
 )

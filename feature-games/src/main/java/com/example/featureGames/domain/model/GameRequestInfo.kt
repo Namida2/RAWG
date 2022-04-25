@@ -10,13 +10,22 @@ sealed class RequestSates {
 }
 
 data class GameRequestInfo(
-    val request: GamesRequest,
+    override val request: GamesGetRequest,
     private var response: GamesResponse? = null,
-    var state: RequestSates = RequestSates.Default
-) {
-    fun setResponse(response: GamesResponse) {
+    override var state: RequestSates = RequestSates.Default
+): RequestInfo<GamesGetRequest, GamesResponse?>{
+    override fun setResponse(response: GamesResponse?) {
         state = RequestSates.Completed
         this.response = response
     }
-    fun getResponse() = response
+    override fun getResponse(): GamesResponse? = response
 }
+
+interface RequestInfo<MyRequest: GetRequest, MyResponse: Response?> {
+    val request: MyRequest
+    var state: RequestSates
+    fun setResponse(response: MyResponse)
+    fun getResponse(): MyResponse
+}
+
+interface Response

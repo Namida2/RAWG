@@ -4,8 +4,10 @@ import android.graphics.Bitmap
 import com.example.core.domain.tools.extensions.logD
 import com.example.featureGames.domain.tools.GameScreens
 import com.example.featureGames.domain.tools.TopPicksDameScreenSetting.defaultRequestForTopPicksScreen
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,7 +22,7 @@ class GamesHolder @Inject constructor() {
 
     fun getScreenInfo(screenTag: GameScreens): GameScreenInfo =
         screensInfo[screenTag] ?: run {
-            val defaultRequest: GamesRequest? = when (screenTag) {
+            val defaultRequest: GamesGetRequest? = when (screenTag) {
                 GameScreens.TOP_PICKS -> defaultRequestForTopPicksScreen
                 GameScreens.BEST_OF_THE_YER -> null
                 GameScreens.NEW_RELEASES -> null
@@ -31,7 +33,7 @@ class GamesHolder @Inject constructor() {
             }
         }
 
-    fun setBitmapForGameById(gameId: Int, bitmap: Bitmap) {
+     fun setBitmapForGameById(gameId: Int, bitmap: Bitmap) {
         games.indexOfFirst {
             it.id == gameId
         }.let {
@@ -54,7 +56,9 @@ class GamesHolder @Inject constructor() {
                     newGame.copy(isLiked = games[indexOnExistingGame].isLiked)
             }
         }
+        logD("gamesCollectionSize: ${games.size}")
         getScreenInfo(screenTag).gameIds.addAll(newGames.map { it.id })
+        notifyGameScreens(screenTag)
     }
 
     fun getGamesBuScreenTag(screenTag: GameScreens): List<Game> {
@@ -69,6 +73,10 @@ class GamesHolder @Inject constructor() {
             if (info.gameIds.contains(gameId))
                 _gameScreenChanges.tryEmit(tag)
         }
+    }
+
+    private fun notifyGameScreens(screenTag: GameScreens) {
+        _gameScreenChanges.tryEmit(screenTag)
     }
 
 }

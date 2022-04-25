@@ -1,7 +1,7 @@
 package com.example.featureGames.domain.tools
 
-import com.example.featureGames.domain.model.GamesRequest
-import com.example.featureGames.domain.model.GamesRequest.Builder.Companion.defaultTimeZone
+import com.example.featureGames.domain.model.GamesGetRequest
+import com.example.featureGames.domain.model.GamesGetRequest.Builder.Companion.defaultTimeZone
 import java.util.*
 
 object TopPicksDameScreenSetting {
@@ -9,9 +9,9 @@ object TopPicksDameScreenSetting {
     private const val metacriticMax = 100
     private const val startDay = 1
     private const val startMonth = 0
-    private const val yearDifferences = 10
-    val defaultRequestForTopPicksScreen: GamesRequest =
-        GamesRequest.Builder()
+    private const val yearDifferences = 3
+    val defaultRequestForTopPicksScreen: GamesGetRequest =
+        GamesGetRequest.Builder()
             .setDates(
                 Calendar.getInstance().also { it.timeZone = defaultTimeZone },
                 let {
@@ -24,7 +24,7 @@ object TopPicksDameScreenSetting {
                     }
                 }
             )
-//            .setMetacritic(metacriticMin, metacriticMax)
+            .setMetacritic(metacriticMin, metacriticMax)
             .addOrdering(OrderedFields.METACRITIC.reverseOrder)
             .build()
 }

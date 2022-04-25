@@ -2,6 +2,7 @@ package com.example.featureGames.domain.di
 
 import android.content.Context
 import com.example.featureGames.domain.di.modules.RemoteRepositoryModule
+import com.example.featureGames.domain.di.modules.RequestQueueModule
 import com.example.featureGames.domain.di.modules.UseCasesModule
 import com.example.featureGames.domain.model.GamesHolder
 import com.example.featureGames.domain.repositories.RAWGamesService
@@ -13,7 +14,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     dependencies = [GamesAppComponentDeps::class],
-    modules = [RemoteRepositoryModule::class, UseCasesModule::class]
+    modules = [RemoteRepositoryModule::class, UseCasesModule::class, RequestQueueModule::class]
 )
 interface GamesAppComponent {
     fun provideRAWGamesService(): RAWGamesService

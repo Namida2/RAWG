@@ -10,16 +10,17 @@ class RecyclerViewScrollListener(
     onPositionChangeListener: OnPositionChangeListener,
     spanCount: Int = GAMES_SPAN_COUNT
 ) : RecyclerView.OnScrollListener() {
+
     init {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                val lm: StaggeredGridLayoutManager =
+                val layoutManager: StaggeredGridLayoutManager =
                     recyclerView.layoutManager as StaggeredGridLayoutManager
-                val totalItemCount: Int = lm.itemCount
-                val lastVisibleItemPosition = IntArray(spanCount)
-                lm.findLastVisibleItemPositions(lastVisibleItemPosition)
-                onPositionChangeListener.onNewPosition(lastVisibleItemPosition[0], totalItemCount)
+                val totalItemCount: Int = layoutManager.itemCount
+                val lastVisibleItemPositions = IntArray(spanCount)
+                layoutManager.findLastVisibleItemPositions(lastVisibleItemPositions)
+                onPositionChangeListener.onNewPosition(lastVisibleItemPositions, totalItemCount)
             }
         })
     }

@@ -9,7 +9,8 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.core.domain.tools.Constants.GAMES_SPAN_COUNT
-import com.example.core.domain.tools.extensions.logD
+import com.example.core.domain.tools.Constants.MIN_ITEMS_COUNT_FOR_NEXT_PAGE
+import com.example.core.domain.tools.Constants.PAGE_SIZE
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
 import com.example.featureGames.databinding.FragmentGamesBinding
 import com.example.featureGames.domain.ViewModelFactory
@@ -20,7 +21,6 @@ import com.example.featureGames.presentation.recyclerView.delegates.GamesDelegat
 import com.example.featureGames.presentation.recyclerView.delegates.GamesPlaceholderDelegate
 
 class GamesFragment : Fragment() {
-    private val placeholdersCount = 20
     private lateinit var binding: FragmentGamesBinding
     private lateinit var viewModel: GamesViewModel
     private val adapter = BaseRecyclerViewAdapter(
@@ -59,6 +59,7 @@ class GamesFragment : Fragment() {
             RecyclerViewScrollListener(gamesRecyclerView, viewModel)
         }
         observeNewGamesEvent()
+        observeLoadingNewPageEvent()
     }
 
     private fun observeNewGamesEvent() {
@@ -69,13 +70,25 @@ class GamesFragment : Fragment() {
         }
     }
 
+    private fun observeLoadingNewPageEvent() {
+        viewModel.loadingNewPageEvent.observe(viewLifecycleOwner) {
+            it.getData()?.let { positions ->
+                if (adapter.currentList.size - positions[0] < MIN_ITEMS_COUNT_FOR_NEXT_PAGE) {
+                    viewModel.loadNextPage()
+                    adapter.submitList(
+                        (adapter.currentList + getPlaceholders()).toMutableList()
+                    )
+                }
+            }
+        }
+    }
+
     private fun getPlaceholders(): List<GamePlaceHolder> {
         val placeHolder = GamePlaceHolder()
         val result = mutableListOf<GamePlaceHolder>()
-        return repeat(placeholdersCount) {
+        return repeat(PAGE_SIZE) {
             result.add(placeHolder)
         }.run { result }
-
     }
 
 }

@@ -7,19 +7,24 @@ import com.example.core.domain.tools.RequestParams.PAGE
 import java.text.SimpleDateFormat
 import java.util.*
 
-class GamesRequest {
+interface GetRequest {
+    fun next(): GetRequest
+    fun getPage(): Int
+    fun getParams(): Map<String, Any>
+}
 
+class GamesGetRequest: GetRequest {
     private var page: Int = 1
     private var params = mutableMapOf<String, Any>()
-    fun getAndIncrementPage(): Int = page++
-    fun incrementPage() = apply {
-        ++page
-        params[PAGE] = page
-    }
-    fun getPage() = page
-    fun getParams() = params.toMap()
-    fun copy(page: Int = this.page, params: Map<String, Any> = this.params): GamesRequest =
-        GamesRequest().also { it.page = page; it.params = params.toMutableMap() }
+    override fun next(): GamesGetRequest =
+        this.copy().also {
+            it.params[PAGE] = ++page
+        }
+
+    override fun getPage() = page
+    override fun getParams() = params.toMap()
+    private fun copy(page: Int = this.page, params: Map<String, Any> = this.params): GamesGetRequest =
+        GamesGetRequest().also { it.page = page; it.params = params.toMutableMap() }
 
     class Builder {
         private val separator = ","
@@ -76,7 +81,7 @@ class GamesRequest {
         fun setPage(page: Int) = apply {
             this.page = page
         }
-        fun build(): GamesRequest {
+        fun build(): GamesGetRequest {
             val request = mutableMapOf<String, Any>()
             dates?.let { request[RequestParams.DATES] = it }
             platforms?.let { request[RequestParams.PLATFORMS] = it }
@@ -89,7 +94,7 @@ class GamesRequest {
             ordering?.let { request[RequestParams.ORDERING] = it }
             request[RequestParams.PAGE_SIZE] = pageSize.toString()
             request[RequestParams.PAGE] = page
-            return GamesRequest().also { it.params = request }
+            return GamesGetRequest().also { it.params = request }
         }
         private fun getDateString(calendar: Calendar, timeZone: TimeZone) =
             SimpleDateFormat(datePattern, Locale.getDefault()).also {
