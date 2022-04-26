@@ -23,8 +23,8 @@ class GamesPlaceholderDelegate: BaseRecyclerViewDelegate<GamePlaceHolder, Layout
     }
     override fun getDiffItemCallback(): DiffUtil.ItemCallback<GamePlaceHolder> = diffItemCallback
     private val diffItemCallback = object: DiffUtil.ItemCallback<GamePlaceHolder>() {
-        override fun areItemsTheSame(oldItem: GamePlaceHolder, newItem: GamePlaceHolder): Boolean = false
-        override fun areContentsTheSame(oldItem: GamePlaceHolder, newItem: GamePlaceHolder): Boolean = false
+        override fun areItemsTheSame(oldItem: GamePlaceHolder, newItem: GamePlaceHolder): Boolean = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: GamePlaceHolder, newItem: GamePlaceHolder): Boolean = oldItem.id == newItem.id
     }
 }
 

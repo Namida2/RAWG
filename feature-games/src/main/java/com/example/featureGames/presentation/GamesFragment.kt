@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.core.domain.tools.Constants.GAMES_SPAN_COUNT
 import com.example.core.domain.tools.Constants.MIN_ITEMS_COUNT_FOR_NEXT_PAGE
 import com.example.core.domain.tools.Constants.PAGE_SIZE
+import com.example.core.domain.tools.extensions.logD
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
 import com.example.featureGames.databinding.FragmentGamesBinding
 import com.example.featureGames.domain.ViewModelFactory
@@ -19,6 +20,8 @@ import com.example.featureGames.domain.tools.GameScreens
 import com.example.featureGames.presentation.recyclerView.RecyclerViewScrollListener
 import com.example.featureGames.presentation.recyclerView.delegates.GamesDelegate
 import com.example.featureGames.presentation.recyclerView.delegates.GamesPlaceholderDelegate
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 
 class GamesFragment : Fragment() {
     private lateinit var binding: FragmentGamesBinding
@@ -55,7 +58,7 @@ class GamesFragment : Fragment() {
                 ).also {
                     it.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
                 }
-            gamesRecyclerView.adapter = adapter.also { it.submitList(getPlaceholders()) }
+            gamesRecyclerView.adapter = adapter.also { it.submitList(viewModel.getPlaceholders()) }
             RecyclerViewScrollListener(gamesRecyclerView, viewModel)
         }
         observeNewGamesEvent()
@@ -75,20 +78,9 @@ class GamesFragment : Fragment() {
             it.getData()?.let { positions ->
                 if (adapter.currentList.size - positions[0] < MIN_ITEMS_COUNT_FOR_NEXT_PAGE) {
                     viewModel.loadNextPage()
-                    adapter.submitList(
-                        (adapter.currentList + getPlaceholders()).toMutableList()
-                    )
                 }
             }
         }
-    }
-
-    private fun getPlaceholders(): List<GamePlaceHolder> {
-        val placeHolder = GamePlaceHolder()
-        val result = mutableListOf<GamePlaceHolder>()
-        return repeat(PAGE_SIZE) {
-            result.add(placeHolder)
-        }.run { result }
     }
 
 }

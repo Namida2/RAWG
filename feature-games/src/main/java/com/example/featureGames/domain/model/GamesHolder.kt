@@ -1,24 +1,29 @@
 package com.example.featureGames.domain.model
 
 import android.graphics.Bitmap
+import com.example.core.domain.tools.Messages.GAME_NOT_FOUND
+import com.example.core.domain.tools.Messages.GAME_SCREEN_TYPE_MISMATCH
+import com.example.core.domain.tools.Messages.PAGE_NOT_FOUND
 import com.example.core.domain.tools.extensions.logD
+import com.example.featureGames.domain.model.interfaces.GameScreenItemType
 import com.example.featureGames.domain.tools.GameScreens
 import com.example.featureGames.domain.tools.TopPicksDameScreenSetting.defaultRequestForTopPicksScreen
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
+data class NewGamesForScreen(val screenTag: GameScreens, val page: Int)
+data class GameBackgroundImageChanges(val screenTag: GameScreens, val page: Int, val game: Game)
+
 @Singleton
 class GamesHolder @Inject constructor() {
-    private val gameNotFountMessage = "Game not found. Id: "
     private val games = mutableListOf<Game>()
     private val screensInfo = mutableMapOf<GameScreens, GameScreenInfo>()
-
-    private val _gameScreenChanges = MutableSharedFlow<GameScreens>(1)
-    val gameScreenChanges: SharedFlow<GameScreens> = _gameScreenChanges
+    private val _gameScreenChanges = MutableSharedFlow<NewGamesForScreen>(1)
+    val newGamesForScreen: SharedFlow<NewGamesForScreen> = _gameScreenChanges
+    private val _gamesBackgroundImageChanges = MutableSharedFlow<GameBackgroundImageChanges>(1)
+    val gamesBackgroundImageChanges: SharedFlow<GameBackgroundImageChanges> = _gamesBackgroundImageChanges
 
     fun getScreenInfo(screenTag: GameScreens): GameScreenInfo =
         screensInfo[screenTag] ?: run {
@@ -33,20 +38,24 @@ class GamesHolder @Inject constructor() {
             }
         }
 
-     fun setBitmapForGameById(gameId: Int, bitmap: Bitmap) {
+    fun setBitmapForGameById(screenTag: GameScreens, page: Int, gameId: Int, bitmap: Bitmap) {
         games.indexOfFirst {
             it.id == gameId
         }.let {
-            if (it == -1) {
-                logD(gameNotFountMessage + gameId)
-                return
-            }
+            if (it == -1) throw java.lang.IllegalArgumentException(GAME_NOT_FOUND + gameId)
+            //copy to notify the listAdapter about changes
             games[it] = games[it].copy(backgroundImage = bitmap)
-            notifyGameScreens(gameId)
+            _gamesBackgroundImageChanges.tryEmit(
+                GameBackgroundImageChanges(screenTag, page, games[it])
+            )
         }
     }
 
-    fun addGames(screenTag: GameScreens, newGames: List<Game>) {
+    fun addGames(
+        screenTag: GameScreens,
+        newGames: List<Game>,
+        gameType: GameScreenItemType.GameType
+    ) {
         newGames.forEach { newGame ->
             val indexOnExistingGame = games.indexOfFirst { it.id == newGame.id }
             if (indexOnExistingGame == -1) {
@@ -57,26 +66,26 @@ class GamesHolder @Inject constructor() {
             }
         }
         logD("gamesCollectionSize: ${games.size}")
-        getScreenInfo(screenTag).gameIds.addAll(newGames.map { it.id })
-        notifyGameScreens(screenTag)
+        getScreenInfo(screenTag).screenItems[gameType.page] = gameType
+        notifyGameScreens(screenTag, gameType.page)
     }
 
-    fun getGamesBuScreenTag(screenTag: GameScreens): List<Game> {
-        val screenGameIds = getScreenInfo(screenTag).gameIds
-        return games.filter { game ->
-            screenGameIds.contains(game.id)
+    fun getGamesByScreenTagAndPage(screenTag: GameScreens, page: Int): List<Game> {
+        val screenItem = getScreenInfo(screenTag).screenItems[page]
+            ?: throw IllegalArgumentException(PAGE_NOT_FOUND + page)
+        val gamesScreenItem: GameScreenItemType.GameType =
+            screenItem as? GameScreenItemType.GameType
+                ?: throw IllegalArgumentException(GAME_SCREEN_TYPE_MISMATCH + page)
+        return gamesScreenItem.gameIds.map { gameId ->
+            val game = games.find { it.id == gameId }
+                ?: throw java.lang.IllegalArgumentException(GAME_NOT_FOUND + gameId); game
         }
     }
 
-    private fun notifyGameScreens(gameId: Int) {
-        screensInfo.forEach { (tag, info) ->
-            if (info.gameIds.contains(gameId))
-                _gameScreenChanges.tryEmit(tag)
-        }
-    }
-
-    private fun notifyGameScreens(screenTag: GameScreens) {
-        _gameScreenChanges.tryEmit(screenTag)
+    private fun notifyGameScreens(screenTag: GameScreens, page: Int) {
+        _gameScreenChanges.tryEmit(
+            NewGamesForScreen(screenTag, page)
+        )
     }
 
 }

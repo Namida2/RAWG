@@ -5,8 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:background="@color/blackLite"
-    android:clickable="true"
-    android:focusable="true"
     app:cardBackgroundColor="@color/blackLite"
     app:cardCornerRadius="16dp">
 
@@ -95,32 +93,23 @@
 
         </LinearLayout>
 
-        <TextView
+        <View
             android:id="@+id/gameName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="116dp"
+            android:layout_height="14dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/bg_placeholder"
-            android:fontFamily="@font/montserrat_regular"
-            android:text="000000000000000000"
-            android:textColor="@color/gray"
-            android:textSize="12sp" />
+            android:textColor="@color/gray" />
 
-
-        <com.google.android.material.textview.MaterialTextView
+        <View
             android:id="@+id/addedCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="14dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="6dp"
-            android:background="@drawable/bg_placeholder"
-            android:drawablePadding="4dp"
-            android:fontFamily="@font/montserrat_regular"
-            android:text="0000000"
-            android:textColor="@color/gray"
-            android:textSize="12dp" />
+            android:background="@drawable/bg_placeholder" />
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

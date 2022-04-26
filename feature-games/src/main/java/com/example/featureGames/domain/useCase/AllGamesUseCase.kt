@@ -7,65 +7,78 @@ import com.example.core.domain.tools.extensions.logD
 import com.example.featureGames.data.models.GamesResponse
 import com.example.featureGames.data.models.RAWGame
 import com.example.featureGames.domain.model.*
+import com.example.featureGames.domain.model.interfaces.GameScreenItemType
 import com.example.featureGames.domain.tools.GameScreens
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
+import retrofit2.HttpException
 
-class AllGamesUseCase @Inject constructor(
+@AssistedFactory
+interface AllGamesFactory {
+    fun create(screenTag: GameScreens): AllGamesUseCase
+}
+
+class AllGamesUseCase @AssistedInject constructor(
+    @Assisted override var screenTag: GameScreens,
     private val applicationContext: Context,
     private val gamesMapper: Game.GameMapper,
     private val gamesHolder: GamesHolder,
     private val requestsQueueGames: RequestQueue<GamesGetRequest, GamesResponse>
-) : GamesUseCase {
+) : GamesUseCase, QueueResultHandler<RequestsQueueChanges<GamesResponse>> {
 
-    override val gameScreenChanges: Flow<GameScreens> by gamesHolder::gameScreenChanges
-    override suspend fun readGames(screenTag: GameScreens, request: GamesGetRequest) {
-        requestsQueueGames.readGames(request)
-        if (requestsQueueGames.onResult == null) {
-            requestsQueueGames.onResult =
-                object : QueueResult<RequestsQueueChanges<GamesResponse>> {
-                    override fun invoke(it: RequestsQueueChanges<GamesResponse>) {
-                        logD("collectPage: ${it.page}")
-                        logD("responseCount: ${it.response?.count}")
-                        val gamesResponse = it.response ?: return
-                        val games = it.response.rawGames?.map { game ->
-                            gamesMapper.map(game)
-                        } ?: return
-                        logD("gamesCount: ${games.size}")
-                        gamesHolder.addGames(screenTag, games)
-                        readImages(gamesResponse)
-                    }
-                }
-        }
+    init { requestsQueueGames.onResult = this }
+    override val newGamesForScreen: Flow<NewGamesForScreen> by gamesHolder::newGamesForScreen
+    override val responseHttpExceptions: Flow<HttpException> by requestsQueueGames::responseHttpExceptions
+    override val gamesBackgroundImageChanges: Flow<GameBackgroundImageChanges> by gamesHolder::gamesBackgroundImageChanges
+
+    override suspend fun readGames(request: GamesGetRequest, coroutineScope: CoroutineScope) {
+        requestsQueueGames.readGames(request, coroutineScope)
     }
 
-    override fun getScreenInfo(screenTag: GameScreens): GameScreenInfo =
+    override fun invoke(result: RequestsQueueChanges<GamesResponse>) {
+        logD("collectPage: ${result.page}")
+        logD("responseCount: ${result.response?.count}")
+        val gamesResponse = result.response ?: return
+        val games = result.response.rawGames?.map { game ->
+            gamesMapper.map(game)
+        } ?: return
+        logD("gamesCount: ${games.size}")
+        gamesHolder.addGames(
+            screenTag, games,
+            GameScreenItemType.GameType(result.page, games.map { it.id })
+        )
+        readImages(result.page, gamesResponse)
+    }
+
+    override fun getScreenInfo(): GameScreenInfo =
         gamesHolder.getScreenInfo(screenTag)
 
-    override fun getGamesBuScreenTag(screenTag: GameScreens): List<Game> =
-        gamesHolder.getGamesBuScreenTag(screenTag)
+    override fun getGamesByPage(page: Int): List<Game> =
+        gamesHolder.getGamesByScreenTagAndPage(screenTag, page)
 
-    private fun readImages(response: GamesResponse) {
+    private fun readImages(page: Int, response: GamesResponse) {
+        val newScope = CoroutineScope(IO)
         response.rawGames?.forEach { game ->
-            CoroutineScope(IO).launch {
-                loadImage(game)
-            }
+            newScope.launch { loadImage(page, game) }
         }
     }
 
-    private suspend fun loadImage(game: RAWGame) {
+    private suspend fun loadImage(page: Int, game: RAWGame) {
         game.backgroundImage ?: return
         val bitmap = Glide.with(applicationContext).asBitmap()
             .apply(RequestOptions().override(120, 220))
-            .load(game.backgroundImage).submit()
-            .get()
+            .load(game.backgroundImage)
+            .submit().get()
+        logD("loadImage: $page")
         withContext(Main) {
-            gamesHolder.setBitmapForGameById(game.id, bitmap)
+            gamesHolder.setBitmapForGameById(screenTag, page, game.id, bitmap)
         }
     }
 }

@@ -4,26 +4,22 @@ import com.example.core.domain.tools.Constants.FIRST_PAGE
 import com.example.core.domain.tools.Constants.PAGE_SIZE
 import com.example.core.domain.tools.RequestParams
 import com.example.core.domain.tools.RequestParams.PAGE
+import com.example.featureGames.domain.model.interfaces.GetRequest
 import java.text.SimpleDateFormat
 import java.util.*
 
-interface GetRequest {
-    fun next(): GetRequest
-    fun getPage(): Int
-    fun getParams(): Map<String, Any>
-}
 
 class GamesGetRequest: GetRequest {
     private var page: Int = FIRST_PAGE
     private var params = mutableMapOf<String, Any>()
     override fun next(): GamesGetRequest =
         this.copy().also {
-            it.params[PAGE] = ++page
+            it.params[PAGE] = ++it.page
         }
 
     override fun getPage() = page
     override fun getParams() = params.toMap()
-    private fun copy(page: Int = this.page, params: Map<String, Any> = this.params): GamesGetRequest =
+    fun copy(page: Int = this.page, params: Map<String, Any> = this.params): GamesGetRequest =
         GamesGetRequest().also { it.page = page; it.params = params.toMutableMap() }
 
     class Builder {

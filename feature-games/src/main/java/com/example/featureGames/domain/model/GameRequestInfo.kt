@@ -1,6 +1,8 @@
 package com.example.featureGames.domain.model
 
 import com.example.featureGames.data.models.GamesResponse
+import com.example.featureGames.domain.model.interfaces.GetRequest
+import com.example.featureGames.domain.model.interfaces.Response
 
 sealed class RequestSates {
     object Completed : RequestSates()
@@ -27,5 +29,3 @@ interface RequestInfo<MyRequest: GetRequest, MyResponse: Response?> {
     fun setResponse(response: MyResponse)
     fun getResponse(): MyResponse
 }
-
-interface Response
