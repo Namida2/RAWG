@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.viewbinding.ViewBinding
-import com.example.core.domain.tools.Messages.VIEW_TYPE_NOT_FOUND
+import com.example.core.domain.tools.constants.StringConstants.VIEW_TYPE_NOT_FOUND
 
 class BaseRecyclerViewAdapter(
     private val delegates: List<BaseRecyclerViewDelegate<out BaseRecyclerViewType, out ViewBinding>>

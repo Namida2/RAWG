@@ -35,10 +35,10 @@ android {
 dependencies {
     implementation project(':core')
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
-    implementation ("com.github.bumptech.glide:glide:4.13.1")
+    implementation 'com.github.bumptech.glide:glide:4.13.1'
     kapt 'com.github.bumptech.glide:compiler:4.13.0'
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
 
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.3"))
     implementation("com.squareup.okhttp3:okhttp")

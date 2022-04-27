@@ -1,9 +1,9 @@
 package com.example.featureGames.domain.model
 
-import com.example.core.domain.tools.Constants.FIRST_PAGE
-import com.example.core.domain.tools.Constants.PAGE_SIZE
-import com.example.core.domain.tools.RequestParams
-import com.example.core.domain.tools.RequestParams.PAGE
+import com.example.core.domain.tools.constants.Constants.FIRST_PAGE
+import com.example.core.domain.tools.constants.Constants.PAGE_SIZE
+import com.example.core.domain.tools.constants.RequestParams
+import com.example.core.domain.tools.constants.RequestParams.PAGE
 import com.example.featureGames.domain.model.interfaces.GetRequest
 import java.text.SimpleDateFormat
 import java.util.*

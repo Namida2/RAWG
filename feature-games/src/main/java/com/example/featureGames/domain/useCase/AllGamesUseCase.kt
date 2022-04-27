@@ -14,10 +14,8 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
 @AssistedFactory
@@ -33,7 +31,10 @@ class AllGamesUseCase @AssistedInject constructor(
     private val requestsQueueGames: RequestQueue<GamesGetRequest, GamesResponse>
 ) : GamesUseCase, QueueResultHandler<RequestsQueueChanges<GamesResponse>> {
 
-    init { requestsQueueGames.onResult = this }
+    init {
+        requestsQueueGames.onResult = this
+    }
+
     override val newGamesForScreen: Flow<NewGamesForScreen> by gamesHolder::newGamesForScreen
     override val responseHttpExceptions: Flow<HttpException> by requestsQueueGames::responseHttpExceptions
     override val gamesBackgroundImageChanges: Flow<GameBackgroundImageChanges> by gamesHolder::gamesBackgroundImageChanges
@@ -42,7 +43,7 @@ class AllGamesUseCase @AssistedInject constructor(
         requestsQueueGames.readGames(request, coroutineScope)
     }
 
-    override fun invoke(result: RequestsQueueChanges<GamesResponse>) {
+    override suspend fun invoke(result: RequestsQueueChanges<GamesResponse>) {
         logD("collectPage: ${result.page}")
         logD("responseCount: ${result.response?.count}")
         val gamesResponse = result.response ?: return
@@ -63,22 +64,35 @@ class AllGamesUseCase @AssistedInject constructor(
     override fun getGamesByPage(page: Int): List<Game> =
         gamesHolder.getGamesByScreenTagAndPage(screenTag, page)
 
+    override fun onNetworkConnected(coroutineScope: CoroutineScope) {
+        requestsQueueGames.onNetworkConnected(coroutineScope)
+    }
+
     private fun readImages(page: Int, response: GamesResponse) {
         val newScope = CoroutineScope(IO)
         response.rawGames?.forEach { game ->
-            newScope.launch { loadImage(page, game) }
+            newScope.launch {
+                loadImage(page, game)
+            }
         }
+
     }
 
     private suspend fun loadImage(page: Int, game: RAWGame) {
-        game.backgroundImage ?: return
+        // TODO: Add a ImageLoader class //STOPPED// 
+        logD("withContext.loadImage: $page, gameName: ${game.name}")
+        game.backgroundImage ?: run {
+            logD("background is null for: ${game.name}")
+            return
+        }
         val bitmap = Glide.with(applicationContext).asBitmap()
-            .apply(RequestOptions().override(120, 220))
+            .apply(RequestOptions().override(200, 300))
             .load(game.backgroundImage)
             .submit().get()
-        logD("loadImage: $page")
-        withContext(Main) {
-            gamesHolder.setBitmapForGameById(screenTag, page, game.id, bitmap)
-        }
+        logD("loadImageFromPage: $page")
+        logD("bitmap: $bitmap")
+        logD("withContext.withContext: $page, gameName: ${game.name}")
+        gamesHolder.setBitmapForGameById(screenTag, page, game.id, bitmap)
+
     }
 }

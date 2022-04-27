@@ -14,4 +14,5 @@ interface GamesUseCase {
     suspend fun readGames(request: GamesGetRequest,coroutineScope: CoroutineScope)
     fun getScreenInfo(): GameScreenInfo
     fun getGamesByPage(page: Int): List<Game>
+    fun onNetworkConnected(coroutineScope: CoroutineScope)
 }

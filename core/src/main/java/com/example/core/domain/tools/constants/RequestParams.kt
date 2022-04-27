@@ -1,6 +1,10 @@
-package com.example.core.domain.tools
+package com.example.core.domain.tools.constants
 
 object RequestParams {
+    const val PARAM_KEY = "key"
+    const val API_KEY = "eb93975e53414766bd5b734fae1502eb"
+    const val RAWG_BASE_URL = "https://api.rawg.io/api/"
+
     const val DATES = "dates"
     const val PLATFORMS = "platforms"
     const val STORES = "stores"

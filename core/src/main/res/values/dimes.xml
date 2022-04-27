@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="small_margin">8dp</dimen>
+    <dimen name="large_margin">16dp</dimen>
+    <dimen name="top_tables_margin">60dp</dimen>
+
+    <item name="transitionAnimationDuration" type="integer">300</item>
+    <item name="dismissDialogTime" type="integer">120</item>
+    <item name="navigationUIStartDelay" type="integer">200</item>
+</resources>

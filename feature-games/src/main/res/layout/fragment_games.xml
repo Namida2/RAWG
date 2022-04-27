@@ -4,4 +4,4 @@
     android:layout_width="match_parent"
     android:id="@+id/games_recycler_view"
     android:layout_height="match_parent"
-    tools:listitem="@layout/layout_game" />
+    tools:listitem="@layout/layout_game"/>

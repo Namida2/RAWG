@@ -1,7 +1,6 @@
 package com.example.featureGames.domain.model.interfaces
 
-import com.example.core.domain.tools.Constants.PAGE_SIZE
-import com.example.featureGames.domain.model.Game
+import com.example.core.domain.tools.constants.Constants.PAGE_SIZE
 
 sealed interface GameScreenItemType {
     val page: Int

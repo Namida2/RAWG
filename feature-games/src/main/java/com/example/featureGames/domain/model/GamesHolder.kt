@@ -1,13 +1,14 @@
 package com.example.featureGames.domain.model
 
 import android.graphics.Bitmap
-import com.example.core.domain.tools.Messages.GAME_NOT_FOUND
-import com.example.core.domain.tools.Messages.GAME_SCREEN_TYPE_MISMATCH
-import com.example.core.domain.tools.Messages.PAGE_NOT_FOUND
+import com.example.core.domain.tools.constants.StringConstants.GAME_NOT_FOUND
+import com.example.core.domain.tools.constants.StringConstants.GAME_SCREEN_TYPE_MISMATCH
+import com.example.core.domain.tools.constants.StringConstants.PAGE_NOT_FOUND
 import com.example.core.domain.tools.extensions.logD
 import com.example.featureGames.domain.model.interfaces.GameScreenItemType
 import com.example.featureGames.domain.tools.GameScreens
 import com.example.featureGames.domain.tools.TopPicksDameScreenSetting.defaultRequestForTopPicksScreen
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Inject
@@ -20,9 +21,9 @@ data class GameBackgroundImageChanges(val screenTag: GameScreens, val page: Int,
 class GamesHolder @Inject constructor() {
     private val games = mutableListOf<Game>()
     private val screensInfo = mutableMapOf<GameScreens, GameScreenInfo>()
-    private val _gameScreenChanges = MutableSharedFlow<NewGamesForScreen>(1)
+    private val _gameScreenChanges = MutableSharedFlow<NewGamesForScreen>(onBufferOverflow = BufferOverflow.SUSPEND)
     val newGamesForScreen: SharedFlow<NewGamesForScreen> = _gameScreenChanges
-    private val _gamesBackgroundImageChanges = MutableSharedFlow<GameBackgroundImageChanges>(1)
+    private val _gamesBackgroundImageChanges = MutableSharedFlow<GameBackgroundImageChanges>(onBufferOverflow = BufferOverflow.SUSPEND)
     val gamesBackgroundImageChanges: SharedFlow<GameBackgroundImageChanges> = _gamesBackgroundImageChanges
 
     fun getScreenInfo(screenTag: GameScreens): GameScreenInfo =
@@ -38,20 +39,21 @@ class GamesHolder @Inject constructor() {
             }
         }
 
-    fun setBitmapForGameById(screenTag: GameScreens, page: Int, gameId: Int, bitmap: Bitmap) {
+    suspend fun setBitmapForGameById(screenTag: GameScreens, page: Int, gameId: Int, bitmap: Bitmap) {
         games.indexOfFirst {
             it.id == gameId
         }.let {
             if (it == -1) throw java.lang.IllegalArgumentException(GAME_NOT_FOUND + gameId)
             //copy to notify the listAdapter about changes
             games[it] = games[it].copy(backgroundImage = bitmap)
-            _gamesBackgroundImageChanges.tryEmit(
+            logD("setBitmapForGameById: $page, gameName: ${games[it].name}")
+            _gamesBackgroundImageChanges.emit(
                 GameBackgroundImageChanges(screenTag, page, games[it])
             )
         }
     }
 
-    fun addGames(
+    suspend fun addGames(
         screenTag: GameScreens,
         newGames: List<Game>,
         gameType: GameScreenItemType.GameType
@@ -82,10 +84,8 @@ class GamesHolder @Inject constructor() {
         }
     }
 
-    private fun notifyGameScreens(screenTag: GameScreens, page: Int) {
-        _gameScreenChanges.tryEmit(
-            NewGamesForScreen(screenTag, page)
-        )
+    private suspend fun notifyGameScreens(screenTag: GameScreens, page: Int) {
+        _gameScreenChanges.emit( NewGamesForScreen(screenTag, page ))
     }
 
 }

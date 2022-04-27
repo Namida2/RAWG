@@ -1,9 +1,10 @@
 package com.example.rawg.application
 
 import android.app.Application
-import com.example.core.domain.tools.Messages
-import com.example.core.domain.tools.Messages.API_KEY
-import com.example.core.domain.tools.Messages.RAWG_BASE_URL
+import com.example.core.domain.tools.NetworkConnectionListener
+import com.example.core.domain.tools.constants.RequestParams.API_KEY
+import com.example.core.domain.tools.constants.RequestParams.PARAM_KEY
+import com.example.core.domain.tools.constants.RequestParams.RAWG_BASE_URL
 import com.example.featureGames.domain.di.GamesDepsStore
 import com.example.rawg.domain.di.AppComponent
 import com.example.rawg.domain.di.DaggerAppComponent
@@ -15,11 +16,12 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class MyApplication: Application() {
+class MyApplication : Application() {
 
     lateinit var _appComponent: AppComponent
 
     override fun onCreate() {
+        NetworkConnectionListener.registerCallback(applicationContext)
         _appComponent = DaggerAppComponent.builder()
             .putRetrofit(configureRetrofit())
             .putContext(applicationContext)
@@ -35,7 +37,7 @@ class MyApplication: Application() {
             ).addInterceptor(Interceptor { chain ->
                 var request: Request = chain.request()
                 val url: HttpUrl = request.url.newBuilder()
-                    .addQueryParameter(Messages.PARAM_KEY, API_KEY).build()
+                    .addQueryParameter(PARAM_KEY, API_KEY).build()
                 request = request.newBuilder().url(url).build()
                 chain.proceed(request)
             }).build()
