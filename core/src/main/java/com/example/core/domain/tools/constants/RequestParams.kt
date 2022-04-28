@@ -16,4 +16,11 @@ object RequestParams {
     const val METACRITIC = "metacritic"
     const val PAGE_SIZE = "page_size"
     const val PAGE = "page"
+
+    const val NAME = "name"
+    const val RELEASED = "released"
+    const val ADDED = "added"
+    const val CREATED = "created"
+    const val UPDATED = "updated"
+    const val RATING = "rating"
 }

@@ -1,6 +1,6 @@
 package com.example.featureGames.domain.model
 
-import com.example.featureGames.data.models.GamesResponse
+import com.example.featureGames.data.entities.rawGameResponse.GamesResponse
 import com.example.featureGames.domain.model.interfaces.GetRequest
 import com.example.featureGames.domain.model.interfaces.Response
 

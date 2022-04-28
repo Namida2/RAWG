@@ -1,4 +1,4 @@
-package com.example.featureGames.data.models
+package com.example.featureGames.data.entities.rawGameResponse
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,4 +1,4 @@
-package com.example.featureGames.data.models
+package com.example.featureGames.data.entities.rawGameResponse
 
 class Year {
     var year = 0

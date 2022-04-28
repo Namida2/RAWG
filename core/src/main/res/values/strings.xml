@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="defaultTitle">Oops!</string>
-    <string name="networkConnectionMessage">Пожалуйста, проверьте свое интернет-соединение.</string>
+    <string name="defaultMessage">Something went wrong, please try again later</string>
+    <string name="networkConnectionMessage">Please check your network connection.</string>
+
+    <string name="badGatewayTitle">502</string>
+    <string name="badGatewayMessage">Error on the server, please try again.</string>
+
+    <string name="pageNotFoundTitle">404</string>
+    <string name="pageNotFoundMessage">It seems that this is all that could be found.</string>
+
 </resources>

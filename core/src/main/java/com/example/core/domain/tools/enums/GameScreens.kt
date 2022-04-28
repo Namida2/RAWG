@@ -1,6 +1,4 @@
-package com.example.featureGames.domain.tools
-
-import java.io.Serializable
+package com.example.core.domain.tools.enums
 
 enum class GameScreens(val screenTag: String) {
     TOP_PICKS("Top picks"),

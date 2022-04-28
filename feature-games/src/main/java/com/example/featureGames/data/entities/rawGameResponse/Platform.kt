@@ -1,11 +1,16 @@
-package com.example.featureGames.data.models
+package com.example.featureGames.data.entities.rawGameResponse
 
 import com.google.gson.annotations.SerializedName
 
-class Genre {
+class Platform {
     var id = 0
     var name: String? = null
     var slug: String? = null
+    var image: Any? = null
+    @SerializedName("year_end")
+    var yearEnd: Any? = null
+    @SerializedName("year_start")
+    var yearStart = 0
     @SerializedName("games_count")
     var gamesCount = 0
     @SerializedName("image_background")

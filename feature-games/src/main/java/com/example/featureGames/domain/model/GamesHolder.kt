@@ -6,7 +6,7 @@ import com.example.core.domain.tools.constants.StringConstants.GAME_SCREEN_TYPE_
 import com.example.core.domain.tools.constants.StringConstants.PAGE_NOT_FOUND
 import com.example.core.domain.tools.extensions.logD
 import com.example.featureGames.domain.model.interfaces.GameScreenItemType
-import com.example.featureGames.domain.tools.GameScreens
+import com.example.core.domain.tools.enums.GameScreens
 import com.example.featureGames.domain.tools.TopPicksDameScreenSetting.defaultRequestForTopPicksScreen
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow

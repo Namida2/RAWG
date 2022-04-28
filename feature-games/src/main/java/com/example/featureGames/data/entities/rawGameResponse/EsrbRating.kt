@@ -1,4 +1,4 @@
-package com.example.featureGames.data.models
+package com.example.featureGames.data.entities.rawGameResponse
 
 class EsrbRating {
     var id = 0

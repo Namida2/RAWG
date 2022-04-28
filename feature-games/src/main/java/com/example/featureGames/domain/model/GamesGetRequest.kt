@@ -8,7 +8,6 @@ import com.example.featureGames.domain.model.interfaces.GetRequest
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class GamesGetRequest: GetRequest {
     private var page: Int = FIRST_PAGE
     private var params = mutableMapOf<String, Any>()

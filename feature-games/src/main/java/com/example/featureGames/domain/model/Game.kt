@@ -2,7 +2,7 @@ package com.example.featureGames.domain.model
 
 import android.graphics.Bitmap
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
-import com.example.featureGames.data.models.*
+import com.example.featureGames.data.entities.rawGameResponse.*
 import javax.inject.Inject
 
 data class Game(

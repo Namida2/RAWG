@@ -5,7 +5,7 @@ import com.example.featureGames.domain.model.GamesGetRequest.Builder.Companion.d
 import java.util.*
 
 object TopPicksDameScreenSetting {
-    private const val metacriticMin = 70
+    private const val metacriticMin = 84
     private const val metacriticMax = 100
     private const val startDay = 1
     private const val startMonth = 0

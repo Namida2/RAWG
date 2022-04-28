@@ -5,27 +5,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.example.core.domain.tools.constants.Constants.GAMES_SPAN_COUNT
 import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
 import com.example.core.domain.tools.extensions.createMessageAlertDialog
-import com.example.core.domain.tools.extensions.logD
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
 import com.example.featureGames.databinding.FragmentGamesBinding
 import com.example.featureGames.domain.ViewModelFactory
-import com.example.featureGames.domain.tools.GameScreens
+import com.example.core.domain.tools.enums.GameScreens
+import com.example.core.R
 import com.example.featureGames.presentation.recyclerView.RecyclerViewScrollListener
 import com.example.featureGames.presentation.recyclerView.delegates.GamesDelegate
 import com.example.featureGames.presentation.recyclerView.delegates.GamesPlaceholderDelegate
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 
 class GamesFragment : Fragment() {
     private lateinit var binding: FragmentGamesBinding
@@ -65,38 +61,48 @@ class GamesFragment : Fragment() {
             gamesRecyclerView.adapter = adapter
             RecyclerViewScrollListener(gamesRecyclerView, viewModel)
         }
-        observeNewGamesEvent()
+        observeSingleEventsEvent()
         observeOnStateChangedEvent()
-        observeOnNetworkConnectionLostEvent()
     }
 
-    private fun observeNewGamesEvent() {
-        viewModel.newGamesEvent.observe(viewLifecycleOwner) {
-            it.getData()?.let { games ->
-                adapter.submitList(games)
+    private fun observeSingleEventsEvent() {
+        viewModel.singleEvents.observe(viewLifecycleOwner) {
+            when(it) {
+                is GamesVMSingleEvents.NewGamesEvent ->
+                    adapter.submitList(it.event.getData() ?: return@observe)
+                is GamesVMSingleEvents.NetworkConnectionLostEvent -> {
+                    it.event.getData() ?: return@observe
+                    requireContext().createMessageAlertDialog(checkNetworkConnectionMessage)
+                        ?.show(parentFragmentManager, "")
+                }
             }
         }
     }
-
     private fun observeOnStateChangedEvent() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is GamesVMStats.AllGamesFromRequestHaveBeenLoaded -> {
-
+                    if(viewModel.snackBarIsShowing) return@observe
+                    showSnackBar(R.string.pageNotFoundMessage)
                 }
-                is GamesVMStats.Default -> {
-
+                is GamesVMStats.Error -> {
+                    requireContext().createMessageAlertDialog(state.message)
+                        ?.show(parentFragmentManager, "")
                 }
+                is GamesVMStats.Default -> {}
             }
         }
     }
-
-    private fun observeOnNetworkConnectionLostEvent() {
-        viewModel.networkConnectionLostEvent.observe(viewLifecycleOwner) {
-            it.getData() ?: return@observe
-            requireContext().createMessageAlertDialog(checkNetworkConnectionMessage)
-                ?.show(parentFragmentManager, "")
-        }
+    private fun showSnackBar(messageStringId: Int) {
+        viewModel.snackBarIsShowing = true
+        Snackbar.make(binding.root, messageStringId, Snackbar.LENGTH_LONG)
+            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.black))
+            .addCallback(object: BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                    super.onDismissed(transientBottomBar, event)
+                    viewModel.snackBarIsShowing = false
+                }
+            })
+            .setTextColor(ContextCompat.getColor(requireContext(), R.color.white)).show()
     }
-
 }
