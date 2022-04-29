@@ -1,8 +1,7 @@
 package com.example.featureGames.domain.useCase
 
 import com.example.core.domain.entities.GamesHttpException
-import com.example.core.domain.entities.HttpExceptionInfo
-import com.example.core.domain.tools.enums.GameScreens
+import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.logD
 import com.example.featureGames.data.entities.imageLoader.GameBackgroundImageUrlInfo
 import com.example.featureGames.data.entities.rawGameResponse.GamesResponse
@@ -22,15 +21,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 @AssistedFactory
 interface GamesUseCaseFactory {
-    fun create(screenTag: GameScreens, coroutineScope: CoroutineScope): AllGamesUseCase
+    fun create(screenTag: GameScreenTags, coroutineScope: CoroutineScope): AllGamesUseCase
 }
 
 class AllGamesUseCase @AssistedInject constructor(
-    @Assisted override var screenTag: GameScreens,
+    @Assisted override var screenTag: GameScreenTags,
     @Assisted private var coroutineScope: CoroutineScope,
     private val gamesHolder: GamesHolder,
     private val gamesMapper: Game.GameMapper,
@@ -48,7 +46,7 @@ class AllGamesUseCase @AssistedInject constructor(
     override val responseHttpExceptions: Flow<GamesHttpException> by requestsQueueGames::responseHttpExceptions
     override val gamesBackgroundImageChanges: Flow<GameBackgroundImageChanges> by gamesHolder::gamesBackgroundImageChanges
 
-    override suspend fun readGames(request: GamesGetRequest, coroutineScope: CoroutineScope) {
+    override suspend fun readGames(request: GamesGetRequest) {
         requestsQueueGames.readGames(request, coroutineScope)
     }
 
@@ -77,7 +75,6 @@ class AllGamesUseCase @AssistedInject constructor(
             loadedImageInfo.bitmap
         )
     }
-
 
     override fun getScreenInfo(): GameScreenInfo =
         gamesHolder.getScreenInfo(screenTag)

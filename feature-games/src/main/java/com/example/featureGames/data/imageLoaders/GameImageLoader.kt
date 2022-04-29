@@ -41,8 +41,10 @@ class GameImageLoader @Inject constructor(
     }
 
     override fun onNetworkConnected(coroutineScope: CoroutineScope) {
-        imagesLinks.forEach { imageUrlInfo ->
-            getImage(imageUrlInfo, coroutineScope)
+        coroutineScope.launch(Main.immediate) {
+            imagesLinks.forEach { imageUrlInfo ->
+                getImage(imageUrlInfo, coroutineScope)
+            }
         }
     }
 
@@ -60,7 +62,8 @@ class GameImageLoader @Inject constructor(
     }
 
     private suspend fun onImageLoaded(imageUrlInfo: GameBackgroundImageUrlInfo, bitmap: Bitmap) {
-        withContext(Main) {
+        //Use new job to avoid cancellation of passed coroutineContext's job
+        withContext(Job()) {
             imagesLinks.remove(imageUrlInfo)
             onResultHandler.onImageLoaded(GameLoadedImageInfo(imageUrlInfo, bitmap))
         }

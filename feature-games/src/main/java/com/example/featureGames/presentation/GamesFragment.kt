@@ -8,15 +8,18 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.core.R
 import com.example.core.domain.tools.constants.Constants.GAMES_SPAN_COUNT
+import com.example.core.domain.tools.constants.Constants.GAME_SCREEN_TAG
 import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
+import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.createMessageAlertDialog
+import com.example.core.domain.tools.extensions.logD
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
 import com.example.featureGames.databinding.FragmentGamesBinding
 import com.example.featureGames.domain.ViewModelFactory
-import com.example.core.domain.tools.enums.GameScreens
-import com.example.core.R
 import com.example.featureGames.presentation.recyclerView.RecyclerViewScrollListener
 import com.example.featureGames.presentation.recyclerView.delegates.GamesDelegate
 import com.example.featureGames.presentation.recyclerView.delegates.GamesPlaceholderDelegate
@@ -26,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar
 class GamesFragment : Fragment() {
     private lateinit var binding: FragmentGamesBinding
     private lateinit var viewModel: GamesViewModel
+    private lateinit var screenTag: GameScreenTags
     private val adapter = BaseRecyclerViewAdapter(
         listOf(
             GamesDelegate(),
@@ -35,10 +39,13 @@ class GamesFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        viewModel =
-            ViewModelFactory(GameScreens.TOP_PICKS).create(GamesViewModel::class.java).also {
-                it.readGames()
-            }
+        screenTag = arguments?.get(GAME_SCREEN_TAG) as? GameScreenTags
+            ?: throw IllegalArgumentException()
+        logD("$this: onAttach, screenTag: $screenTag")
+        viewModel = ViewModelProvider(
+            this, ViewModelFactory(screenTag)
+        )[GamesViewModel::class.java].also { it.getGames() }
+
     }
 
     override fun onCreateView(
@@ -67,7 +74,7 @@ class GamesFragment : Fragment() {
 
     private fun observeSingleEventsEvent() {
         viewModel.singleEvents.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 is GamesVMSingleEvents.NewGamesEvent ->
                     adapter.submitList(it.event.getData() ?: return@observe)
                 is GamesVMSingleEvents.NetworkConnectionLostEvent -> {
@@ -78,11 +85,12 @@ class GamesFragment : Fragment() {
             }
         }
     }
+
     private fun observeOnStateChangedEvent() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is GamesVMStats.AllGamesFromRequestHaveBeenLoaded -> {
-                    if(viewModel.snackBarIsShowing) return@observe
+                    if (viewModel.snackBarIsShowing) return@observe
                     showSnackBar(R.string.pageNotFoundMessage)
                 }
                 is GamesVMStats.Error -> {
@@ -93,11 +101,12 @@ class GamesFragment : Fragment() {
             }
         }
     }
+
     private fun showSnackBar(messageStringId: Int) {
         viewModel.snackBarIsShowing = true
         Snackbar.make(binding.root, messageStringId, Snackbar.LENGTH_LONG)
             .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.black))
-            .addCallback(object: BaseTransientBottomBar.BaseCallback<Snackbar>() {
+            .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
                 override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                     super.onDismissed(transientBottomBar, event)
                     viewModel.snackBarIsShowing = false

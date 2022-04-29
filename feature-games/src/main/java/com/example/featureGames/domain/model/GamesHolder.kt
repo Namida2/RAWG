@@ -4,42 +4,51 @@ import android.graphics.Bitmap
 import com.example.core.domain.tools.constants.StringConstants.GAME_NOT_FOUND
 import com.example.core.domain.tools.constants.StringConstants.GAME_SCREEN_TYPE_MISMATCH
 import com.example.core.domain.tools.constants.StringConstants.PAGE_NOT_FOUND
+import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.logD
 import com.example.featureGames.domain.model.interfaces.GameScreenItemType
-import com.example.core.domain.tools.enums.GameScreens
-import com.example.featureGames.domain.tools.TopPicksDameScreenSetting.defaultRequestForTopPicksScreen
+import com.example.featureGames.domain.tools.AllGamesGameScreenSetting
+import com.example.featureGames.domain.tools.TopPicksGameScreenSetting
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
-data class NewGamesForScreen(val screenTag: GameScreens, val page: Int)
-data class GameBackgroundImageChanges(val screenTag: GameScreens, val page: Int, val game: Game)
+data class NewGamesForScreen(val screenTag: GameScreenTags, val page: Int)
+data class GameBackgroundImageChanges(val screenTag: GameScreenTags, val page: Int, val game: Game)
 
 @Singleton
 class GamesHolder @Inject constructor() {
     private val games = mutableListOf<Game>()
-    private val screensInfo = mutableMapOf<GameScreens, GameScreenInfo>()
-    private val _gameScreenChanges = MutableSharedFlow<NewGamesForScreen>(onBufferOverflow = BufferOverflow.SUSPEND)
+    private val screensInfo = mutableMapOf<GameScreenTags, GameScreenInfo>()
+    private val _gameScreenChanges =
+        MutableSharedFlow<NewGamesForScreen>(onBufferOverflow = BufferOverflow.SUSPEND)
     val newGamesForScreen: SharedFlow<NewGamesForScreen> = _gameScreenChanges
-    private val _gamesBackgroundImageChanges = MutableSharedFlow<GameBackgroundImageChanges>(onBufferOverflow = BufferOverflow.SUSPEND)
-    val gamesBackgroundImageChanges: SharedFlow<GameBackgroundImageChanges> = _gamesBackgroundImageChanges
+    private val _gamesBackgroundImageChanges =
+        MutableSharedFlow<GameBackgroundImageChanges>(onBufferOverflow = BufferOverflow.SUSPEND)
+    val gamesBackgroundImageChanges: SharedFlow<GameBackgroundImageChanges> =
+        _gamesBackgroundImageChanges
 
-    fun getScreenInfo(screenTag: GameScreens): GameScreenInfo =
+    fun getScreenInfo(screenTag: GameScreenTags): GameScreenInfo =
         screensInfo[screenTag] ?: run {
             val defaultRequest: GamesGetRequest? = when (screenTag) {
-                GameScreens.TOP_PICKS -> defaultRequestForTopPicksScreen
-                GameScreens.BEST_OF_THE_YER -> null
-                GameScreens.NEW_RELEASES -> null
-                GameScreens.ALL_GAMES -> null
+                GameScreenTags.TOP_PICKS -> TopPicksGameScreenSetting.request
+                GameScreenTags.ALL_GAMES -> AllGamesGameScreenSetting.request
+                GameScreenTags.BEST_OF_THE_YER -> null
+                GameScreenTags.NEW_RELEASES -> null
             }
             GameScreenInfo(screenTag, defaultRequest!!).also {
                 screensInfo[screenTag] = it
             }
         }
 
-    suspend fun setBitmapForGameById(screenTag: GameScreens, page: Int, gameId: Int, bitmap: Bitmap) {
+    suspend fun setBitmapForGameById(
+        screenTag: GameScreenTags,
+        page: Int,
+        gameId: Int,
+        bitmap: Bitmap
+    ) {
         games.indexOfFirst {
             it.id == gameId
         }.let {
@@ -54,7 +63,7 @@ class GamesHolder @Inject constructor() {
     }
 
     suspend fun addGames(
-        screenTag: GameScreens,
+        screenTag: GameScreenTags,
         newGames: List<Game>,
         gameType: GameScreenItemType.GameType
     ) {
@@ -72,7 +81,7 @@ class GamesHolder @Inject constructor() {
         notifyGameScreens(screenTag, gameType.page)
     }
 
-    fun getGamesByScreenTagAndPage(screenTag: GameScreens, page: Int): List<Game> {
+    fun getGamesByScreenTagAndPage(screenTag: GameScreenTags, page: Int): List<Game> {
         val screenItem = getScreenInfo(screenTag).screenItems[page]
             ?: throw IllegalArgumentException(PAGE_NOT_FOUND + page)
         val gamesScreenItem: GameScreenItemType.GameType =
@@ -84,8 +93,8 @@ class GamesHolder @Inject constructor() {
         }
     }
 
-    private suspend fun notifyGameScreens(screenTag: GameScreens, page: Int) {
-        _gameScreenChanges.emit( NewGamesForScreen(screenTag, page ))
+    private suspend fun notifyGameScreens(screenTag: GameScreenTags, page: Int) {
+        _gameScreenChanges.emit(NewGamesForScreen(screenTag, page))
     }
 
 }

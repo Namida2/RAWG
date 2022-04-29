@@ -7,4 +7,6 @@ object Constants {
     const val MIN_ITEMS_COUNT_FOR_NEXT_PAGE = 10
     const val GAME_IMAGE_HEIGHT = 300
     const val GAME_IMAGE_WIDTH = 200
+
+    const val GAME_SCREEN_TAG = "GAME_SCREEN_TAG"
 }

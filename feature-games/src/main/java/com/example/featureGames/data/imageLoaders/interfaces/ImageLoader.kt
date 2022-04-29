@@ -1,5 +1,6 @@
 package com.example.featureGames.data.imageLoaders.interfaces
 
+import androidx.annotation.MainThread
 import com.example.featureGames.data.imageLoaders.LoadedImageInfo
 import kotlinx.coroutines.CoroutineScope
 

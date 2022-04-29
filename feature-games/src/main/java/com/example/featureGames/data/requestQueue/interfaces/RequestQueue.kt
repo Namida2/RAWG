@@ -1,5 +1,6 @@
 package com.example.featureGames.data.requestQueue.interfaces
 
+import androidx.annotation.MainThread
 import com.example.core.domain.entities.HttpExceptionInfo
 import com.example.featureGames.domain.model.interfaces.GetRequest
 import com.example.featureGames.domain.model.interfaces.Response
