@@ -15,12 +15,12 @@ class BaseRecyclerViewAdapter(
         parent: ViewGroup,
         viewType: Int
     ): BaseViewHolder<BaseRecyclerViewType, ViewBinding> {
-        return delegates.find {
+        return (delegates.find {
             it.layoutId == viewType
         }?.getViewHolder(
             LayoutInflater.from(parent.context),
             parent
-        ) as BaseViewHolder<BaseRecyclerViewType, ViewBinding>
+        ) as BaseViewHolder<BaseRecyclerViewType, ViewBinding>)
     }
 
     override fun onBindViewHolder(

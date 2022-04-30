@@ -108,7 +108,7 @@ class GamesViewModel(
 
 
     override fun onNewPosition(positions: IntArray, itemCount: Int) {
-        logD("onNewPosition: ${positions.toList()}, size: ${currentScreenItems.values.sumOf { it.size }}")
+//        logD("onNewPosition: ${positions.toList()}, size: ${currentScreenItems.values.sumOf { it.size }}")
         val isMinVisiblePosition =
             currentScreenItems.values.sumOf { it.size } - positions[0] <= MIN_ITEMS_COUNT_FOR_NEXT_PAGE
         if (state.value is GamesVMStats.AllGamesFromRequestHaveBeenLoaded && isMinVisiblePosition) return
@@ -126,7 +126,6 @@ class GamesViewModel(
     }
 
     override fun onCleared() {
-        // TODO: Add a tabs layout and 
         // FIXME: Requests and images loading stop perform after canceling and are lost
 //        Maybe add a subcomponents for each gameScreen and make the queues singletons
 //        remoteRepositoryScope.cancel()
@@ -166,7 +165,7 @@ class GamesViewModel(
     }
 
     private fun removeLastPageOfPlaceHolders(page: Int) {
-        logE("IllegalArgumentException, page+++: $page")
+//        logE("IllegalArgumentException, page+++: $page")
         if (currentScreenItems.remove(page) == null) {
             logE("IllegalArgumentException, page: $page")
             throw IllegalArgumentException()
@@ -196,7 +195,7 @@ class GamesViewModel(
     }
 
     private fun onNewGamesForScreen(changes: NewGamesForScreen) {
-        logD("GamesViewModel.init. page: ${changes.page}")
+//        logD("GamesViewModel.init. page: ${changes.page}")
         if (this.gameScreenInfo.tag != changes.screenTag) return
         currentScreenItems[changes.page] =
             gamesUseCase.getGamesByPage(changes.page).toMutableList()
@@ -204,7 +203,7 @@ class GamesViewModel(
     }
 
     private fun onNewGamesBackgroundImageChanges(changes: GameBackgroundImageChanges) {
-        logD("gamesBackgroundImageChanges, page: ${changes.page}")
+//        logD("gamesBackgroundImageChanges, page: ${changes.page}")
         if (this.gameScreenInfo.tag != changes.screenTag) return
         currentScreenItems[changes.page]!!.indexOfFirst { type ->
             if (type is Game) type.id == changes.game.id else false

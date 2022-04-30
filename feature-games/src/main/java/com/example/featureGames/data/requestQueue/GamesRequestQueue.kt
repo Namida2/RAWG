@@ -74,13 +74,13 @@ class GamesRequestQueue @Inject constructor(
     }
 
     private suspend fun onRequestComplete(request: GamesGetRequest) {
-        logD("onRequestComplete: page: ${request.getPage()}, state: ${requests[request.getPage()]?.state}")
+//        logD("onRequestComplete: page: ${request.getPage()}, state: ${requests[request.getPage()]?.state}")
         val response = requests[request.getPage()]
-        logD("requests: " + requests.keys.toString())
+//        logD("requests: " + requests.keys.toString())
         requests.remove(request.getPage())
-        logD("page: " + request.getPage().toString())
-        logD("requests: ${requests.keys}")
-        logD("-------emit-------")
+//        logD("page: " + request.getPage().toString())
+//        logD("requests: ${requests.keys}")
+//        logD("-------emit-------")
         onResultHandler.onResponse(
             RequestsQueueChanges(response?.getResponse(), request.getPage())
         )

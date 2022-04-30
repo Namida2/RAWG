@@ -31,7 +31,22 @@ object TopPicksGameScreenSetting: GameScreensSettings {
             .build()
 }
 
-object AllGamesGameScreenSetting: GameScreensSettings {
+object NewReleasesGameScreenSetting: GameScreensSettings {
+    override val request: GamesGetRequest =
+        GamesGetRequest.Builder().build()
+}
+
+object BestOfTheYearGameScreenSetting: GameScreensSettings {
+    override val request: GamesGetRequest =
+        GamesGetRequest.Builder().build()
+}
+
+object AllGameScreenSetting: GameScreensSettings {
+    override val request: GamesGetRequest =
+        GamesGetRequest.Builder().build()
+}
+
+object MyLikesGameScreenSetting: GameScreensSettings {
     override val request: GamesGetRequest =
         GamesGetRequest.Builder().build()
 }

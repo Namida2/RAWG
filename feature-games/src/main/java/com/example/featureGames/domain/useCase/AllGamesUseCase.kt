@@ -51,8 +51,8 @@ class AllGamesUseCase @AssistedInject constructor(
     }
 
     override suspend fun onResponse(result: RequestsQueueChanges<GamesResponse>) {
-        logD("collectPage: ${result.page}")
-        logD("responseCount: ${result.response?.count}")
+//        logD("collectPage: ${result.page}")
+//        logD("responseCount: ${result.response?.count}")
         val gamesResponse = result.response ?: return
         val games = result.response.rawGames?.map { game ->
             gamesMapper.map(game)
@@ -66,8 +66,8 @@ class AllGamesUseCase @AssistedInject constructor(
     }
 
     override suspend fun onImageLoaded(loadedImageInfo: LoadedImageInfo<GameBackgroundImageUrlInfo>) {
-        logD("loadImageFromPage: ${loadedImageInfo.imageUrlInfo.page}")
-        logD("bitmap: ${loadedImageInfo.bitmap}")
+//        logD("loadImageFromPage: ${loadedImageInfo.imageUrlInfo.page}")
+//        logD("bitmap: ${loadedImageInfo.bitmap}")
         gamesHolder.setBitmapForGameById(
             screenTag,
             loadedImageInfo.imageUrlInfo.page,
@@ -97,7 +97,7 @@ class AllGamesUseCase @AssistedInject constructor(
     }
 
     private fun loadImage(page: Int, game: RAWGame) {
-        logD("withContext.loadImage: $page, gameName: ${game.name}")
+//        logD("withContext.loadImage: $page, gameName: ${game.name}")
         game.backgroundImage ?: run {
             logD("background is null for: ${game.name}")
             return

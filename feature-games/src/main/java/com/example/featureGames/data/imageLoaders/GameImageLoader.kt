@@ -56,7 +56,7 @@ class GameImageLoader @Inject constructor(
             val bitmap = Glide.with(context).asBitmap()
                 .apply(RequestOptions().override(GAME_IMAGE_WIDTH, GAME_IMAGE_HEIGHT))
                 .load(imageUrlInfo.link).submit().get()
-            logE("getImage: ${imageUrlInfo.gameId}")
+//            logE("getImage: ${imageUrlInfo.gameId}")
             onImageLoaded(imageUrlInfo, bitmap)
         }
     }

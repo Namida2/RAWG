@@ -7,8 +7,7 @@ import com.example.core.domain.tools.constants.StringConstants.PAGE_NOT_FOUND
 import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.logD
 import com.example.featureGames.domain.model.interfaces.GameScreenItemType
-import com.example.featureGames.domain.tools.AllGamesGameScreenSetting
-import com.example.featureGames.domain.tools.TopPicksGameScreenSetting
+import com.example.featureGames.domain.tools.*
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -32,13 +31,14 @@ class GamesHolder @Inject constructor() {
 
     fun getScreenInfo(screenTag: GameScreenTags): GameScreenInfo =
         screensInfo[screenTag] ?: run {
-            val defaultRequest: GamesGetRequest? = when (screenTag) {
+            val defaultRequest: GamesGetRequest = when (screenTag) {
                 GameScreenTags.TOP_PICKS -> TopPicksGameScreenSetting.request
-                GameScreenTags.ALL_GAMES -> AllGamesGameScreenSetting.request
-                GameScreenTags.BEST_OF_THE_YER -> null
-                GameScreenTags.NEW_RELEASES -> null
+                GameScreenTags.NEW_RELEASES -> NewReleasesGameScreenSetting.request
+                GameScreenTags.BEST_OF_THE_YER -> BestOfTheYearGameScreenSetting.request
+                GameScreenTags.ALL_GAMES -> AllGameScreenSetting.request
+                GameScreenTags.MY_LIKES -> MyLikesGameScreenSetting.request
             }
-            GameScreenInfo(screenTag, defaultRequest!!).also {
+            GameScreenInfo(screenTag, defaultRequest).also {
                 screensInfo[screenTag] = it
             }
         }
@@ -55,7 +55,7 @@ class GamesHolder @Inject constructor() {
             if (it == -1) throw java.lang.IllegalArgumentException(GAME_NOT_FOUND + gameId)
             //copy to notify the listAdapter about changes
             games[it] = games[it].copy(backgroundImage = bitmap)
-            logD("setBitmapForGameById: $page, gameName: ${games[it].name}")
+//            logD("setBitmapForGameById: $page, gameName: ${games[it].name}")
             _gamesBackgroundImageChanges.emit(
                 GameBackgroundImageChanges(screenTag, page, games[it])
             )
@@ -76,7 +76,7 @@ class GamesHolder @Inject constructor() {
                     newGame.copy(isLiked = games[indexOnExistingGame].isLiked)
             }
         }
-        logD("gamesCollectionSize: ${games.size}")
+//        logD("gamesCollectionSize: ${games.size}")
         getScreenInfo(screenTag).screenItems[gameType.page] = gameType
         notifyGameScreens(screenTag, gameType.page)
     }

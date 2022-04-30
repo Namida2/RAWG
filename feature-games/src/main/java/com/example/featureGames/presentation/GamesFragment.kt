@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.core.R
 import com.example.core.domain.tools.constants.Constants.GAMES_SPAN_COUNT
@@ -17,6 +18,7 @@ import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMe
 import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.createMessageAlertDialog
 import com.example.core.domain.tools.extensions.logD
+import com.example.core.domain.tools.extensions.logE
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
 import com.example.featureGames.databinding.FragmentGamesBinding
 import com.example.featureGames.domain.ViewModelFactory
@@ -39,13 +41,24 @@ class GamesFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        screenTag = arguments?.get(GAME_SCREEN_TAG) as? GameScreenTags
+        screenTag = arguments?.get(hashCode().toString()) as? GameScreenTags
             ?: throw IllegalArgumentException()
-        logD("$this: onAttach, screenTag: $screenTag")
+        logE("onAttach, screenTag: $screenTag")
         viewModel = ViewModelProvider(
             this, ViewModelFactory(screenTag)
-        )[GamesViewModel::class.java].also { it.getGames() }
+        )[GamesViewModel::class.java].also {
+            it.getGames()
+        }
+    }
 
+    override fun onResume() {
+        logE("onResume: $screenTag")
+        super.onResume()
+    }
+
+    override fun onPause() {
+        logE("onPause: $screenTag")
+        super.onPause()
     }
 
     override fun onCreateView(
@@ -57,14 +70,10 @@ class GamesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
+        logE("recyclerView: ${binding.gamesRecyclerView.hashCode()}")
         with(binding) {
             gamesRecyclerView.layoutManager =
-                StaggeredGridLayoutManager(
-                    GAMES_SPAN_COUNT,
-                    StaggeredGridLayoutManager.VERTICAL
-                ).also {
-                    it.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
-                }
+                StaggeredGridLayoutManager(GAMES_SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL)
             gamesRecyclerView.adapter = adapter
             RecyclerViewScrollListener(gamesRecyclerView, viewModel)
         }
@@ -74,9 +83,13 @@ class GamesFragment : Fragment() {
 
     private fun observeSingleEventsEvent() {
         viewModel.singleEvents.observe(viewLifecycleOwner) {
+//            logE("$this: observeSingleEventsEvent, screenTag: $screenTag")
             when (it) {
-                is GamesVMSingleEvents.NewGamesEvent ->
+                is GamesVMSingleEvents.NewGamesEvent -> {
+                    // TODO: Submit list after debounce
+                    // TODO: Add a tabsLayout, filters and search bar //STOPPED//
                     adapter.submitList(it.event.getData() ?: return@observe)
+                }
                 is GamesVMSingleEvents.NetworkConnectionLostEvent -> {
                     it.event.getData() ?: return@observe
                     requireContext().createMessageAlertDialog(checkNetworkConnectionMessage)
