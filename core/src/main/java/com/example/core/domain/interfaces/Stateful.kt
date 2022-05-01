@@ -1,4 +1,4 @@
-package com.example.core.domain.tools.interfaces
+package com.example.core.domain.interfaces
 
 interface Stateful {
     fun setNewState(newState: State)

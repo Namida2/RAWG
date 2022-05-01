@@ -36,7 +36,7 @@ dependencies {
     implementation project(':core')
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     implementation 'com.github.bumptech.glide:glide:4.13.1'
-    kapt 'com.github.bumptech.glide:compiler:4.13.0'
+    kapt 'com.github.bumptech.glide:compiler:4.13.1'
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
 
@@ -46,7 +46,7 @@ dependencies {
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation 'com.google.code.gson:gson:2.9.0'
 
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 

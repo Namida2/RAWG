@@ -2,9 +2,11 @@ package com.example.featureGames.domain
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.core.domain.tools.constants.StringConstants
 import com.example.featureGames.domain.di.GamesDepsStore.gamesAppComponent
 import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.featureGames.presentation.GamesViewModel
+import java.lang.IllegalArgumentException
 
 class ViewModelFactory(private val screenTag: GameScreenTags) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -15,7 +17,7 @@ class ViewModelFactory(private val screenTag: GameScreenTags) : ViewModelProvide
                     gamesAppComponent!!.provideAllGamesFactory()
                 )
             }
-            else -> throw IllegalArgumentException()
+            else -> throw IllegalArgumentException(StringConstants.UNKNOWN_VIEW_MODEL_CLASS + modelClass)
         }
         return viewModel as T
     }

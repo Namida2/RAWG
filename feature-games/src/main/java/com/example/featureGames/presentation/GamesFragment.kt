@@ -47,7 +47,7 @@ class GamesFragment : Fragment() {
         viewModel = ViewModelProvider(
             this, ViewModelFactory(screenTag)
         )[GamesViewModel::class.java].also {
-            it.getGames()
+//            it.getGames()
         }
     }
 

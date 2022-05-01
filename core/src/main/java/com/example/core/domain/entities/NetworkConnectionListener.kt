@@ -1,4 +1,4 @@
-package com.example.core.domain.tools
+package com.example.core.domain.entities
 
 import android.content.Context
 import android.net.ConnectivityManager

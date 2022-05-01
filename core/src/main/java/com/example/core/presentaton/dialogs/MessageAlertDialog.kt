@@ -1,4 +1,4 @@
-package com.example.core.domain.tools.dialogs
+package com.example.core.presentaton.dialogs
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog

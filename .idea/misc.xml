@@ -5,6 +5,8 @@
       <map>
         <entry key="..\:/Projects/AndroidProjects/RAWG/app/src/main/res/drawable/bg_rounded_16.xml" value="0.368" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/app/src/main/res/drawable/bg_rounded_black_lite_16.xml" value="0.141" />
+        <entry key="..\:/Projects/AndroidProjects/RAWG/app/src/main/res/drawable/bg_splash_creen.xml" value="0.141" />
+        <entry key="..\:/Projects/AndroidProjects/RAWG/app/src/main/res/drawable/bg_splash_screen.xml" value="0.141" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/app/src/main/res/drawable/bg_tab_indicator.xml" value="0.238" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/app/src/main/res/layout/layout_game_card.xml" value="0.25" />

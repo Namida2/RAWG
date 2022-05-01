@@ -1,7 +1,7 @@
 package com.example.rawg.application
 
 import android.app.Application
-import com.example.core.domain.tools.NetworkConnectionListener
+import com.example.core.domain.entities.NetworkConnectionListener
 import com.example.core.domain.tools.constants.RequestParams.API_KEY
 import com.example.core.domain.tools.constants.RequestParams.PARAM_KEY
 import com.example.core.domain.tools.constants.RequestParams.RAWG_BASE_URL

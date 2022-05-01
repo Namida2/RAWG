@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.domain.entities.GamesHttpException
 import com.example.core.domain.interfaces.OnPositionChangeListener
-import com.example.core.domain.tools.Message
-import com.example.core.domain.tools.NetworkConnectionListener.isNetworkConnected
-import com.example.core.domain.tools.NetworkConnectionListener.networkConnectionChanges
-import com.example.core.domain.tools.SingleEvent
+import com.example.core.domain.entities.Message
+import com.example.core.domain.entities.NetworkConnectionListener.isNetworkConnected
+import com.example.core.domain.entities.NetworkConnectionListener.networkConnectionChanges
+import com.example.core.domain.entities.SingleEvent
 import com.example.core.domain.tools.constants.Constants
 import com.example.core.domain.tools.constants.Constants.MIN_ITEMS_COUNT_FOR_NEXT_PAGE
 import com.example.core.domain.tools.constants.Messages.allGamesHaveBeenLoadedMessage
@@ -20,7 +20,7 @@ import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.enums.ResponseCodes
 import com.example.core.domain.tools.extensions.logD
 import com.example.core.domain.tools.extensions.logE
-import com.example.core.domain.tools.interfaces.Stateful
+import com.example.core.domain.interfaces.Stateful
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
 import com.example.featureGames.domain.model.*
 import com.example.featureGames.domain.model.interfaces.GameScreenItemType
