@@ -32,6 +32,7 @@ class GameImageLoader @Inject constructor(
         CoroutineExceptionHandler { coroutineContext, throwable ->
             logE("$this: coroutineContext: $coroutineContext, throwable: $throwable")
         }
+    private val defaultContext = Job() + Main.immediate
     override fun loadImage(
         imageUrlInfo: GameBackgroundImageUrlInfo,
         coroutineScope: CoroutineScope
@@ -41,7 +42,7 @@ class GameImageLoader @Inject constructor(
     }
 
     override fun onNetworkConnected(coroutineScope: CoroutineScope) {
-        coroutineScope.launch(Main.immediate) {
+        coroutineScope.launch(defaultContext) {
             imagesLinks.forEach { imageUrlInfo ->
                 getImage(imageUrlInfo, coroutineScope)
             }
@@ -63,7 +64,7 @@ class GameImageLoader @Inject constructor(
 
     private suspend fun onImageLoaded(imageUrlInfo: GameBackgroundImageUrlInfo, bitmap: Bitmap) {
         //Use new job to avoid cancellation of passed coroutineContext's job
-        withContext(Job()) {
+        withContext(defaultContext) {
             imagesLinks.remove(imageUrlInfo)
             onResultHandler.onImageLoaded(GameLoadedImageInfo(imageUrlInfo, bitmap))
         }

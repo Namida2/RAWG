@@ -11,11 +11,9 @@ import com.example.core.domain.tools.constants.Messages.defaultErrorMessage
 import com.example.core.domain.tools.extensions.logD
 import com.example.core.domain.tools.extensions.logE
 import com.example.rawg.domain.useCases.ReadFiltersUseCase
-import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers.Main
 import javax.inject.Inject
 
 sealed class MainVMStates : Stateful.State {
@@ -24,7 +22,8 @@ sealed class MainVMStates : Stateful.State {
     class Error(
         val message: Message = defaultErrorMessage
     ) : MainVMStates(), Stateful.TerminatingState
-    object FiltersLoadedSuccessfully : MainVMStates(), Stateful.TerminatingState
+
+    object FiltersLoadedSuccessfully : MainVMStates()
 }
 
 class MainViewModel @Inject constructor(
@@ -36,24 +35,34 @@ class MainViewModel @Inject constructor(
     private val coroutineExceptionHandler =
         CoroutineExceptionHandler { coroutineContext, throwable ->
             logE("$this: throwable: $throwable, coroutineContext: $coroutineContext")
-            setNewState(MainVMStates.Error())
+            MainScope().launch { setNewState(MainVMStates.Error()) }
         }
 
     init {
         viewModelScope.launch {
             NetworkConnectionListener.networkConnectionChanges.collect { isConnected ->
-                if (isConnected) {
-                    viewModelScope.coroutineContext.job.cancelChildren()
-                } else if(state.value is MainVMStates.LostNetworkConnection) {
-
-                }
+                if (isConnected && state.value is MainVMStates.LostNetworkConnection)
+                    readFilters()
+                else if (!isConnected)
+                    setNewState(MainVMStates.LostNetworkConnection)
             }
         }
     }
 
     fun readFilters() {
-        viewModelScope.launch(IO) {
+        if(state.value is MainVMStates.FiltersLoadedSuccessfully) return
+        // TODO: Put this things to cash
+        viewModelScope.launch(IO + coroutineExceptionHandler) {
+            logD("readFiltersUseCase")
             readFiltersUseCase.getFilters(this)
+            logD("isALive: $isActive")
+            withContext(Main) {
+                logD("withContext(Main)")
+                setNewState(MainVMStates.FiltersLoadedSuccessfully)
+                //Stop listen for network changes
+                viewModelScope.coroutineContext.job.cancelChildren()
+            }
+
         }
     }
 

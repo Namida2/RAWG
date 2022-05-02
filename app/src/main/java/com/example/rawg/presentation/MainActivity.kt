@@ -7,7 +7,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.core.domain.tools.constants.Constants.NUM_PAGES
+import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
 import com.example.core.domain.tools.enums.GameScreenTags
+import com.example.core.domain.tools.extensions.createMessageAlertDialog
 import com.example.core.domain.tools.extensions.logD
 import com.example.featureGames.presentation.GamesFragment
 import com.example.rawg.databinding.ActivityMainBinding
@@ -23,13 +25,14 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         iniBinding()
         getViewModel()
+        observeViewModelStates()
         viewModel.readFilters()
-        setContentView(binding.root)
     }
 
-    private fun iniBinding () {
+    private fun iniBinding() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         binding.viewPager.adapter = ScreenSlidePagerAdapter(this)
+        // TODO: Remove commentaries and add OnScreenChangedListener
         binding.viewPager.offscreenPageLimit = NUM_PAGES
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = gameScreenTags[position].screenTag
@@ -37,7 +40,26 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun getViewModel() {
-        viewModel = ViewModelProvider(this, ViewModelFactory(appComponent))[MainViewModel::class.java]
+        viewModel =
+            ViewModelProvider(this, ViewModelFactory(appComponent))[MainViewModel::class.java]
+    }
+
+    private fun observeViewModelStates() {
+        viewModel.state.observe(this) {
+            when (it) {
+                is MainVMStates.LostNetworkConnection ->
+                    createMessageAlertDialog(checkNetworkConnectionMessage)
+                        ?.show(supportFragmentManager, "")
+                is MainVMStates.FiltersLoadedSuccessfully -> {
+                    setContentView(binding.root)
+                }
+                is MainVMStates.Error -> {
+                    createMessageAlertDialog(it.message)
+                        ?.show(supportFragmentManager, "")
+                }
+                is MainVMStates.Default -> {}
+            }
+        }
     }
 
     private inner class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
@@ -50,6 +72,7 @@ class MainActivity : FragmentActivity() {
                 )
             }
         }
+
     }
 
     override fun onBackPressed() {

@@ -73,6 +73,7 @@ class GamesViewModel(
         listenChanges()
         viewModelScope.launch {
             networkConnectionChanges.collect { isConnected ->
+                logD(screenTag.toString())
                 if (isConnected) gamesUseCase.onNetworkConnected(remoteRepositoryScope)
                 else {
                     remoteRepositoryScope.coroutineContext.job.cancelChildren()
@@ -126,7 +127,9 @@ class GamesViewModel(
     }
 
     override fun onCleared() {
+        // TODO: Add a filtersBottomSheetDialog and resolve active state issue for fragments //STOPPED//
         // FIXME: Requests and images loading stop perform after canceling and are lost
+        //Losing images when: lost network connection -> close application -> return to application
 //        Maybe add a subcomponents for each gameScreen and make the queues singletons
 //        remoteRepositoryScope.cancel()
         super.onCleared()

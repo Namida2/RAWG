@@ -1,9 +1,6 @@
 package com.example.featureGames.data.requestQueue
 
-import androidx.annotation.MainThread
-import androidx.annotation.UiThread
 import com.example.core.domain.entities.GamesHttpException
-import com.example.core.domain.entities.HttpExceptionInfo
 import com.example.core.domain.tools.extensions.logD
 import com.example.featureGames.data.entities.rawGameResponse.GamesResponse
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueue
@@ -30,9 +27,11 @@ class GamesRequestQueue @Inject constructor(
         MutableSharedFlow<GamesHttpException>(onBufferOverflow = BufferOverflow.SUSPEND)
     override val responseHttpExceptions: SharedFlow<GamesHttpException> =
         _responseHttpExceptions
-    private val coroutineExceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+    private val coroutineExceptionHandler =
+        CoroutineExceptionHandler { coroutineContext, throwable ->
             logD("$this: coroutineContext: $coroutineContext, throwable: $throwable")
         }
+    private val defaultContext = Job() + Main.immediate
 
     override fun readGames(request: GamesGetRequest, coroutineScope: CoroutineScope) {
         requests[request.getPage()] = GameRequestInfo(request)
@@ -40,12 +39,12 @@ class GamesRequestQueue @Inject constructor(
     }
 
     private fun makeRequest(request: GamesGetRequest, coroutineScope: CoroutineScope) {
-        coroutineScope.launch() {
+        coroutineScope.launch {
             try {
                 requests[request.getPage()]?.setResponse(gamesService.getGames(request.getParams()))
-                //Use a new job (main scope in this case) to avoid cancellation of passed
-                // coroutineContext's job when it is suspended in sharedFlow after using emit
-                withContext(Main) {
+                //Use a new job to avoid cancellation of passed coroutineContext's job
+                // when it is suspended in sharedFlow after using emit
+                withContext(defaultContext) {
                     onRequestComplete(request)
                 }
             } catch (e: Exception) {
@@ -57,9 +56,9 @@ class GamesRequestQueue @Inject constructor(
     }
 
     override fun onNetworkConnected(coroutineScope: CoroutineScope) {
-        //Use the main thread to avoid the concurrentModificationException
+        //Use the defaultContext thread to avoid the concurrentModificationException
         // when trying to remove a request from map
-        coroutineScope.launch(Main.immediate) {
+        coroutineScope.launch(defaultContext) {
             requests.forEach { (_, requestInfo) ->
                 makeRequest(requestInfo.request, coroutineScope)
             }

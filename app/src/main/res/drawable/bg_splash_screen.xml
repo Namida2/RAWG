@@ -5,6 +5,6 @@
         android:width="172dp"
         android:height="32dp"
         android:gravity="center"
-        android:bottom="132dp"
+        android:bottom="100dp"
         android:drawable="@drawable/im_rawg_io"/>
 </layer-list>

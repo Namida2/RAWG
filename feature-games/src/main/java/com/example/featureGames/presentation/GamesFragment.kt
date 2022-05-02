@@ -47,7 +47,7 @@ class GamesFragment : Fragment() {
         viewModel = ViewModelProvider(
             this, ViewModelFactory(screenTag)
         )[GamesViewModel::class.java].also {
-//            it.getGames()
+            it.getGames()
         }
     }
 
@@ -59,6 +59,11 @@ class GamesFragment : Fragment() {
     override fun onPause() {
         logE("onPause: $screenTag")
         super.onPause()
+    }
+
+    override fun onStop() {
+        logE("onStop: $screenTag")
+        super.onStop()
     }
 
     override fun onCreateView(
@@ -83,6 +88,7 @@ class GamesFragment : Fragment() {
 
     private fun observeSingleEventsEvent() {
         viewModel.singleEvents.observe(viewLifecycleOwner) {
+            logD(screenTag.toString())
 //            logE("$this: observeSingleEventsEvent, screenTag: $screenTag")
             when (it) {
                 is GamesVMSingleEvents.NewGamesEvent -> {
