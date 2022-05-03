@@ -23,6 +23,7 @@ class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
         )
     )
 
+    // TODO: Add itemDecorations and making requests after setting filters //STOPPED//
     companion object {
         private val isExists = AtomicBoolean(false)
         fun getNewInstance(): FiltersBottomSheetDialog? =
