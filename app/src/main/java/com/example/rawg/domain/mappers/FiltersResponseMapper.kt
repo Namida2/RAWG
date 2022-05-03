@@ -1,9 +1,7 @@
 package com.example.rawg.domain.mappers
 
-import com.example.core.domain.entities.Filter
+import com.example.featureFiltersDialog.domain.Filter
 import com.example.core.domain.interfaces.Mapper
-import com.example.rawg.data.model.DevelopersResult
-import com.example.rawg.data.model.Root
 import com.example.rawg.data.model.interfaces.FilterParams
 import javax.inject.Inject
 

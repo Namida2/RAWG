@@ -4,7 +4,7 @@ import com.example.rawg.data.model.*
 import retrofit2.http.GET
 
 interface FiltersService {
-    @GET("developers+++")
+    @GET("developers")
     suspend fun getDevelopers(): Root<DevelopersResult>
 
     @GET("genres")

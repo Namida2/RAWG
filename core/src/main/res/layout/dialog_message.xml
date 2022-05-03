@@ -51,7 +51,7 @@
         android:layout_below="@id/containerText"
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
-        android:background="@drawable/bg_gradient_pink_to_purple" />
+        android:background="@drawable/bg_solid_gradient_blue_to_pink" />
 
     <Button
         android:id="@+id/actionButton"

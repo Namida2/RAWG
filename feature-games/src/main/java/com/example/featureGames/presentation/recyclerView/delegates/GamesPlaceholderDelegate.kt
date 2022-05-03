@@ -3,14 +3,14 @@ package com.example.featureGames.presentation.recyclerView.delegates
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewDelegate
+import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.BaseViewHolder
 import com.example.featureGames.R
 import com.example.featureGames.databinding.LayoutGamePlaceholderBinding
 import com.example.featureGames.domain.model.GamePlaceHolder
 
-class GamesPlaceholderDelegate: BaseRecyclerViewDelegate<GamePlaceHolder, LayoutGamePlaceholderBinding> {
+class GamesPlaceholderDelegate: RecyclerViewAdapterDelegate<GamePlaceHolder, LayoutGamePlaceholderBinding> {
     override val layoutId: Int
         get() = R.layout.layout_game_placeholder
 

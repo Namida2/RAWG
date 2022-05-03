@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.example.core.domain.tools.extensions.precomputeAndSetText
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewDelegate
+import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.BaseViewHolder
 import com.example.featureGames.R
 import com.example.featureGames.databinding.LayoutGameBinding
 import com.example.featureGames.domain.model.Game
 
-class GamesDelegate : BaseRecyclerViewDelegate<Game, LayoutGameBinding> {
+class GamesDelegate : RecyclerViewAdapterDelegate<Game, LayoutGameBinding> {
     override val layoutId: Int
         get() = R.layout.layout_game
 

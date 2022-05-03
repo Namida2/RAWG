@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.viewbinding.ViewBinding
 
 class BaseDiffItemCallback(
-    private val delegates: List<BaseRecyclerViewDelegate<out BaseRecyclerViewType, out ViewBinding>>
+    private val delegates: List<RecyclerViewAdapterDelegate<out BaseRecyclerViewType, out ViewBinding>>
 ) : DiffUtil.ItemCallback<BaseRecyclerViewType>() {
     override fun areItemsTheSame(
         oldItem: BaseRecyclerViewType,

@@ -18,6 +18,7 @@ import javax.inject.Inject
 
 sealed class MainVMStates : Stateful.State {
     object Default : MainVMStates()
+    object ReadingFilters : MainVMStates()
     object LostNetworkConnection : MainVMStates()
     class Error(
         val message: Message = defaultErrorMessage
@@ -50,7 +51,9 @@ class MainViewModel @Inject constructor(
     }
 
     fun readFilters() {
-        if(state.value is MainVMStates.FiltersLoadedSuccessfully) return
+        if(state.value is MainVMStates.FiltersLoadedSuccessfully ||
+            state.value == MainVMStates.ReadingFilters) return
+        _state.value = MainVMStates.ReadingFilters
         // TODO: Put this things to cash
         viewModelScope.launch(IO + coroutineExceptionHandler) {
             logD("readFiltersUseCase")

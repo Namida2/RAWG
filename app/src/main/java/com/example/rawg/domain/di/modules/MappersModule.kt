@@ -1,6 +1,6 @@
 package com.example.rawg.domain.di.modules
 
-import com.example.core.domain.entities.Filter
+import com.example.featureFiltersDialog.domain.Filter
 import com.example.core.domain.interfaces.Mapper
 import com.example.rawg.data.model.interfaces.FilterParams
 import com.example.rawg.domain.mappers.FiltersResponseMapper

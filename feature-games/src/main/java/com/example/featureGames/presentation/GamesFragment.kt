@@ -29,7 +29,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 
 class GamesFragment : Fragment() {
-    private lateinit var binding: FragmentGamesBinding
+    private var binding: FragmentGamesBinding? = null
     private lateinit var viewModel: GamesViewModel
     private lateinit var screenTag: GameScreenTags
     private val adapter = BaseRecyclerViewAdapter(
@@ -47,7 +47,7 @@ class GamesFragment : Fragment() {
         viewModel = ViewModelProvider(
             this, ViewModelFactory(screenTag)
         )[GamesViewModel::class.java].also {
-            it.getGames()
+//            it.getGames()
         }
     }
 
@@ -75,8 +75,8 @@ class GamesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
-        logE("recyclerView: ${binding.gamesRecyclerView.hashCode()}")
-        with(binding) {
+        logE("recyclerView: ${binding!!.gamesRecyclerView.hashCode()}")
+        with(binding!!) {
             gamesRecyclerView.layoutManager =
                 StaggeredGridLayoutManager(GAMES_SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL)
             gamesRecyclerView.adapter = adapter
@@ -123,7 +123,7 @@ class GamesFragment : Fragment() {
 
     private fun showSnackBar(messageStringId: Int) {
         viewModel.snackBarIsShowing = true
-        Snackbar.make(binding.root, messageStringId, Snackbar.LENGTH_LONG)
+        Snackbar.make(binding!!.root, messageStringId, Snackbar.LENGTH_LONG)
             .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.black))
             .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
                 override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
@@ -132,5 +132,10 @@ class GamesFragment : Fragment() {
                 }
             })
             .setTextColor(ContextCompat.getColor(requireContext(), R.color.white)).show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }

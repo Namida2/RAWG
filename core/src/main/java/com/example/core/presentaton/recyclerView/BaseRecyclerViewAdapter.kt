@@ -7,7 +7,7 @@ import androidx.viewbinding.ViewBinding
 import com.example.core.domain.tools.constants.StringConstants.VIEW_TYPE_NOT_FOUND
 
 class BaseRecyclerViewAdapter(
-    private val delegates: List<BaseRecyclerViewDelegate<out BaseRecyclerViewType, out ViewBinding>>
+    private val delegates: List<RecyclerViewAdapterDelegate<out BaseRecyclerViewType, out ViewBinding>>
 ) : ListAdapter<BaseRecyclerViewType, BaseViewHolder<BaseRecyclerViewType, ViewBinding>>(
     BaseDiffItemCallback(delegates)
 ) {
