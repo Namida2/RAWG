@@ -8,7 +8,7 @@ import androidx.fragment.app.viewModels
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
 import com.example.featureFiltersDialog.databinding.DialogFiltersBinding
 import com.example.featureFiltersDialog.domain.ViewModelFactory
-import com.example.featureFiltersDialog.presentation.recyclerView.FilterNameAdapterDelegate
+import com.example.featureFiltersDialog.presentation.recyclerView.FilterCategoryNameAdapterDelegate
 import com.example.featureFiltersDialog.presentation.recyclerView.FiltersContainerAdapterDelegate
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.util.concurrent.atomic.AtomicBoolean
@@ -18,7 +18,7 @@ class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
     private val viewModel by viewModels<FiltersViewModel> { ViewModelFactory }
     private val adapter = BaseRecyclerViewAdapter(
         listOf(
-            FilterNameAdapterDelegate(),
+            FilterCategoryNameAdapterDelegate(),
             FiltersContainerAdapterDelegate()
         )
     )

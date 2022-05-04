@@ -1,6 +1,6 @@
 package com.example.featureFiltersDialog.domain.di
 
-import com.example.featureFiltersDialog.domain.FiltersHolder
+import com.example.core.domain.entities.filters.FiltersHolder
 import dagger.Component
 
 @Component(dependencies = [FiltersAppComponentDeps::class])

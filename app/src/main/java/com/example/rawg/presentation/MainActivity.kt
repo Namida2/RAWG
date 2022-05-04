@@ -1,8 +1,16 @@
 package com.example.rawg.presentation
 
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.os.Bundle
+import android.transition.Explode
 import android.view.View
+import android.view.Window
+import android.view.animation.LinearInterpolator
+import android.view.animation.OvershootInterpolator
+import androidx.core.animation.doOnEnd
 import androidx.core.os.bundleOf
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -12,6 +20,7 @@ import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMe
 import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.createMessageAlertDialog
 import com.example.core.domain.tools.extensions.logD
+import com.example.core.domain.tools.extensions.prepareFadeInAnimation
 import com.example.core.domain.tools.extensions.showIfNotAdded
 import com.example.featureFiltersDialog.domain.di.FiltersDepsStore
 import com.example.featureFiltersDialog.presentation.FiltersBottomSheetDialog
@@ -20,6 +29,7 @@ import com.example.rawg.databinding.ActivityMainBinding
 import com.example.rawg.domain.ViewModelFactory
 import com.example.rawg.domain.tools.appComponent
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.transition.MaterialFade
 
 class MainActivity : FragmentActivity(), View.OnClickListener {
     private lateinit var binding: ActivityMainBinding
@@ -69,6 +79,9 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                         ?.show(supportFragmentManager, "")
                 is MainVMStates.FiltersLoadedSuccessfully -> {
                     setContentView(binding.root)
+                    binding.root.doOnPreDraw { rootView ->
+                        rootView.prepareFadeInAnimation().start()
+                    }
                 }
                 is MainVMStates.Error -> {
                     createMessageAlertDialog(it.message)
@@ -79,6 +92,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
             }
         }
     }
+
 
     private inner class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
         override fun getItemCount(): Int = NUM_PAGES

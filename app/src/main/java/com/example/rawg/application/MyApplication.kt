@@ -1,11 +1,14 @@
 package com.example.rawg.application
 
 import android.app.Application
+import androidx.room.Room
+import com.example.core.data.database.Database
 import com.example.core.domain.entities.NetworkConnectionListener
 import com.example.core.domain.tools.constants.RequestParams.API_KEY
 import com.example.core.domain.tools.constants.RequestParams.PARAM_KEY
 import com.example.core.domain.tools.constants.RequestParams.RAWG_BASE_URL
 import com.example.featureGames.domain.di.GamesDepsStore
+import com.example.core.R
 import com.example.rawg.domain.di.AppComponent
 import com.example.rawg.domain.di.DaggerAppComponent
 import okhttp3.HttpUrl
@@ -25,7 +28,13 @@ class MyApplication : Application() {
         _appComponent = DaggerAppComponent.builder()
             .putRetrofit(configureRetrofit())
             .putContext(applicationContext)
-            .build()
+            .putDatabase(
+                Room.databaseBuilder(
+                    applicationContext,
+                    Database::class.java,
+                    resources.getString(R.string.databaseName)
+                ).build()
+            ).build()
         provideFeatureGamesDeps()
         super.onCreate()
     }
@@ -37,12 +46,12 @@ class MyApplication : Application() {
             ).addInterceptor(Interceptor { chain ->
                 var request: Request = chain.request()
                 val url: HttpUrl = request.url.newBuilder()
-                    .addQueryParameter(PARAM_KEY, API_KEY).build()
+                    .addQueryParameter(PARAM_KEY.slug, API_KEY.slug).build()
                 request = request.newBuilder().url(url).build()
                 chain.proceed(request)
             }).build()
         return Retrofit.Builder()
-            .baseUrl(RAWG_BASE_URL)
+            .baseUrl(RAWG_BASE_URL.slug)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

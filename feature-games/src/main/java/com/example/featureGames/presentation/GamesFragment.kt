@@ -9,11 +9,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.core.R
 import com.example.core.domain.tools.constants.Constants.GAMES_SPAN_COUNT
-import com.example.core.domain.tools.constants.Constants.GAME_SCREEN_TAG
 import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
 import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.createMessageAlertDialog
@@ -25,11 +23,17 @@ import com.example.featureGames.domain.ViewModelFactory
 import com.example.featureGames.presentation.recyclerView.RecyclerViewScrollListener
 import com.example.featureGames.presentation.recyclerView.delegates.GamesDelegate
 import com.example.featureGames.presentation.recyclerView.delegates.GamesPlaceholderDelegate
+import com.example.featureGames.presentation.recyclerView.itemDecorations.GamesItemDecorations
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import kotlin.properties.Delegates
 
 class GamesFragment : Fragment() {
+    private var smallMargin by Delegates.notNull<Int>()
+    private var largeMargin by Delegates.notNull<Int>()
+    private var topMargin by Delegates.notNull<Int>()
     private var binding: FragmentGamesBinding? = null
+
     private lateinit var viewModel: GamesViewModel
     private lateinit var screenTag: GameScreenTags
     private val adapter = BaseRecyclerViewAdapter(
@@ -41,14 +45,18 @@ class GamesFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        smallMargin = resources.getDimensionPixelSize(R.dimen.small_margin)
+        largeMargin = resources.getDimensionPixelSize(R.dimen.large_margin)
+        topMargin = resources.getDimensionPixelSize(R.dimen.top_games_margin)
         screenTag = arguments?.get(hashCode().toString()) as? GameScreenTags
             ?: throw IllegalArgumentException()
         logE("onAttach, screenTag: $screenTag")
         viewModel = ViewModelProvider(
             this, ViewModelFactory(screenTag)
         )[GamesViewModel::class.java].also {
-//            it.getGames()
+            it.getGames()
         }
+
     }
 
     override fun onResume() {
@@ -80,11 +88,15 @@ class GamesFragment : Fragment() {
             gamesRecyclerView.layoutManager =
                 StaggeredGridLayoutManager(GAMES_SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL)
             gamesRecyclerView.adapter = adapter
+            gamesRecyclerView.addItemDecoration(GamesItemDecorations(
+                topMargin, largeMargin, smallMargin
+            ))
             RecyclerViewScrollListener(gamesRecyclerView, viewModel)
         }
         observeSingleEventsEvent()
         observeOnStateChangedEvent()
     }
+
 
     private fun observeSingleEventsEvent() {
         viewModel.singleEvents.observe(viewLifecycleOwner) {

@@ -2,8 +2,8 @@ package com.example.featureFiltersDialog.presentation
 
 import androidx.lifecycle.ViewModel
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
-import com.example.featureFiltersDialog.domain.FilterName
-import com.example.featureFiltersDialog.domain.FiltersHolder
+import com.example.core.domain.entities.filters.FilterCategoryName
+import com.example.core.domain.entities.filters.FiltersHolder
 
 class FiltersViewModel(
     private val filtersHolder: FiltersHolder
@@ -15,7 +15,7 @@ class FiltersViewModel(
 
     private fun prepareFiltersForView(): List<BaseRecyclerViewType> =
         filtersHolder.filters.map {
-            listOf<BaseRecyclerViewType>(FilterName(it.filterName)) + it
+            listOf<BaseRecyclerViewType>(FilterCategoryName(it.categoryName)) + it
         }.flatten()
 
 }

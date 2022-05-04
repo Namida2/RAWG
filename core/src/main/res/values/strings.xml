@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="databaseName">RAWGDatabase</string>
     <string name="defaultTitle">Oops!</string>
     <string name="defaultMessage">Something went wrong, please try again later</string>
     <string name="networkConnectionMessage">Please check your network connection.</string>

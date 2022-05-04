@@ -9,7 +9,7 @@ import com.example.core.presentaton.recyclerView.BaseViewHolder
 import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
 import com.example.featureFiltersDialog.R
 import com.example.featureFiltersDialog.databinding.LayoutFilterBinding
-import com.example.featureFiltersDialog.domain.Filter
+import com.example.core.domain.entities.filters.Filter
 
 class FiltersAdapterDelegate: RecyclerViewAdapterDelegate<Filter, LayoutFilterBinding> {
     override val layoutId: Int

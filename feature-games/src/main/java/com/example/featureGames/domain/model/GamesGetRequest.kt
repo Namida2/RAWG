@@ -8,12 +8,12 @@ import com.example.featureGames.domain.model.interfaces.GetRequest
 import java.text.SimpleDateFormat
 import java.util.*
 
-class GamesGetRequest: GetRequest {
+class GamesGetRequest : GetRequest {
     private var page: Int = FIRST_PAGE
     private var params = mutableMapOf<String, Any>()
     override fun next(): GamesGetRequest =
         this.copy().also {
-            it.params[PAGE] = ++it.page
+            it.params[PAGE.slug] = ++it.page
         }
 
     override fun getPage() = page
@@ -46,51 +46,63 @@ class GamesGetRequest: GetRequest {
                 dates = getDateString(endDate, timeZone) +
                         separator + getDateString(startDate, timeZone)
             }
+
         fun addPlatform(vararg platforms: String) = apply {
             this.platforms = platforms.joinToString(separator = separator)
         }
+
         fun addStores(vararg stores: String) = apply {
             this.stores = stores.joinToString(separator = separator)
         }
+
         fun addGenres(vararg genres: String) = apply {
             this.genres = genres.joinToString(separator = separator)
         }
+
         fun addDevelopers(vararg developers: String) = apply {
             this.developers = developers.joinToString(separator = separator)
         }
+
         fun addPublishers(vararg publishers: String) = apply {
             this.publishers = publishers.joinToString(separator = separator)
         }
+
         fun addTags(vararg tags: String) = apply {
             this.tags = tags.joinToString(separator = separator)
         }
+
         fun setMetacritic(minRating: Int, maxRating: Int) = apply {
             metacritic = "$minRating$separator$maxRating"
         }
+
         fun setPageSize(size: Int) = apply {
-            this.pageSize = if(size > 0) size else this.pageSize
+            this.pageSize = if (size > 0) size else this.pageSize
         }
+
         fun addOrdering(orderedField: String) = apply {
             this.ordering = orderedField
         }
+
         fun setPage(page: Int) = apply {
             this.page = page
         }
+
         fun build(): GamesGetRequest {
             val request = mutableMapOf<String, Any>()
-            dates?.let { request[RequestParams.DATES] = it }
-            platforms?.let { request[RequestParams.PLATFORMS] = it }
-            stores?.let { request[RequestParams.STORES] = it }
-            genres?.let { request[RequestParams.GENRES] = it }
-            developers?.let { request[RequestParams.DEVELOPERS] = it }
-            publishers?.let { request[RequestParams.PUBLISHERS] = it }
-            tags?.let { request[RequestParams.TAGS] = it }
-            metacritic?.let { request[RequestParams.METACRITIC] = it }
-            ordering?.let { request[RequestParams.ORDERING] = it }
-            request[RequestParams.PAGE_SIZE] = pageSize.toString()
-            request[RequestParams.PAGE] = page
+            dates?.let { request[RequestParams.DATES.slug] = it }
+            platforms?.let { request[RequestParams.PLATFORMS.slug] = it }
+            stores?.let { request[RequestParams.STORES.slug] = it }
+            genres?.let { request[RequestParams.GENRES.slug] = it }
+            developers?.let { request[RequestParams.DEVELOPERS.slug] = it }
+            publishers?.let { request[RequestParams.PUBLISHERS.slug] = it }
+            tags?.let { request[RequestParams.TAGS.slug] = it }
+            metacritic?.let { request[RequestParams.METACRITIC.slug] = it }
+            ordering?.let { request[RequestParams.ORDERING.slug] = it }
+            request[RequestParams.PAGE_SIZE.slug] = pageSize.toString()
+            request[PAGE.slug] = page
             return GamesGetRequest().also { it.params = request }
         }
+
         private fun getDateString(calendar: Calendar, timeZone: TimeZone) =
             SimpleDateFormat(datePattern, Locale.getDefault()).also {
                 it.timeZone = timeZone

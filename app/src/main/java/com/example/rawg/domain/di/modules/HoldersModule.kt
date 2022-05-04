@@ -1,7 +1,7 @@
 package com.example.rawg.domain.di.modules
 
-import com.example.featureFiltersDialog.domain.FiltersHolder
-import com.example.featureFiltersDialog.domain.FiltersHolderImpl
+import com.example.core.domain.entities.filters.FiltersHolder
+import com.example.core.domain.entities.filters.FiltersHolderImpl
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton

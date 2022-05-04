@@ -10,36 +10,36 @@ import com.example.core.presentaton.recyclerView.BaseViewHolder
 import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
 import com.example.featureFiltersDialog.R
 import com.example.featureFiltersDialog.databinding.LayoutFiltersContainerBinding
-import com.example.featureFiltersDialog.domain.FiltersRecyclerViewType
+import com.example.core.domain.entities.filters.FilterCategory
 
 class FiltersContainerAdapterDelegate :
-    RecyclerViewAdapterDelegate<FiltersRecyclerViewType, LayoutFiltersContainerBinding> {
+    RecyclerViewAdapterDelegate<FilterCategory, LayoutFiltersContainerBinding> {
     override val layoutId: Int
         get() = R.layout.layout_filter
 
-    override fun isItMe(item: BaseRecyclerViewType): Boolean = item is FiltersRecyclerViewType
+    override fun isItMe(item: BaseRecyclerViewType): Boolean = item is FilterCategory
 
     override fun getViewHolder(
         inflater: LayoutInflater,
         parent: ViewGroup
-    ): BaseViewHolder<FiltersRecyclerViewType, LayoutFiltersContainerBinding> =
+    ): BaseViewHolder<FilterCategory, LayoutFiltersContainerBinding> =
         FiltersContainerViewHolder(
             LayoutFiltersContainerBinding.inflate(inflater, parent, false)
         )
 
-    override fun getDiffItemCallback(): DiffUtil.ItemCallback<FiltersRecyclerViewType> =
+    override fun getDiffItemCallback(): DiffUtil.ItemCallback<FilterCategory> =
         diffItemCallback
 
-    private val diffItemCallback = object : DiffUtil.ItemCallback<FiltersRecyclerViewType>() {
+    private val diffItemCallback = object : DiffUtil.ItemCallback<FilterCategory>() {
         override fun areItemsTheSame(
-            oldItem: FiltersRecyclerViewType,
-            newItem: FiltersRecyclerViewType
+            oldItem: FilterCategory,
+            newItem: FilterCategory
         ): Boolean =
-            oldItem.filterName == newItem.filterName
+            oldItem.categoryName == newItem.categoryName
 
         override fun areContentsTheSame(
-            oldItem: FiltersRecyclerViewType,
-            newItem: FiltersRecyclerViewType
+            oldItem: FilterCategory,
+            newItem: FilterCategory
         ): Boolean =
             oldItem == newItem
     }
@@ -48,7 +48,7 @@ class FiltersContainerAdapterDelegate :
 
 class FiltersContainerViewHolder(
     private val binding: LayoutFiltersContainerBinding
-) : BaseViewHolder<FiltersRecyclerViewType, LayoutFiltersContainerBinding>(binding) {
+) : BaseViewHolder<FilterCategory, LayoutFiltersContainerBinding>(binding) {
     private val adapter: BaseRecyclerViewAdapter = BaseRecyclerViewAdapter(
         listOf(FiltersAdapterDelegate())
     ).also {
@@ -59,8 +59,8 @@ class FiltersContainerViewHolder(
         }
     }
 
-    override fun onBind(item: FiltersRecyclerViewType) {
-        adapter.submitList(item.filters)
+    override fun onBind(item: FilterCategory) {
+        adapter.submitList(item.filters as List<BaseRecyclerViewType>?)
     }
 
 }

@@ -3,6 +3,9 @@
     android:layout_width="wrap_content"
     android:id="@+id/filterName"
     android:textSize="12sp"
+    android:layout_marginTop="24dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginBottom="8dp"
     android:fontFamily="@font/montserrat_semi_bold"
     android:textColor="@color/white"
     android:layout_height="wrap_content"/>
