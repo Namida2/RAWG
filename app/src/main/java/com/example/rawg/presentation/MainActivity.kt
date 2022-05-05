@@ -48,7 +48,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
     private fun iniBinding() {
         binding = ActivityMainBinding.inflate(layoutInflater)
-        iniBinding()
+        initViewPager()
         binding.filtersCardView.setOnClickListener(this)
     }
 
