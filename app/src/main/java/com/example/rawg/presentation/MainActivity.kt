@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.example.core.domain.tools.constants.Constants.NUM_PAGES
 import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
 import com.example.core.domain.tools.enums.GameScreenTags
@@ -28,6 +29,8 @@ import com.example.featureGames.presentation.GamesFragment
 import com.example.rawg.databinding.ActivityMainBinding
 import com.example.rawg.domain.ViewModelFactory
 import com.example.rawg.domain.tools.appComponent
+import com.example.rawg.presentation.viewPager.GamePagerAdapter
+import com.example.rawg.presentation.viewPager.getCurrentFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.transition.MaterialFade
 
@@ -45,12 +48,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
     private fun iniBinding() {
         binding = ActivityMainBinding.inflate(layoutInflater)
-        binding.viewPager.adapter = ScreenSlidePagerAdapter(this)
-        // TODO: Remove commentaries and add OnScreenChangedListener
-//        binding.viewPager.offscreenPageLimit = NUM_PAGES
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = gameScreenTags[position].screenTag
-        }.attach()
+        iniBinding()
         binding.filtersCardView.setOnClickListener(this)
     }
 
@@ -58,6 +56,21 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
         FiltersDepsStore.deps = appComponent
         FiltersBottomSheetDialog.getNewInstance()
             ?.show(supportFragmentManager, "")
+    }
+
+    private fun initViewPager() {
+        with(binding) {
+            viewPager.adapter = GamePagerAdapter(this@MainActivity, gameScreenTags)
+            viewPager.offscreenPageLimit = NUM_PAGES
+            TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+                tab.text = gameScreenTags[position].screenTag
+            }.attach()
+            viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                   logD(viewPager.getCurrentFragment<GamesFragment>(supportFragmentManager).toString())
+                }
+            })
+        }
     }
 
     private fun getViewModel() {
@@ -91,20 +104,6 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                 is MainVMStates.Default -> {}
             }
         }
-    }
-
-
-    private inner class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
-        override fun getItemCount(): Int = NUM_PAGES
-        override fun createFragment(position: Int): Fragment = run {
-            logD("ScreenSlidePagerAdapter, screenTag: ${gameScreenTags[position]}")
-            GamesFragment().also {
-                it.arguments = bundleOf(
-                    it.hashCode().toString() to gameScreenTags[position]
-                )
-            }
-        }
-
     }
 
 }

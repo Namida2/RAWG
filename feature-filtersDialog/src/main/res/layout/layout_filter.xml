@@ -4,18 +4,18 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
-    android:layout_marginEnd="8dp"
     android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
     android:layout_marginBottom="8dp"
     android:clickable="true"
-    app:cardBackgroundColor="@color/blackLite"
     android:focusable="true"
+    app:cardBackgroundColor="@color/blackLite"
     app:cardCornerRadius="90dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_black_lite_rounded"
+        android:background="@drawable/bg_black_lite_stroke_gradient_blue_to_pink_90"
         android:orientation="horizontal">
 
         <TextView

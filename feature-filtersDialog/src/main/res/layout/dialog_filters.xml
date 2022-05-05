@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -24,5 +24,42 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/layout_filter" />
 
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        app:cardCornerRadius="16dp"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        app:cardBackgroundColor="@color/blackLite"
+        android:layout_height="wrap_content">
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                style="@style/buttonStyle"
+                android:text="Apply"
+                android:layout_marginBottom="8dp"
+                android:layout_height="wrap_content"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:text="Cancel"
+                android:minHeight="36dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:fontFamily="@font/montserrat_medium"
+                android:background="@drawable/bg_black_lite_stroke_gradient_blue_to_pink_8"
+                android:layout_marginBottom="32dp"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
