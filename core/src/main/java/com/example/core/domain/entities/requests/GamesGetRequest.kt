@@ -10,16 +10,17 @@ import java.util.*
 
 class GamesGetRequest : GetRequest {
     private var page: Int = FIRST_PAGE
-    private var _params = mutableMapOf<String, Any>()
-    override val params = mutableMapOf<String, Any>()
+    private var params = mutableMapOf<String, Any>()
     override fun next(): GamesGetRequest =
         this.copy().also {
-            it._params[PAGE.slug] = ++it.page
+            it.params[PAGE.slug] = ++it.page
         }
 
     override fun getPage() = page
-    fun copy(page: Int = this.page, params: Map<String, Any> = this._params): GamesGetRequest =
-        GamesGetRequest().also { it.page = page; it._params = params.toMutableMap() }
+    override fun getParams(): Map<String, Any> = params
+
+    fun copy(page: Int = this.page, params: Map<String, Any> = this.params): GamesGetRequest =
+        GamesGetRequest().also { it.page = page; it.params = params.toMutableMap() }
 
     class Builder {
         private val separator = ","
@@ -100,7 +101,7 @@ class GamesGetRequest : GetRequest {
             ordering?.let { request[RequestParams.ORDERING.slug] = it }
             request[RequestParams.PAGE_SIZE.slug] = pageSize.toString()
             request[PAGE.slug] = page
-            return GamesGetRequest().also { it._params = request }
+            return GamesGetRequest().also { it.params = request }
         }
 
         private fun getDateString(calendar: Calendar, timeZone: TimeZone) =

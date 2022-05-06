@@ -41,7 +41,7 @@ class GamesRequestQueue @Inject constructor(
     private fun makeRequest(request: GamesGetRequest, coroutineScope: CoroutineScope) {
         coroutineScope.launch {
             try {
-                requests[request.getPage()]?.setResponse(gamesService.getGames(request.params))
+                requests[request.getPage()]?.setResponse(gamesService.getGames(request.getParams()))
                 //Use a new job to avoid cancellation of passed coroutineContext's job
                 // when it is suspended in sharedFlow after using emit
                 withContext(defaultContext) {
