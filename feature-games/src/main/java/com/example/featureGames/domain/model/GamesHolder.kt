@@ -1,11 +1,11 @@
 package com.example.featureGames.domain.model
 
 import android.graphics.Bitmap
+import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.tools.constants.StringConstants.GAME_NOT_FOUND
 import com.example.core.domain.tools.constants.StringConstants.GAME_SCREEN_TYPE_MISMATCH
 import com.example.core.domain.tools.constants.StringConstants.PAGE_NOT_FOUND
 import com.example.core.domain.tools.enums.GameScreenTags
-import com.example.core.domain.tools.extensions.logD
 import com.example.featureGames.domain.model.interfaces.GameScreenItemType
 import com.example.featureGames.domain.tools.*
 import kotlinx.coroutines.channels.BufferOverflow

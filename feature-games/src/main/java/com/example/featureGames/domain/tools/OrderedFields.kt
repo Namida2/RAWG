@@ -1,6 +1,6 @@
 package com.example.featureGames.domain.tools
 
-import com.example.core.domain.tools.constants.RequestParams
+import com.example.core.domain.tools.enums.RequestParams
 
 private const val reverseOrderSign = "-"
 enum class OrderedFields(val orderingField: String) {

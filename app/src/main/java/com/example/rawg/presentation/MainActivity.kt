@@ -1,20 +1,10 @@
 package com.example.rawg.presentation
 
-import android.animation.ObjectAnimator
-import android.animation.PropertyValuesHolder
 import android.os.Bundle
-import android.transition.Explode
 import android.view.View
-import android.view.Window
-import android.view.animation.LinearInterpolator
-import android.view.animation.OvershootInterpolator
-import androidx.core.animation.doOnEnd
-import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.core.domain.tools.constants.Constants.NUM_PAGES
 import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
@@ -22,7 +12,6 @@ import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.createMessageAlertDialog
 import com.example.core.domain.tools.extensions.logD
 import com.example.core.domain.tools.extensions.prepareFadeInAnimation
-import com.example.core.domain.tools.extensions.showIfNotAdded
 import com.example.featureFiltersDialog.domain.di.FiltersDepsStore
 import com.example.featureFiltersDialog.presentation.FiltersBottomSheetDialog
 import com.example.featureGames.presentation.GamesFragment
@@ -32,7 +21,6 @@ import com.example.rawg.domain.tools.appComponent
 import com.example.rawg.presentation.viewPager.GamePagerAdapter
 import com.example.rawg.presentation.viewPager.getCurrentFragment
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.android.material.transition.MaterialFade
 
 class MainActivity : FragmentActivity(), View.OnClickListener {
     private lateinit var binding: ActivityMainBinding
@@ -65,9 +53,12 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                 tab.text = gameScreenTags[position].screenTag
             }.attach()
-            viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+            viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
-                   logD(viewPager.getCurrentFragment<GamesFragment>(supportFragmentManager).toString())
+                    logD(
+                        viewPager.getCurrentFragment<GamesFragment>(supportFragmentManager)
+                            .toString()
+                    )
                 }
             })
         }

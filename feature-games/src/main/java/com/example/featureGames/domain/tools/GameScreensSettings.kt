@@ -1,7 +1,7 @@
 package com.example.featureGames.domain.tools
 
-import com.example.featureGames.domain.model.GamesGetRequest
-import com.example.featureGames.domain.model.GamesGetRequest.Builder.Companion.defaultTimeZone
+import com.example.core.domain.entities.requests.GamesGetRequest
+import com.example.core.domain.entities.requests.GamesGetRequest.Builder.Companion.defaultTimeZone
 import java.util.*
 interface GameScreensSettings {
     val request: GamesGetRequest

@@ -4,9 +4,9 @@ import android.app.Application
 import androidx.room.Room
 import com.example.core.data.database.Database
 import com.example.core.domain.entities.NetworkConnectionListener
-import com.example.core.domain.tools.constants.RequestParams.API_KEY
-import com.example.core.domain.tools.constants.RequestParams.PARAM_KEY
-import com.example.core.domain.tools.constants.RequestParams.RAWG_BASE_URL
+import com.example.core.domain.tools.enums.RequestParams.API_KEY
+import com.example.core.domain.tools.enums.RequestParams.PARAM_KEY
+import com.example.core.domain.tools.enums.RequestParams.RAWG_BASE_URL
 import com.example.featureGames.domain.di.GamesDepsStore
 import com.example.core.R
 import com.example.rawg.domain.di.AppComponent

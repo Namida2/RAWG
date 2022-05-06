@@ -21,42 +21,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/layout_filter" />
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:cardCornerRadius="16dp"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         app:cardBackgroundColor="@color/blackLite"
-        android:layout_height="wrap_content">
+        app:cardCornerRadius="16dp"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior">
 
         <LinearLayout
-            android:layout_marginTop="24dp"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="match_parent"
-                style="@style/buttonStyle"
-                android:text="Apply"
-                android:layout_marginBottom="8dp"
-                android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="match_parent"
-                android:text="Cancel"
-                android:minHeight="36dp"
+                android:id="@+id/clearButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:fontFamily="@font/montserrat_medium"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_black_lite_stroke_gradient_blue_to_pink_8"
-                android:layout_marginBottom="32dp"
-                android:layout_height="wrap_content"/>
+                android:fontFamily="@font/montserrat_medium"
+                android:minHeight="36dp"
+                android:text="Cleare"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/acceptButton"
+                style="@style/buttonStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Apply" />
 
         </LinearLayout>
 

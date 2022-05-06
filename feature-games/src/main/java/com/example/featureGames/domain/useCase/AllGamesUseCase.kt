@@ -1,6 +1,7 @@
 package com.example.featureGames.domain.useCase
 
 import com.example.core.domain.entities.GamesHttpException
+import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.logD
 import com.example.featureGames.data.entities.imageLoader.GameBackgroundImageUrlInfo

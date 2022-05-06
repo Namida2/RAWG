@@ -1,5 +1,6 @@
 package com.example.featureGames.domain.model
 
+import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.featureGames.domain.model.interfaces.GameScreenItemType
 import com.example.core.domain.tools.enums.GameScreenTags
 

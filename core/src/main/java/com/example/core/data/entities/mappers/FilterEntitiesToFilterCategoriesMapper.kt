@@ -12,7 +12,7 @@ class FilterEntitiesToFilterCategoriesMapper @Inject constructor():
         val filtersHolder = mutableListOf<FilterCategory>()
         value.forEach {
             getFilterCategory(it.categoryName, filtersHolder)
-                .filters.add(Filter(it.name, it.slug))
+                .filters.add(Filter(it.categoryName, it.name, it.slug))
         }
         return filtersHolder
     }

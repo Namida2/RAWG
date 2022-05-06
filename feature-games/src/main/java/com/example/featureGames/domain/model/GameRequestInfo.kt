@@ -1,8 +1,9 @@
 package com.example.featureGames.domain.model
 
+import com.example.core.domain.entities.requests.GamesGetRequest
+import com.example.core.domain.interfaces.remoteRepository.GetRequest
+import com.example.core.domain.interfaces.remoteRepository.Response
 import com.example.featureGames.data.entities.rawGameResponse.GamesResponse
-import com.example.featureGames.domain.model.interfaces.GetRequest
-import com.example.featureGames.domain.model.interfaces.Response
 
 sealed class RequestSates {
     object Completed : RequestSates()
@@ -15,15 +16,16 @@ data class GameRequestInfo(
     override val request: GamesGetRequest,
     private var response: GamesResponse? = null,
     override var state: RequestSates = RequestSates.Default
-): RequestInfo<GamesGetRequest, GamesResponse?>{
+) : RequestInfo<GamesGetRequest, GamesResponse?> {
     override fun setResponse(response: GamesResponse?) {
         state = RequestSates.Completed
         this.response = response
     }
+
     override fun getResponse(): GamesResponse? = response
 }
 
-interface RequestInfo<MyRequest: GetRequest, MyResponse: Response?> {
+interface RequestInfo<MyRequest : GetRequest, MyResponse : Response?> {
     val request: MyRequest
     var state: RequestSates
     fun setResponse(response: MyResponse)

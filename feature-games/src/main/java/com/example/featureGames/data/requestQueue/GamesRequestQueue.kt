@@ -7,7 +7,7 @@ import com.example.featureGames.data.requestQueue.interfaces.RequestQueue
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueueResultHandler
 import com.example.featureGames.data.requestQueue.interfaces.RequestsQueueChanges
 import com.example.featureGames.domain.model.GameRequestInfo
-import com.example.featureGames.domain.model.GamesGetRequest
+import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.featureGames.domain.repositories.RAWGamesService
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main
@@ -41,7 +41,7 @@ class GamesRequestQueue @Inject constructor(
     private fun makeRequest(request: GamesGetRequest, coroutineScope: CoroutineScope) {
         coroutineScope.launch {
             try {
-                requests[request.getPage()]?.setResponse(gamesService.getGames(request.getParams()))
+                requests[request.getPage()]?.setResponse(gamesService.getGames(request.params))
                 //Use a new job to avoid cancellation of passed coroutineContext's job
                 // when it is suspended in sharedFlow after using emit
                 withContext(defaultContext) {

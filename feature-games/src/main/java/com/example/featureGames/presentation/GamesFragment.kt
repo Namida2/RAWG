@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.core.R
-import com.example.core.domain.tools.constants.Constants.GAMES_SPAN_COUNT
+import com.example.core.domain.tools.constants.Constants.SPAN_COUNT
 import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
 import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.createMessageAlertDialog
@@ -86,7 +86,7 @@ class GamesFragment : Fragment() {
         logE("recyclerView: ${binding!!.gamesRecyclerView.hashCode()}")
         with(binding!!) {
             gamesRecyclerView.layoutManager =
-                StaggeredGridLayoutManager(GAMES_SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL)
+                StaggeredGridLayoutManager(SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL)
             gamesRecyclerView.adapter = adapter
             gamesRecyclerView.addItemDecoration(GamesItemDecorations(
                 topMargin, largeMargin, smallMargin

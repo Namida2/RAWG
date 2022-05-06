@@ -1,6 +1,6 @@
 package com.example.featureGames.data.entities.rawGameResponse
 
-import com.example.featureGames.domain.model.interfaces.Response
+import com.example.core.domain.interfaces.remoteRepository.Response
 import com.google.gson.annotations.SerializedName
 
 class GamesResponse : Response {

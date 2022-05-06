@@ -1,25 +1,25 @@
-package com.example.featureGames.domain.model
+package com.example.core.domain.entities.requests
 
+import com.example.core.domain.interfaces.remoteRepository.GetRequest
 import com.example.core.domain.tools.constants.Constants.FIRST_PAGE
 import com.example.core.domain.tools.constants.Constants.PAGE_SIZE
-import com.example.core.domain.tools.constants.RequestParams
-import com.example.core.domain.tools.constants.RequestParams.PAGE
-import com.example.featureGames.domain.model.interfaces.GetRequest
+import com.example.core.domain.tools.enums.RequestParams
+import com.example.core.domain.tools.enums.RequestParams.PAGE
 import java.text.SimpleDateFormat
 import java.util.*
 
 class GamesGetRequest : GetRequest {
     private var page: Int = FIRST_PAGE
-    private var params = mutableMapOf<String, Any>()
+    private var _params = mutableMapOf<String, Any>()
+    override val params = mutableMapOf<String, Any>()
     override fun next(): GamesGetRequest =
         this.copy().also {
-            it.params[PAGE.slug] = ++it.page
+            it._params[PAGE.slug] = ++it.page
         }
 
     override fun getPage() = page
-    override fun getParams() = params.toMap()
-    fun copy(page: Int = this.page, params: Map<String, Any> = this.params): GamesGetRequest =
-        GamesGetRequest().also { it.page = page; it.params = params.toMutableMap() }
+    fun copy(page: Int = this.page, params: Map<String, Any> = this._params): GamesGetRequest =
+        GamesGetRequest().also { it.page = page; it._params = params.toMutableMap() }
 
     class Builder {
         private val separator = ","
@@ -100,7 +100,7 @@ class GamesGetRequest : GetRequest {
             ordering?.let { request[RequestParams.ORDERING.slug] = it }
             request[RequestParams.PAGE_SIZE.slug] = pageSize.toString()
             request[PAGE.slug] = page
-            return GamesGetRequest().also { it.params = request }
+            return GamesGetRequest().also { it._params = request }
         }
 
         private fun getDateString(calendar: Calendar, timeZone: TimeZone) =
