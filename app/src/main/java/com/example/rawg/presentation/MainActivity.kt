@@ -2,6 +2,7 @@ package com.example.rawg.presentation
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -20,9 +21,10 @@ import com.example.rawg.domain.ViewModelFactory
 import com.example.rawg.domain.tools.appComponent
 import com.example.rawg.presentation.viewPager.GamePagerAdapter
 import com.example.rawg.presentation.viewPager.getCurrentFragment
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.tabs.TabLayoutMediator
 
-class MainActivity : FragmentActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private val gameScreenTags = GameScreenTags.values()

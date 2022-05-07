@@ -48,6 +48,7 @@ class GamesRequestQueue @Inject constructor(
                     onRequestComplete(request)
                 }
             } catch (e: Exception) {
+                // TODO: Handle timeout
                 logD("requests in exception: ${requests.keys}")
                 coroutineExceptionHandler.handleException(coroutineContext, e)
                 (e as? HttpException)?.let { onException(GamesHttpException(e, request.getPage())) }

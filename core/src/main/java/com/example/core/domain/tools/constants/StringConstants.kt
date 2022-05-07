@@ -1,6 +1,9 @@
 package com.example.core.domain.tools.constants
 
 object StringConstants {
+    const val EMPTY_STRING = ""
+    const val DEFAULT_DATE = "0000.00.00"
+    const val DEFAULT_METACRITIC = "0"
     const val FILTER_CATEGORY_NOT_FOUND = "FilterCategory not found. FilterCategory: "
     const val UNKNOWN_VIEW_MODEL_CLASS = "Unknown ViewModel class. Class: "
     const val VIEW_TYPE_NOT_FOUND = "View type was not found in recyclerViewTypes. Item: "

@@ -14,7 +14,6 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/feature-filtersDialog" />
             <option value="$PROJECT_DIR$/feature-games" />
-            <option value="$PROJECT_DIR$/feature-splashScreen" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

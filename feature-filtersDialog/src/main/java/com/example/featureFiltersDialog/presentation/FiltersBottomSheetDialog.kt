@@ -5,15 +5,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.core.domain.tools.extensions.logD
+import com.example.core.domain.tools.constants.StringConstants.DEFAULT_DATE
+import com.example.core.domain.tools.constants.StringConstants.DEFAULT_METACRITIC
+import com.example.core.domain.tools.constants.StringConstants.EMPTY_STRING
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
 import com.example.featureFiltersDialog.databinding.DialogFiltersBinding
 import com.example.featureFiltersDialog.domain.ViewModelFactory
+import com.example.featureFiltersDialog.domain.entities.toDateString
 import com.example.featureFiltersDialog.presentation.recyclerView.FilterCategoryNameAdapterDelegate
 import com.example.featureFiltersDialog.presentation.recyclerView.FiltersContainerAdapterDelegate
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.datepicker.MaterialDatePicker
 import java.util.concurrent.atomic.AtomicBoolean
 
 class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
@@ -54,8 +60,30 @@ class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
             viewModel.getFilters()
             acceptButton.setOnClickListener { viewModel.onAcceptButtonClick(adapter.currentList) }
             clearButton.setOnClickListener { viewModel.onClearButtonClick() }
+            setListeners()
         }
         observeViewModelEvents()
+    }
+
+    private fun setListeners() {
+        setOnDateClickListener(binding!!.releaseStartDateTextView)
+        setOnDateClickListener(binding!!.releaseEndDateTextView)
+        binding!!.metacriticMinTexView.addTextChangedListener(viewModel.metacriticMinTextWatcher)
+        binding!!.metacriticMaxTexView.addTextChangedListener(viewModel.metacriticMaxTextWatcher)
+    }
+
+    private fun setOnDateClickListener(field: TextView) {
+        field.setOnClickListener {
+            MaterialDatePicker
+                .Builder.datePicker()
+                .setTitleText("Select date")
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .build().also {
+                it.addOnPositiveButtonClickListener { dateLong ->
+                    field.text = dateLong.toDateString()
+                }
+            }.show(parentFragmentManager, "")
+        }
     }
 
     private fun observeViewModelEvents() {
@@ -63,14 +91,35 @@ class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
             when (it) {
                 is FilterVMEvents.OnNewFilterItemsEvent -> {
                     it.event.getData()?.let { filterItems ->
-                        val current = adapter.currentList
-                        if (current == filterItems)
-                            logD("same")
-                        else logD("new")
                         adapter.submitList(filterItems)
                     }
                 }
+                is FilterVMEvents.OnMinMetacriticWrongValue -> {
+                    onNewMetacriticValue(it.event.getData(), binding!!.metacriticMinTexView)
+                }
+                is FilterVMEvents.OnMaxMetacriticWrongValue -> {
+                    onNewMetacriticValue(it.event.getData(), binding!!.metacriticMaxTexView)
+                }
+                is FilterVMEvents.OnFilterClearedEvent -> {
+                    it.event.getData()?.let { filterItems ->
+                        adapter.submitList(filterItems)
+                        with(binding!!) {
+                            searchEditText.setText(EMPTY_STRING)
+                            metacriticMinTexView.setText(DEFAULT_METACRITIC)
+                            metacriticMaxTexView.setText(DEFAULT_METACRITIC)
+                            releaseStartDateTextView.text = DEFAULT_DATE
+                            releaseEndDateTextView.text = DEFAULT_DATE
+                        }
+                    }
+                }
             }
+        }
+    }
+
+    private fun onNewMetacriticValue(value: String?, field: EditText) {
+        value?.let { collectValue ->
+            field.setText(collectValue)
+            field.setSelection(value.length)
         }
     }
 

@@ -6,21 +6,165 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/searchEditText"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="38dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_rounded_black_lite_16"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="12dp"
+            android:elevation="8dp"
+            android:fontFamily="@font/montserrat_medium"
+            android:hint="Game"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/grayLite"
+            android:textCursorDrawable="@null"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/filtersCardView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:text="Release start:"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/releaseStartDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ems="5"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="0000.00.00"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:text="Release end:"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/releaseEndDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ems="5"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="0000.00.00"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:text="Metacritic start:"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/metacriticMinTexView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="@color/blackLite"
+                android:ems="3"
+                android:fontFamily="@font/montserrat_medium"
+                android:hint="70"
+                android:inputType="number"
+                android:maxLength="3"
+                android:textColor="@color/white"
+                android:textColorHint="@color/grayLite"
+                android:textCursorDrawable="@null"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:text="Metacritic end:"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/metacriticMaxTexView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="@color/blackLite"
+                android:ems="3"
+                android:fontFamily="@font/montserrat_medium"
+                android:hint="100"
+                android:inputType="date"
+                android:maxLength="3"
+                android:textColor="@color/white"
+
+                android:textColorHint="@color/grayLite"
+                android:textCursorDrawable="@null"
+                android:textSize="12sp" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginStart="100dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="100dp"
-        android:background="@color/white"
         android:elevation="8dp"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="90dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/filtersContainerRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="200dp"
         tools:listitem="@layout/layout_filter" />
 
     <com.google.android.material.card.MaterialCardView
@@ -40,11 +184,11 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/clearButton"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
+                android:layout_weight="1"
                 android:background="@drawable/bg_black_lite_stroke_gradient_blue_to_pink_8"
                 android:fontFamily="@font/montserrat_medium"
                 android:minHeight="36dp"
@@ -56,9 +200,9 @@
                 android:id="@+id/acceptButton"
                 style="@style/buttonStyle"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
+                android:layout_weight="1"
                 android:text="Apply" />
 
         </LinearLayout>
