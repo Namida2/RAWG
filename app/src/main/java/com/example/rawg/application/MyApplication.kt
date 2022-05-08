@@ -18,6 +18,7 @@ import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 class MyApplication : Application() {
 
@@ -40,7 +41,8 @@ class MyApplication : Application() {
     }
 
     private fun configureRetrofit(): Retrofit {
-        val client = OkHttpClient.Builder()
+        val okHttpClient = OkHttpClient.Builder()
+            .readTimeout(500, TimeUnit.MILLISECONDS)
             .addInterceptor(
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
             ).addInterceptor(Interceptor { chain ->
@@ -53,7 +55,7 @@ class MyApplication : Application() {
         return Retrofit.Builder()
             .baseUrl(RAWG_BASE_URL.slug)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
+            .client(okHttpClient)
             .build()
     }
 

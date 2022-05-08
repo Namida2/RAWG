@@ -105,8 +105,8 @@ class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
                         adapter.submitList(filterItems)
                         with(binding!!) {
                             searchEditText.setText(EMPTY_STRING)
-                            metacriticMinTexView.setText(DEFAULT_METACRITIC)
-                            metacriticMaxTexView.setText(DEFAULT_METACRITIC)
+                            metacriticMinTexView.setText(EMPTY_STRING)
+                            metacriticMaxTexView.setText(EMPTY_STRING)
                             releaseStartDateTextView.text = DEFAULT_DATE
                             releaseEndDateTextView.text = DEFAULT_DATE
                         }

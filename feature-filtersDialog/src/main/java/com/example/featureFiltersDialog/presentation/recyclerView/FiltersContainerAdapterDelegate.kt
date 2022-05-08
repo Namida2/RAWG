@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.core.domain.entities.filters.FilterCategory
+import com.example.core.domain.tools.constants.Constants.FILTERS_SPAN_COUNT
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.BaseViewHolder
@@ -77,7 +78,7 @@ class FiltersContainerViewHolder(
             filtersContainerRecyclerView.adapter = it
             filtersContainerRecyclerView.itemAnimator = null
             filtersContainerRecyclerView.layoutManager =
-                StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL)
+                StaggeredGridLayoutManager(FILTERS_SPAN_COUNT, StaggeredGridLayoutManager.HORIZONTAL)
         }
     }
 

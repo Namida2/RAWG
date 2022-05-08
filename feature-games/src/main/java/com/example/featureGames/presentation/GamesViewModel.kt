@@ -4,12 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.core.domain.entities.GamesHttpException
-import com.example.core.domain.interfaces.OnPositionChangeListener
+import com.example.core.domain.entities.GameNetworkExceptions
 import com.example.core.domain.entities.Message
 import com.example.core.domain.entities.NetworkConnectionListener.isNetworkConnected
 import com.example.core.domain.entities.NetworkConnectionListener.networkConnectionChanges
 import com.example.core.domain.entities.SingleEvent
+import com.example.core.domain.interfaces.OnPositionChangeListener
+import com.example.core.domain.interfaces.Stateful
 import com.example.core.domain.tools.constants.Constants
 import com.example.core.domain.tools.constants.Constants.MIN_ITEMS_COUNT_FOR_NEXT_PAGE
 import com.example.core.domain.tools.constants.Messages.allGamesHaveBeenLoadedMessage
@@ -20,12 +21,12 @@ import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.enums.ResponseCodes
 import com.example.core.domain.tools.extensions.logD
 import com.example.core.domain.tools.extensions.logE
-import com.example.core.domain.interfaces.Stateful
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
 import com.example.featureGames.domain.model.*
 import com.example.featureGames.domain.model.interfaces.GameScreenItemType
 import com.example.featureGames.domain.useCase.GamesUseCase
 import com.example.featureGames.domain.useCase.GamesUseCaseFactory
+import com.example.featureGames.presentation.recyclerView.delegates.GameErrorPageAdapterDelegateCallback
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main
 
@@ -58,7 +59,7 @@ class GamesViewModel(
     gamesUseCaseFactory: GamesUseCaseFactory,
     private val remoteRepositoryScope: CoroutineScope = CoroutineScope(SupervisorJob() + Main.immediate)
 ) : ViewModel(), OnPositionChangeListener, Stateful,
-    GameScreenInfo.Mapper<PageToListRecyclerViewItems> {
+    GameScreenInfo.Mapper<PageToListRecyclerViewItems>, GameErrorPageAdapterDelegateCallback {
     var snackBarIsShowing = false
     private var gamesUseCase: GamesUseCase =
         gamesUseCaseFactory.create(screenTag, remoteRepositoryScope)
@@ -84,6 +85,7 @@ class GamesViewModel(
     }
 
     fun getGames() {
+        logD("getGames: ${gameScreenInfo.tag}")
         if (gameScreenInfo.screenItems.isEmpty()) {
             viewModelScope.launch {
                 gamesUseCase.readGames(gameScreenInfo.request.copy())
@@ -93,9 +95,13 @@ class GamesViewModel(
         onNewGameScreenItemsEvent()
     }
 
+    override fun onGameErrorPagePlaceHolderClick(page: Int) {
+        TODO("Not yet implemented")
+    }
+
     override fun mapGameScreenInfo(
         gameScreenInfo: GameScreenInfo
-    ): PageToListRecyclerViewItems = run {
+    ): PageToListRecyclerViewItems {
         val newMap = mutableMapOf<Int, MutableList<BaseRecyclerViewType>>()
         gameScreenInfo.screenItems.forEach { (key, value) ->
             newMap[key] = when (value) {
@@ -103,13 +109,16 @@ class GamesViewModel(
                     gamesUseCase.getGamesByPage(value.page)
                 is GameScreenItemType.GamePlaceHolderType ->
                     getPlaceholders(value.placeholderCount)
+                is GameScreenItemType.GameErrorPageType ->
+                    listOf(GameErrorPagePlaceHolder(value.page))
             }.toMutableList()
-        }; newMap
+        }
+        return newMap
     }
 
 
     override fun onNewPosition(positions: IntArray, itemCount: Int) {
-//        logD("onNewPosition: ${positions.toList()}, size: ${currentScreenItems.values.sumOf { it.size }}")
+        logD("onNewPosition: ${positions.toList()}, size: ${currentScreenItems.values.sumOf { it.size }}")
         val isMinVisiblePosition =
             currentScreenItems.values.sumOf { it.size } - positions[0] <= MIN_ITEMS_COUNT_FOR_NEXT_PAGE
         if (state.value is GamesVMStats.AllGamesFromRequestHaveBeenLoaded && isMinVisiblePosition) return
@@ -124,15 +133,6 @@ class GamesViewModel(
 
     override fun resetState() {
         _state.value = GamesVMStats.Default
-    }
-
-    override fun onCleared() {
-        // TODO: Add a filtersBottomSheetDialog and resolve active state issue for fragments //STOPPED//
-        // FIXME: Requests and images loading stop perform after canceling and are lost
-        //Losing images when: lost network connection -> close application -> return to application
-//        Maybe add a subcomponents for each gameScreen and make the queues singletons
-//        remoteRepositoryScope.cancel()
-        super.onCleared()
     }
 
     private fun listenChanges() {
@@ -167,6 +167,45 @@ class GamesViewModel(
         }.run { result }
     }
 
+    private fun prepareListForView(): List<BaseRecyclerViewType> =
+        currentScreenItems.keys.sorted().map {
+            currentScreenItems[it]!!
+        }.flatten()
+
+    private fun onNewGameScreenItemsEvent() {
+        _singleEvents.value = GamesVMSingleEvents.NewGamesEvent(
+            SingleEvent(prepareListForView())
+        )
+    }
+
+    private fun onHttpException(networkException: GameNetworkExceptions) {
+        when (networkException) {
+            is GameNetworkExceptions.GamesHttpException -> {
+                logD("onHttpException: ${networkException.exception.code()} ${networkException.exception.message()}")
+                when (networkException.exception.code()) {
+                    ResponseCodes.PAGE_NOT_FOUND.code -> {
+                        setNewState(GamesVMStats.AllGamesFromRequestHaveBeenLoaded())
+                        removeLastPageOfPlaceHolders(networkException.page)
+                    }
+                    ResponseCodes.BAD_GATEWAY.code -> setNewState(
+                        GamesVMStats.Error(
+                            badGatewayMessage
+                        )
+                    )
+                    else -> setNewState(GamesVMStats.Error())
+                }
+            }
+            is GameNetworkExceptions.GameSocketException ->
+                with(networkException.page) {
+                    // TODO: Update the gameScreenInfo for saving current
+                    //  gameScreenItem when current viewModel is destroyed
+                    gameScreenInfo.screenItems[this] = GameScreenItemType.GameErrorPageType(this)
+                    currentScreenItems[this] = listOf(GameErrorPagePlaceHolder(this)).toMutableList()
+                    onNewGameScreenItemsEvent()
+                }
+        }
+    }
+
     private fun removeLastPageOfPlaceHolders(page: Int) {
 //        logE("IllegalArgumentException, page+++: $page")
         if (currentScreenItems.remove(page) == null) {
@@ -174,27 +213,6 @@ class GamesViewModel(
             throw IllegalArgumentException()
         } else onNewGameScreenItemsEvent()
 
-    }
-
-    private fun prepareListForView(): List<BaseRecyclerViewType> =
-        currentScreenItems.keys.sorted().map {
-            currentScreenItems[it]!!
-        }.flatten()
-
-    private fun onNewGameScreenItemsEvent() {
-        _singleEvents.value = GamesVMSingleEvents.NewGamesEvent(SingleEvent(prepareListForView()))
-    }
-
-    private fun onHttpException(exception: GamesHttpException) {
-        logD("onHttpException: ${exception.exception.code()} ${exception.exception.message()}")
-        when (exception.exception.code()) {
-            ResponseCodes.PAGE_NOT_FOUND.code -> {
-                setNewState(GamesVMStats.AllGamesFromRequestHaveBeenLoaded())
-                removeLastPageOfPlaceHolders(exception.page)
-            }
-            ResponseCodes.BAD_GATEWAY.code -> setNewState(GamesVMStats.Error(badGatewayMessage))
-            else -> setNewState(GamesVMStats.Error())
-        }
     }
 
     private fun onNewGamesForScreen(changes: NewGamesForScreen) {

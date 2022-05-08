@@ -7,11 +7,11 @@ interface GameScreensSettings {
     val request: GamesGetRequest
 }
 object TopPicksGameScreenSetting: GameScreensSettings {
-    private const val metacriticMin = 70
+    private const val metacriticMin = 85
     private const val metacriticMax = 100
     private const val startDay = 1
     private const val startMonth = 0
-    private const val yearDifferences = 3
+    private const val yearDifferences = 2
     override val request: GamesGetRequest =
         GamesGetRequest.Builder()
             .setDates(

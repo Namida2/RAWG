@@ -1,6 +1,6 @@
 package com.example.featureGames.domain.useCase
 
-import com.example.core.domain.entities.GamesHttpException
+import com.example.core.domain.entities.GameNetworkExceptions
 import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.logD
@@ -34,7 +34,7 @@ class AllGamesUseCase @AssistedInject constructor(
     private val gamesHolder: GamesHolder,
     private val gamesMapper: Game.GameMapper,
     private val imagesLoader: ImagesLoader<GameBackgroundImageUrlInfo>,
-    private val requestsQueueGames: RequestQueue<GamesGetRequest, GamesResponse, GamesHttpException>
+    private val requestsQueueGames: RequestQueue<GamesGetRequest, GamesResponse, GameNetworkExceptions>
 ) : GamesUseCase, RequestQueueResultHandler<GamesResponse>,
     ImagesLoaderResultHandler<GameBackgroundImageUrlInfo> {
 
@@ -44,7 +44,7 @@ class AllGamesUseCase @AssistedInject constructor(
     }
 
     override val newGamesForScreen: Flow<NewGamesForScreen> by gamesHolder::newGamesForScreen
-    override val responseHttpExceptions: Flow<GamesHttpException> by requestsQueueGames::responseHttpExceptions
+    override val responseHttpExceptions: Flow<GameNetworkExceptions> by requestsQueueGames::onNetworkExceptions
     override val gamesBackgroundImageChanges: Flow<GameBackgroundImageChanges> by gamesHolder::gamesBackgroundImageChanges
 
     override suspend fun readGames(request: GamesGetRequest) {
@@ -52,7 +52,7 @@ class AllGamesUseCase @AssistedInject constructor(
     }
 
     override suspend fun onResponse(result: RequestsQueueChanges<GamesResponse>) {
-//        logD("collectPage: ${result.page}")
+        logD("collectPage: ${result.page}")
 //        logD("responseCount: ${result.response?.count}")
         val gamesResponse = result.response ?: return
         val games = result.response.rawGames?.map { game ->

@@ -1,6 +1,5 @@
 package com.example.featureGames.data.requestQueue.interfaces
 
-import com.example.core.domain.entities.HttpExceptionInfo
 import com.example.core.domain.interfaces.remoteRepository.GetRequest
 import com.example.core.domain.interfaces.remoteRepository.Response
 import kotlinx.coroutines.CoroutineScope
@@ -12,8 +11,8 @@ interface RequestQueueResultHandler<R : Response> {
     suspend fun onResponse(result: RequestsQueueChanges<R>)
 }
 
-interface RequestQueue<MyRequest : GetRequest, MyResponse : Response, HttpException : HttpExceptionInfo> {
-    val responseHttpExceptions: SharedFlow<HttpException>
+interface RequestQueue<MyRequest : GetRequest, MyResponse : Response, HttpException> {
+    val onNetworkExceptions: SharedFlow<HttpException>
     var onResultHandler: RequestQueueResultHandler<MyResponse>
     fun readGames(request: MyRequest, coroutineScope: CoroutineScope)
     fun onNetworkConnected(coroutineScope: CoroutineScope)

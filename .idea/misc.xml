@@ -38,7 +38,9 @@
         <entry key="..\:/Projects/AndroidProjects/RAWG/feature-games/src/main/res/layout/fragment_games.xml" value="0.5" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/feature-games/src/main/res/layout/layout_game.xml" value="0.2118491921005386" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/feature-games/src/main/res/layout/layout_game_card.xml" value="0.22736030828516376" />
-        <entry key="..\:/Projects/AndroidProjects/RAWG/feature-games/src/main/res/layout/layout_game_placeholder.xml" value="0.5218508997429306" />
+        <entry key="..\:/Projects/AndroidProjects/RAWG/feature-games/src/main/res/layout/layout_game_error_page_placeholder.xml" value="0.33" />
+        <entry key="..\:/Projects/AndroidProjects/RAWG/feature-games/src/main/res/layout/layout_game_placeholder.xml" value="0.15760322255790535" />
+        <entry key="..\:/Projects/AndroidProjects/RAWG/feature-games/src/main/res/layout/layout_page_of_games.xml" value="0.19972826086956522" />
       </map>
     </option>
   </component>

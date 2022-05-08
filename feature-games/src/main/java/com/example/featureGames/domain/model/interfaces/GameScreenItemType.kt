@@ -8,4 +8,5 @@ sealed interface GameScreenItemType {
     class GamePlaceHolderType(override val page: Int): GameScreenItemType {
         var placeholderCount = PAGE_SIZE
     }
+    class GameErrorPageType(override val page: Int) : GameScreenItemType
 }

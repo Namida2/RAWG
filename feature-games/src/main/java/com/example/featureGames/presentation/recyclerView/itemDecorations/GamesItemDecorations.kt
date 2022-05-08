@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
+import com.example.featureGames.domain.model.GameErrorPagePlaceHolder
 
 class GamesItemDecorations(
     private val topMargin: Int,
@@ -21,24 +22,23 @@ class GamesItemDecorations(
         super.getItemOffsets(outRect, view, parent, state)
         val adapter = parent.adapter as BaseRecyclerViewAdapter
         val position = parent.getChildAdapterPosition(view)
+        if(position == -1) return
+        val isGameErrorPagePlaceHolder = adapter.currentList[position] is GameErrorPagePlaceHolder
+        outRect.left = smallMargin
+        outRect.right = smallMargin
+        outRect.bottom = smallMargin
         when (position) {
-            0 -> {
-                outRect.top = topMargin
-                outRect.left = smallMargin
-                outRect.right = smallMargin
-            }
+            0 -> outRect.top = topMargin
             1 -> {
-                outRect.top = topMargin
-                outRect.left = smallMargin
-                outRect.right = smallMargin
+                if (isGameErrorPagePlaceHolder) outRect.top = smallMargin
+                else outRect.top = topMargin
             }
-            else -> {
-                outRect.top = largeMargin
-                outRect.left = smallMargin
-                outRect.right = smallMargin
-            }
+            else -> outRect.top = smallMargin
+
         }
-        if (position == adapter.itemCount - 1 || (adapter.itemCount % 2 == 0 && position == adapter.itemCount - 2))
-            outRect.bottom = largeMargin
+        if ((position == adapter.itemCount - 1 ||
+            (adapter.itemCount % 2 == 0 && position == adapter.itemCount - 2)) && !isGameErrorPagePlaceHolder
+        ) outRect.bottom = largeMargin
     }
+
 }

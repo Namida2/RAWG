@@ -11,17 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.core.R
-import com.example.core.domain.tools.constants.Constants.SPAN_COUNT
+import com.example.core.domain.tools.constants.Constants.DEFAULT_SPAN_COUNT
 import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
 import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.createMessageAlertDialog
-import com.example.core.domain.tools.extensions.logD
 import com.example.core.domain.tools.extensions.logE
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
 import com.example.featureGames.databinding.FragmentGamesBinding
 import com.example.featureGames.domain.ViewModelFactory
 import com.example.featureGames.presentation.recyclerView.RecyclerViewScrollListener
-import com.example.featureGames.presentation.recyclerView.delegates.GamesDelegate
+import com.example.featureGames.presentation.recyclerView.delegates.GameErrorPageAdapterDelegate
+import com.example.featureGames.presentation.recyclerView.delegates.GamesAdapterDelegate
 import com.example.featureGames.presentation.recyclerView.delegates.GamesPlaceholderDelegate
 import com.example.featureGames.presentation.recyclerView.itemDecorations.GamesItemDecorations
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -36,27 +36,27 @@ class GamesFragment : Fragment() {
 
     private lateinit var viewModel: GamesViewModel
     private lateinit var screenTag: GameScreenTags
-    private val adapter = BaseRecyclerViewAdapter(
-        listOf(
-            GamesDelegate(),
-            GamesPlaceholderDelegate()
-        )
-    )
+    private lateinit var adapter: BaseRecyclerViewAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        screenTag = arguments?.get(
+            hashCode().toString()
+        ) as? GameScreenTags ?: throw IllegalArgumentException()
+        logE("onAttach, screenTag: $screenTag")
         smallMargin = resources.getDimensionPixelSize(R.dimen.small_margin)
         largeMargin = resources.getDimensionPixelSize(R.dimen.large_margin)
         topMargin = resources.getDimensionPixelSize(R.dimen.top_games_margin)
-        screenTag = arguments?.get(hashCode().toString()) as? GameScreenTags
-            ?: throw IllegalArgumentException()
-        logE("onAttach, screenTag: $screenTag")
         viewModel = ViewModelProvider(
             this, ViewModelFactory(screenTag)
-        )[GamesViewModel::class.java].also {
-            it.getGames()
-        }
-
+        )[GamesViewModel::class.java].also { it.getGames() }
+        adapter = BaseRecyclerViewAdapter(
+            listOf(
+                GamesAdapterDelegate(),
+                GamesPlaceholderDelegate(),
+                GameErrorPageAdapterDelegate(viewModel)
+            )
+        )
     }
 
     override fun onResume() {
@@ -86,11 +86,13 @@ class GamesFragment : Fragment() {
         logE("recyclerView: ${binding!!.gamesRecyclerView.hashCode()}")
         with(binding!!) {
             gamesRecyclerView.layoutManager =
-                StaggeredGridLayoutManager(SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL)
+                StaggeredGridLayoutManager(DEFAULT_SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL)
             gamesRecyclerView.adapter = adapter
-            gamesRecyclerView.addItemDecoration(GamesItemDecorations(
-                topMargin, largeMargin, smallMargin
-            ))
+            gamesRecyclerView.addItemDecoration(
+                GamesItemDecorations(
+                    topMargin, largeMargin, smallMargin
+                )
+            )
             RecyclerViewScrollListener(gamesRecyclerView, viewModel)
         }
         observeSingleEventsEvent()
@@ -100,7 +102,7 @@ class GamesFragment : Fragment() {
 
     private fun observeSingleEventsEvent() {
         viewModel.singleEvents.observe(viewLifecycleOwner) {
-            logD(screenTag.toString())
+//            logD(screenTag.toString())
 //            logE("$this: observeSingleEventsEvent, screenTag: $screenTag")
             when (it) {
                 is GamesVMSingleEvents.NewGamesEvent -> {

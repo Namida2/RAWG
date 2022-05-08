@@ -11,7 +11,7 @@ import com.example.featureGames.R
 import com.example.featureGames.databinding.LayoutGameBinding
 import com.example.featureGames.domain.model.Game
 
-class GamesDelegate : RecyclerViewAdapterDelegate<Game, LayoutGameBinding> {
+class GamesAdapterDelegate : RecyclerViewAdapterDelegate<Game, LayoutGameBinding> {
     override val layoutId: Int
         get() = R.layout.layout_game
 
@@ -19,10 +19,10 @@ class GamesDelegate : RecyclerViewAdapterDelegate<Game, LayoutGameBinding> {
 
     override fun getViewHolder(
         inflater: LayoutInflater,
-        parent: ViewGroup
+        container: ViewGroup
     ): BaseViewHolder<Game, LayoutGameBinding> {
         return GamesViewGolder(
-            LayoutGameBinding.inflate(inflater, parent, false)
+            LayoutGameBinding.inflate(inflater, container, false)
         )
     }
 
