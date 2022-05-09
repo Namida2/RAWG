@@ -11,11 +11,21 @@ import com.example.core.domain.entities.filters.Filter
 import com.example.core.domain.entities.filters.FilterCategory
 import com.example.core.domain.entities.filters.FilterCategoryName
 import com.example.core.domain.entities.filters.FiltersHolder
+import com.example.core.domain.entities.requests.GamesGetRequest
+import com.example.core.domain.interfaces.OnNewGetRequestCallback
+import com.example.core.domain.tools.constants.Constants.MAX_METACRITIC
+import com.example.core.domain.tools.constants.Constants.MIN_METACRITIC
 import com.example.core.domain.tools.constants.StringConstants.DEFAULT_METACRITIC
+import com.example.core.domain.tools.constants.StringConstants.DEFAULT_START_DATE
 import com.example.core.domain.tools.constants.StringConstants.FILTER_CATEGORY_NOT_FOUND
+import com.example.core.domain.tools.constants.StringConstants.DASH_SIGN
+import com.example.core.domain.tools.enums.RequestParams
+import com.example.core.domain.tools.enums.getOrderedFields
 import com.example.core.domain.tools.extensions.logD
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
+import com.example.featureFiltersDialog.domain.entities.toDateString
 import com.example.featureFiltersDialog.presentation.recyclerView.FiltersContainerAdapterDelegateCallback
+import java.util.*
 import kotlin.reflect.KClass
 
 sealed interface FilterVMEvents<out T> {
@@ -37,15 +47,23 @@ sealed interface FilterVMEvents<out T> {
 }
 
 class FiltersViewModel(
-    private val filtersHolder: FiltersHolder
+    private val filtersHolder: FiltersHolder,
+    private val onNewRequestCallback: OnNewGetRequestCallback<GamesGetRequest>
 ) : ViewModel(), FiltersContainerAdapterDelegateCallback {
 
-    private val metacriticMaxValue = 100
-    private var minMetacriticLastSaved = "0"
-    private var maxMetacriticLastSaved = "0"
+    private var minMetacriticLastSaved = DEFAULT_METACRITIC
+    private var maxMetacriticLastSaved = DEFAULT_METACRITIC
+    var startDateLastSaved: String
+    var endDateLastSaved: String
     private val _events = MutableLiveData<FilterVMEvents<Any>>()
     private var currentFilterItems = mutableListOf<BaseRecyclerViewType>()
     val events: LiveData<FilterVMEvents<Any>> = _events
+
+    init {
+        val today = Calendar.getInstance().timeInMillis.toDateString(DASH_SIGN)
+        startDateLastSaved = DEFAULT_START_DATE
+        endDateLastSaved = today
+    }
 
     fun getFilters() {
         if (currentFilterItems.isEmpty())
@@ -53,8 +71,33 @@ class FiltersViewModel(
         else onNewFilterItemsEvent(currentFilterItems)
     }
 
-    fun onAcceptButtonClick(filterItems: List<BaseRecyclerViewType>) {
-
+    fun onAcceptButtonClick() {
+        val builder = GamesGetRequest.Builder()
+        builder.setMetacritic(
+            if (minMetacriticLastSaved == DEFAULT_METACRITIC)
+                MIN_METACRITIC.toString() else minMetacriticLastSaved,
+            if (maxMetacriticLastSaved == DEFAULT_METACRITIC)
+                MAX_METACRITIC.toString() else maxMetacriticLastSaved,
+        )
+        builder.setDates(startDateLastSaved, endDateLastSaved)
+        currentFilterItems.forEach { filterCategory ->
+            if (filterCategory is FilterCategory) {
+                val filters = filterCategory.getSelectedFilters().map { it.id }.toTypedArray()
+                if (filters.isEmpty()) return@forEach
+                when (filterCategory.categoryName) {
+                    RequestParams.ORDERING.myName -> builder.addOrdering(filters.first())
+                    RequestParams.DEVELOPERS.myName -> builder.addDevelopers(*filters)
+                    RequestParams.GENRES.myName -> builder.addGenres(*filters)
+                    RequestParams.PLATFORMS.myName -> builder.addPlatform(*filters)
+                    RequestParams.PUBLISHERS.myName -> builder.addPublishers(*filters)
+                    RequestParams.STORES.myName -> builder.addStores(*filters)
+                    RequestParams.TAGS.myName -> builder.addTags(*filters)
+                }
+            }
+        }
+        onNewRequestCallback.onNewRequest(builder.build().also {
+            logD(it.getParams().toString())
+        })
     }
 
     fun onClearButtonClick() {
@@ -66,7 +109,7 @@ class FiltersViewModel(
                         val newFilters = mutableListOf<Filter>()
                         filterCategory.filters.forEach { filter ->
                             newFilters.add(
-                                Filter(filter.categoryName, filter.name, filter.slug)
+                                Filter(filter.categoryName, filter.name, filter.id)
                             )
                         }; newFilters
                     }
@@ -83,7 +126,9 @@ class FiltersViewModel(
     val metacriticMinTextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            onMetacriticValueChanged(s, FilterVMEvents.OnMinMetacriticWrongValue::class)
+            onMetacriticValueChanged(s, FilterVMEvents.OnMinMetacriticWrongValue::class) {
+                minMetacriticLastSaved = it
+            }
         }
 
         override fun afterTextChanged(s: Editable?) = Unit
@@ -92,7 +137,9 @@ class FiltersViewModel(
     val metacriticMaxTextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            onMetacriticValueChanged(s, FilterVMEvents.OnMaxMetacriticWrongValue::class)
+            onMetacriticValueChanged(s, FilterVMEvents.OnMaxMetacriticWrongValue::class) {
+                maxMetacriticLastSaved = it
+            }
         }
 
         override fun afterTextChanged(s: Editable?) = Unit
@@ -100,41 +147,52 @@ class FiltersViewModel(
 
     private fun onMetacriticValueChanged(
         sequence: CharSequence?,
-        onWringValueEvent: KClass<out FilterVMEvents<Any>>
+        onWringValueEvent: KClass<out FilterVMEvents<Any>>,
+        onNewCorrectValue: (newValue: String) -> Unit
     ) {
         val newString = sequence.toString()
         if (newString.isDigitsOnly() && newString.isNotEmpty()) {
             val newValue = newString.toInt()
-            if (newValue > metacriticMaxValue) {
-                minMetacriticLastSaved = metacriticMaxValue.toString()
-                emitValueForMetacriticFields(minMetacriticLastSaved, onWringValueEvent)
-
-            }
-        } else if(!newString.isDigitsOnly())
+            if (newValue > MAX_METACRITIC) emitValueForMetacriticFields(
+                minMetacriticLastSaved, onWringValueEvent
+            )
+            else onNewCorrectValue.invoke(newString)
+        } else if (!newString.isDigitsOnly())
             emitValueForMetacriticFields(DEFAULT_METACRITIC, onWringValueEvent)
     }
 
     private fun emitValueForMetacriticFields(
         value: String,
-        onWringValueEvent: KClass<out FilterVMEvents<Any>>
-    ) {
-        when (onWringValueEvent) {
-            FilterVMEvents.OnMinMetacriticWrongValue::class -> {
-                _events.value = FilterVMEvents.OnMinMetacriticWrongValue(SingleEvent(value))
-            }
-            FilterVMEvents.OnMaxMetacriticWrongValue::class -> {
-                _events.value = FilterVMEvents.OnMaxMetacriticWrongValue(SingleEvent(value))
-            }
-            else -> throw IllegalArgumentException()
+        onWrongValueEvent: KClass<out FilterVMEvents<Any>>
+    ) = when (onWrongValueEvent) {
+        FilterVMEvents.OnMinMetacriticWrongValue::class -> {
+            minMetacriticLastSaved = value
+            _events.value = FilterVMEvents.OnMinMetacriticWrongValue(SingleEvent(value))
         }
+        FilterVMEvents.OnMaxMetacriticWrongValue::class -> {
+            maxMetacriticLastSaved = value
+            _events.value = FilterVMEvents.OnMaxMetacriticWrongValue(SingleEvent(value))
+        }
+        else -> throw IllegalArgumentException()
     }
 
-    private fun prepareFiltersForView(): List<BaseRecyclerViewType> =
-        filtersHolder.filters.map {
+
+    private fun prepareFiltersForView(): List<BaseRecyclerViewType> {
+        filtersHolder.filters.flatMap {
             listOf<BaseRecyclerViewType>(FilterCategoryName(it.categoryName)) + it
-        }.flatten().also {
-            currentFilterItems = it.toMutableList()
+        }.also {
+            currentFilterItems =
+                (listOf(
+                    FilterCategoryName(RequestParams.ORDERING.myName)
+                ) + FilterCategory(
+                    RequestParams.ORDERING.myName,
+                    getOrderedFields().toMutableList(),
+                    true
+                ) + it).toMutableList()
         }
+        return currentFilterItems
+    }
+
 
     override fun onNewFilter(filterCategory: FilterCategory) {
         logD(filterCategory.categoryName)
@@ -143,6 +201,7 @@ class FiltersViewModel(
         }.also { position ->
             if (position == -1) throw IllegalArgumentException(FILTER_CATEGORY_NOT_FOUND + filterCategory)
             currentFilterItems[position] = filterCategory
+            //Update the parent recyclerView to make the clearButton work correctly
             onNewFilterItemsEvent(currentFilterItems)
         }
     }

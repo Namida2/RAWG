@@ -12,13 +12,12 @@ import com.example.core.presentaton.recyclerView.BaseViewHolder
 import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
 import com.example.featureFiltersDialog.R
 import com.example.featureFiltersDialog.databinding.LayoutFiltersContainerBinding
-import java.lang.IllegalArgumentException
 
 fun interface FiltersContainerAdapterDelegateCallback {
     fun onNewFilter(filterCategory: FilterCategory)
 }
 
-class FiltersContainerAdapterDelegate(
+class FiltersCategoryAdapterDelegate(
     private val callback: FiltersContainerAdapterDelegateCallback
 ) : RecyclerViewAdapterDelegate<FilterCategory, LayoutFiltersContainerBinding> {
     override val layoutId: Int
@@ -30,7 +29,7 @@ class FiltersContainerAdapterDelegate(
         inflater: LayoutInflater,
         container: ViewGroup
     ): BaseViewHolder<FilterCategory, LayoutFiltersContainerBinding> =
-        FiltersContainerViewHolder(
+        FiltersCategoryViewHolder(
             com.example.core.R.drawable.bg_black_lite_stroke_gradient_blue_to_pink_90,
             com.example.core.R.drawable.bg_black_lite_rounded,
             callback,
@@ -53,32 +52,40 @@ class FiltersContainerAdapterDelegate(
     }
 }
 
-class FiltersContainerViewHolder(
+class FiltersCategoryViewHolder(
     private val selectedBackground: Int,
     private val defaultDrawable: Int,
     private val callback: FiltersContainerAdapterDelegateCallback,
     private val binding: LayoutFiltersContainerBinding
 ) : BaseViewHolder<FilterCategory, LayoutFiltersContainerBinding>(binding) {
-
-    private val onFilterSelectedCallback = FilterAdapterDelegateCallback {filter ->
-        filterCategory!!.filters.indexOf(filter).also { position ->
-            if (position == -1) throw IllegalArgumentException()
-            val newFiltersList = filterCategory!!.filters.toMutableList()
-            newFiltersList[position] = filter.copy(isSelected = !filter.isSelected)
-            filterCategory!!.filters = newFiltersList
-            callback.onNewFilter(filterCategory!!)
-            adapter.submitList(newFiltersList as List<BaseRecyclerViewType>?)
+    private var filterCategory: FilterCategory? = null
+    private var positionOfLastSelectedFilter = -1
+    private val onFilterSelectedCallback = FilterAdapterDelegateCallback { filter ->
+        with(filterCategory!!) {
+            this.filters.indexOf(filter).also { position ->
+                if (position == -1) throw IllegalArgumentException()
+                val newFiltersList = this.filters.toMutableList()
+                newFiltersList[position] = filter.copy(isSelected = !filter.isSelected)
+                this.filters = newFiltersList
+                if (this.isSingleSelectable) funDeselectLastFilter()
+                positionOfLastSelectedFilter = position
+                callback.onNewFilter(this)
+                adapter.submitList(this.filters as List<BaseRecyclerViewType>)
+            }
         }
     }
-    private var filterCategory: FilterCategory? = null
     private val adapter: BaseRecyclerViewAdapter = BaseRecyclerViewAdapter(
         listOf(FiltersAdapterDelegate(selectedBackground, defaultDrawable, onFilterSelectedCallback))
     ).also {
         with(binding) {
             filtersContainerRecyclerView.adapter = it
+            filtersContainerRecyclerView.setHasFixedSize(true)
             filtersContainerRecyclerView.itemAnimator = null
             filtersContainerRecyclerView.layoutManager =
-                StaggeredGridLayoutManager(FILTERS_SPAN_COUNT, StaggeredGridLayoutManager.HORIZONTAL)
+                StaggeredGridLayoutManager(
+                    FILTERS_SPAN_COUNT,
+                    StaggeredGridLayoutManager.HORIZONTAL
+                )
         }
     }
 
@@ -87,5 +94,16 @@ class FiltersContainerViewHolder(
         adapter.submitList(item.filters as List<BaseRecyclerViewType>?)
     }
 
+    private fun funDeselectLastFilter() {
+        if(positionOfLastSelectedFilter == -1) return
+        with(filterCategory!!) {
+            val lastSelectedFilter = this.filters[positionOfLastSelectedFilter]
+            val newFiltersList = this.filters.toMutableList()
+            newFiltersList[positionOfLastSelectedFilter] = lastSelectedFilter.copy(
+                isSelected = !lastSelectedFilter.isSelected
+            )
+            this.filters = newFiltersList
+        }
+    }
 }
 

@@ -2,7 +2,9 @@ package com.example.core.domain.tools.constants
 
 object StringConstants {
     const val EMPTY_STRING = ""
-    const val DEFAULT_DATE = "0000.00.00"
+    const val DASH_SIGN = "-"
+    const val DOT_SIGN = "."
+    const val DEFAULT_START_DATE = "1940-01-01"
     const val DEFAULT_METACRITIC = "0"
     const val FILTER_CATEGORY_NOT_FOUND = "FilterCategory not found. FilterCategory: "
     const val UNKNOWN_VIEW_MODEL_CLASS = "Unknown ViewModel class. Class: "

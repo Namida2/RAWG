@@ -54,7 +54,6 @@ class MainViewModel @Inject constructor(
         if(state.value is MainVMStates.FiltersLoadedSuccessfully ||
             state.value == MainVMStates.ReadingFilters) return
         _state.value = MainVMStates.ReadingFilters
-        // TODO: Put this things to cash
         viewModelScope.launch(IO + coroutineExceptionHandler) {
             logD("readFiltersUseCase")
             readFiltersUseCase.getFilters(this)

@@ -1,12 +1,13 @@
 package com.example.featureFiltersDialog.domain.entities
 
 import android.icu.util.Calendar
+import com.example.core.domain.tools.constants.StringConstants.DASH_SIGN
 
-fun Long.toDateString(): String = run {
+fun Long.toDateString(separator: String = DASH_SIGN): String = run {
     val calendar = Calendar.getInstance()
     calendar.timeInMillis = this
-    calendar[Calendar.YEAR].toString() + "." +
-            calendar[Calendar.MONTH + 1].toString().addZeroToDate() + "." +
+    calendar[Calendar.YEAR].toString() + separator +
+            (calendar[Calendar.MONTH] + 1).toString().addZeroToDate() + separator +
             calendar[Calendar.DATE].toString().addZeroToDate()
 }
 

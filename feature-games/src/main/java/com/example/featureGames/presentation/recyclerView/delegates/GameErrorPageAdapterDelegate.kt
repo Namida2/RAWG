@@ -15,7 +15,7 @@ import com.example.featureGames.databinding.LayoutGameErrorPagePlaceholderBindin
 import com.example.featureGames.domain.model.GameErrorPagePlaceHolder
 
 
-fun interface GameErrorPageAdapterDelegateCallback {
+ interface GameErrorPageAdapterDelegateCallback {
     fun onGameErrorPagePlaceHolderClick(page: Int)
 }
 
@@ -34,7 +34,7 @@ class GameErrorPageAdapterDelegate(
     ): BaseViewHolder<GameErrorPagePlaceHolder, LayoutGameErrorPagePlaceholderBinding> {
         val binding =
             LayoutGameErrorPagePlaceholderBinding.inflate(inflater, container, false).also {
-                it.root.setOnClickListener(this)
+                it.container.setOnClickListener(this)
             }
         binding.root.viewTreeObserver.addOnPreDrawListener(object :
             ViewTreeObserver.OnPreDrawListener {
@@ -71,7 +71,9 @@ class GameErrorPageAdapterDelegate(
     }
 
     override fun onClick(v: View?) {
-        v?.tag?.let { callback.onGameErrorPagePlaceHolderClick(it as Int) }
+        v?.tag?.let {
+            callback.onGameErrorPagePlaceHolderClick(it as Int)
+        }
     }
 }
 
@@ -79,6 +81,6 @@ class GameErrorPageViewHolder(
     private val binding: LayoutGameErrorPagePlaceholderBinding
 ) : BaseViewHolder<GameErrorPagePlaceHolder, LayoutGameErrorPagePlaceholderBinding>(binding) {
     override fun onBind(item: GameErrorPagePlaceHolder) {
-        binding.root.tag = item.page
+        binding.container.tag = item.page
     }
 }

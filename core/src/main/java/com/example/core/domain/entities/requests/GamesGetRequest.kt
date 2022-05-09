@@ -20,7 +20,12 @@ class GamesGetRequest : GetRequest {
     override fun getParams(): Map<String, Any> = params
 
     fun copy(page: Int = this.page, params: Map<String, Any> = this.params): GamesGetRequest =
-        GamesGetRequest().also { it.page = page; it.params = params.toMutableMap() }
+        GamesGetRequest().also {
+            it.page = page
+            it.params = params.toMutableMap().also { params ->
+                params[PAGE.slug] = page
+            }
+        }
 
     class Builder {
         private val separator = ","
@@ -48,6 +53,11 @@ class GamesGetRequest : GetRequest {
                         separator + getDateString(startDate, timeZone)
             }
 
+        fun setDates(startDate: String, endDate: String) =
+            apply {
+                dates = "$startDate$separator$endDate"
+            }
+
         fun addPlatform(vararg platforms: String) = apply {
             this.platforms = platforms.joinToString(separator = separator)
         }
@@ -72,7 +82,7 @@ class GamesGetRequest : GetRequest {
             this.tags = tags.joinToString(separator = separator)
         }
 
-        fun setMetacritic(minRating: Int, maxRating: Int) = apply {
+        fun setMetacritic(minRating: String, maxRating: String) = apply {
             metacritic = "$minRating$separator$maxRating"
         }
 

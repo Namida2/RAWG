@@ -52,7 +52,6 @@
     <style name="tabLayoutStyle" parent="Widget.MaterialComponents.TabLayout">
         <item name="tabTextAppearance">@style/tabButtonTextAppearance</item>
         <item name="tabTextColor">@color/white</item>
-
     </style>
 
     <style name="tabButtonTextAppearance" parent="TextAppearance.AppCompat.Title">
@@ -105,7 +104,6 @@
         <item name="colorPrimary">@color/white</item>
         <item name="colorOnPrimary">@color/black</item>
     </style>
-
 
 </resources>
 

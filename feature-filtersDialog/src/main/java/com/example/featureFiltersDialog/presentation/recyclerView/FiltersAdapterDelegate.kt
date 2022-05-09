@@ -1,6 +1,5 @@
 package com.example.featureFiltersDialog.presentation.recyclerView
 
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +39,7 @@ class FiltersAdapterDelegate(
     override fun getDiffItemCallback(): DiffUtil.ItemCallback<Filter> = diffItemCallback
     private val diffItemCallback = object : DiffUtil.ItemCallback<Filter>() {
         override fun areItemsTheSame(oldItem: Filter, newItem: Filter): Boolean =
-            oldItem.categoryName + oldItem.slug == newItem.categoryName + newItem.slug
+            oldItem.categoryName + oldItem.id == newItem.categoryName + newItem.id
         override fun areContentsTheSame(oldItem: Filter, newItem: Filter): Boolean = oldItem == newItem
     }
 

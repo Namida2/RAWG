@@ -9,7 +9,11 @@ class FilterCategoryToFilterEntityMapper @Inject constructor() :
     Mapper<@JvmSuppressWildcards FilterCategory, List<@JvmSuppressWildcards FilterEntity>> {
     override fun map(value: FilterCategory): List<FilterEntity> =
         value.filters.map {
-            FilterEntity(value.categoryName, it.name, it.slug)
+            FilterEntity(
+                id = it.id.toInt(),
+                name = it.name,
+                categoryName = value.categoryName
+            )
         }
 
 

@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.core.R
+import com.example.core.domain.entities.requests.GamesGetRequest
+import com.example.core.domain.interfaces.OnNewGetRequestCallback
+import com.example.core.domain.interfaces.remoteRepository.GetRequest
 import com.example.core.domain.tools.constants.Constants.DEFAULT_SPAN_COUNT
 import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
 import com.example.core.domain.tools.enums.GameScreenTags
@@ -46,7 +49,7 @@ class GamesFragment : Fragment() {
         logE("onAttach, screenTag: $screenTag")
         smallMargin = resources.getDimensionPixelSize(R.dimen.small_margin)
         largeMargin = resources.getDimensionPixelSize(R.dimen.large_margin)
-        topMargin = resources.getDimensionPixelSize(R.dimen.top_games_margin)
+        topMargin = resources.getDimensionPixelSize(R.dimen.games_top_margin)
         viewModel = ViewModelProvider(
             this, ViewModelFactory(screenTag)
         )[GamesViewModel::class.java].also { it.getGames() }
@@ -99,6 +102,7 @@ class GamesFragment : Fragment() {
         observeOnStateChangedEvent()
     }
 
+    fun getOnNewRequestCallback (): OnNewGetRequestCallback<GamesGetRequest> = viewModel
 
     private fun observeSingleEventsEvent() {
         viewModel.singleEvents.observe(viewLifecycleOwner) {

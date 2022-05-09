@@ -1,10 +1,11 @@
 package com.example.featureFiltersDialog.domain.di
 
+import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.interfaces.remoteRepository.GetRequest
-import com.example.featureFiltersDialog.domain.interfaces.OnNewRequestCallback
+import com.example.core.domain.interfaces.OnNewGetRequestCallback
 
 object FiltersDepsStore {
-    var onNewRequest: OnNewRequestCallback<GetRequest>? = null
+    var onNewRequestCallback: OnNewGetRequestCallback<GamesGetRequest>? = null
     var deps: FiltersAppComponentDeps? = null
     var appComponent: FiltersAppComponent? = null
     get() = if(field == null) {
@@ -15,7 +16,7 @@ object FiltersDepsStore {
 
     fun onCleared() {
         deps = null
-        onNewRequest = null
+        onNewRequestCallback = null
         appComponent = null
     }
 }

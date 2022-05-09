@@ -42,7 +42,7 @@ class MyApplication : Application() {
 
     private fun configureRetrofit(): Retrofit {
         val okHttpClient = OkHttpClient.Builder()
-            .readTimeout(500, TimeUnit.MILLISECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
             .addInterceptor(
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
             ).addInterceptor(Interceptor { chain ->

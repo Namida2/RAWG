@@ -14,4 +14,7 @@ sealed class GameNetworkExceptions {
     data class GameSocketException(
         override val exception: SocketTimeoutException, val page: Int
     ) : GameNetworkExceptions(), NetworkException<SocketTimeoutException>
+    data class DefaultPageException(
+        override val exception: Exception, val page: Int
+    ) : GameNetworkExceptions(), NetworkException<Exception>
 }

@@ -9,25 +9,27 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.core.domain.tools.constants.StringConstants.DEFAULT_DATE
-import com.example.core.domain.tools.constants.StringConstants.DEFAULT_METACRITIC
+import com.example.core.domain.tools.constants.StringConstants.DEFAULT_START_DATE
 import com.example.core.domain.tools.constants.StringConstants.EMPTY_STRING
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
 import com.example.featureFiltersDialog.databinding.DialogFiltersBinding
 import com.example.featureFiltersDialog.domain.ViewModelFactory
 import com.example.featureFiltersDialog.domain.entities.toDateString
 import com.example.featureFiltersDialog.presentation.recyclerView.FilterCategoryNameAdapterDelegate
-import com.example.featureFiltersDialog.presentation.recyclerView.FiltersContainerAdapterDelegate
+import com.example.featureFiltersDialog.presentation.recyclerView.FiltersCategoryAdapterDelegate
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.datepicker.MaterialDatePicker
+import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
     private var binding: DialogFiltersBinding? = null
+    // TODO: Add making requests after setting filters,
+    //  game detailScreen and implement the myLikes //STOPPED//
+    // TODO: Change to byActivityViewModels and debug filtering
     private val viewModel by viewModels<FiltersViewModel> { ViewModelFactory }
     private lateinit var adapter: BaseRecyclerViewAdapter
 
-    // TODO: Add making requests after setting filters, game detailScreen and implement the myLikes //STOPPED//
     companion object {
         private val isExists = AtomicBoolean(false)
         fun getNewInstance(): FiltersBottomSheetDialog? =
@@ -39,7 +41,7 @@ class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
         adapter = BaseRecyclerViewAdapter(
             listOf(
                 FilterCategoryNameAdapterDelegate(),
-                FiltersContainerAdapterDelegate(viewModel)
+                FiltersCategoryAdapterDelegate(viewModel)
             )
         )
     }
@@ -53,36 +55,43 @@ class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val today = Calendar.getInstance().timeInMillis.toDateString()
         with(binding!!) {
             filtersContainerRecyclerView.adapter = adapter
+            filtersContainerRecyclerView.setHasFixedSize(true)
             filtersContainerRecyclerView.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             viewModel.getFilters()
-            acceptButton.setOnClickListener { viewModel.onAcceptButtonClick(adapter.currentList) }
+            applyButton.setOnClickListener {
+                viewModel.onAcceptButtonClick()
+                this@FiltersBottomSheetDialog.dismiss()
+            }
             clearButton.setOnClickListener { viewModel.onClearButtonClick() }
+            releaseStartDateTextView.text = DEFAULT_START_DATE
+            releaseEndDateTextView.text = today
             setListeners()
         }
         observeViewModelEvents()
     }
 
     private fun setListeners() {
-        setOnDateClickListener(binding!!.releaseStartDateTextView)
-        setOnDateClickListener(binding!!.releaseEndDateTextView)
+        setOnDateClickListener(binding!!.releaseStartDateTextView) { viewModel.startDateLastSaved = it }
+        setOnDateClickListener(binding!!.releaseEndDateTextView) { viewModel.endDateLastSaved = it }
         binding!!.metacriticMinTexView.addTextChangedListener(viewModel.metacriticMinTextWatcher)
         binding!!.metacriticMaxTexView.addTextChangedListener(viewModel.metacriticMaxTextWatcher)
     }
 
-    private fun setOnDateClickListener(field: TextView) {
+    private fun setOnDateClickListener(field: TextView, onNewDate: (newDate: String) -> Unit) {
         field.setOnClickListener {
             MaterialDatePicker
                 .Builder.datePicker()
                 .setTitleText("Select date")
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                 .build().also {
-                it.addOnPositiveButtonClickListener { dateLong ->
-                    field.text = dateLong.toDateString()
-                }
-            }.show(parentFragmentManager, "")
+                    it.addOnPositiveButtonClickListener { dateLong ->
+                        field.text = dateLong.toDateString().also(onNewDate)
+                    }
+                }.show(parentFragmentManager, "")
         }
     }
 
@@ -102,13 +111,14 @@ class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
                 }
                 is FilterVMEvents.OnFilterClearedEvent -> {
                     it.event.getData()?.let { filterItems ->
+                        val today = Calendar.getInstance().timeInMillis.toDateString()
                         adapter.submitList(filterItems)
                         with(binding!!) {
                             searchEditText.setText(EMPTY_STRING)
                             metacriticMinTexView.setText(EMPTY_STRING)
                             metacriticMaxTexView.setText(EMPTY_STRING)
-                            releaseStartDateTextView.text = DEFAULT_DATE
-                            releaseEndDateTextView.text = DEFAULT_DATE
+                            releaseStartDateTextView.text = DEFAULT_START_DATE
+                            releaseEndDateTextView.text = today
                         }
                     }
                 }

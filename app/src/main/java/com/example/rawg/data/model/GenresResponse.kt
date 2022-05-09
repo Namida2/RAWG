@@ -4,7 +4,7 @@ import com.example.rawg.data.model.interfaces.FilterParams
 import com.google.gson.annotations.SerializedName
 
 class GenresResult: FilterParams {
-    var id = 0
+    override var id = 0
     override var name: String? = null
     override var slug: String? = null
     @SerializedName("games_count")

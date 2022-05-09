@@ -35,9 +35,9 @@ class ReadFiltersUseCaseImpl @Inject constructor(
             logD("ReadFiltersUseCaseImpl: read new filters")
             readFiltersFromRemoteDataSource(coroutineScope)
             filtersDao.deleteAldAndInsertNewFilters(
-                filtersHolder.filters.map {
+                filtersHolder.filters.flatMap {
                     filterCategoryToFilterEntityMapper.map(it)
-                }.flatten()
+                }
             )
             cashInfoDao.deleteAldAndSetNewCashInfo(CashInfo(currentTime))
         } else {
@@ -70,8 +70,7 @@ class ReadFiltersUseCaseImpl @Inject constructor(
                 filterParamsToFiltersMapper.map(
                     RequestParams.GENRES.myName,
                     genresResult.await().results
-                )
-                    .also { logD(it.toString()) }
+                ).also { logD(it.toString()) }
             )
         )
         filtersHolder.filters.add(
@@ -80,8 +79,7 @@ class ReadFiltersUseCaseImpl @Inject constructor(
                 filterParamsToFiltersMapper.map(
                     RequestParams.PLATFORMS.myName,
                     platformsResult.await().results
-                )
-                    .also { logD(it.toString()) }
+                ).also { logD(it.toString()) }
             )
         )
         filtersHolder.filters.add(
@@ -90,8 +88,7 @@ class ReadFiltersUseCaseImpl @Inject constructor(
                 filterParamsToFiltersMapper.map(
                     RequestParams.PUBLISHERS.myName,
                     publishersResult.await().results
-                )
-                    .also { logD(it.toString()) }
+                ).also { logD(it.toString()) }
             )
         )
         filtersHolder.filters.add(
@@ -100,8 +97,7 @@ class ReadFiltersUseCaseImpl @Inject constructor(
                 filterParamsToFiltersMapper.map(
                     RequestParams.STORES.myName,
                     storesResult.await().results
-                )
-                    .also { logD(it.toString()) }
+                ).also { logD(it.toString()) }
             )
         )
         filtersHolder.filters.add(
@@ -110,8 +106,7 @@ class ReadFiltersUseCaseImpl @Inject constructor(
                 filterParamsToFiltersMapper.map(
                     RequestParams.TAGS.myName,
                     tagsResult.await().results
-                )
-                    .also { logD(it.toString()) }
+                ).also { logD(it.toString()) }
             )
         )
     }

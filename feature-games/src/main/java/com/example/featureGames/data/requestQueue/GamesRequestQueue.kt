@@ -25,9 +25,11 @@ class GamesRequestQueue @Inject constructor(
 ) : RequestQueue<GamesGetRequest, GamesResponse, GameNetworkExceptions> {
     private val requests = Collections.synchronizedMap(mutableMapOf<Int, GameRequestInfo>())
     override lateinit var onResultHandler: RequestQueueResultHandler<GamesResponse>
-    private val _responseHttpExceptions = MutableSharedFlow<GameNetworkExceptions>(onBufferOverflow = BufferOverflow.SUSPEND)
+    private val _responseHttpExceptions =
+        MutableSharedFlow<GameNetworkExceptions>(onBufferOverflow = BufferOverflow.SUSPEND)
     override val onNetworkExceptions: SharedFlow<GameNetworkExceptions> = _responseHttpExceptions
-    private val coroutineExceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+    private val coroutineExceptionHandler =
+        CoroutineExceptionHandler { coroutineContext, throwable ->
             logD("$this: coroutineContext: $coroutineContext, throwable: $throwable")
         }
     private val defaultContext = Job() + Main.immediate
@@ -71,11 +73,14 @@ class GamesRequestQueue @Inject constructor(
                     GameNetworkExceptions.GameSocketException(exception, page)
                 )
             is HttpException -> {
-                if(exception.code() != ResponseCodes.BAD_GATEWAY.code) requests.remove(page)
+                if (exception.code() != ResponseCodes.BAD_GATEWAY.code) requests.remove(page)
                 _responseHttpExceptions.emit(
                     GameNetworkExceptions.GamesHttpException(exception, page)
                 )
             }
+            else -> _responseHttpExceptions.emit(
+                GameNetworkExceptions.DefaultPageException(exception, page)
+            )
         }
     }
 
