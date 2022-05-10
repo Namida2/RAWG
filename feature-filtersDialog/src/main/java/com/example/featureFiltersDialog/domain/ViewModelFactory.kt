@@ -12,8 +12,7 @@ object ViewModelFactory : ViewModelProvider.Factory {
         val viewModel = when (modelClass) {
             FiltersViewModel::class.java -> {
                 FiltersViewModel(
-                    appComponent!!.provideFiltersHolder(),
-                    FiltersDepsStore.onNewRequestCallback!!
+                    appComponent!!.provideFiltersHolder()
                 )
             }
             else -> throw IllegalArgumentException(UNKNOWN_VIEW_MODEL_CLASS + modelClass)

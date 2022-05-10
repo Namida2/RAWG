@@ -18,14 +18,14 @@ fun getOrderedFields(): List<Filter> {
     return OrderedFields.values().flatMap {
         listOf(
             Filter(
-                orderedFiledTitle,
-                it.orderingField,
-                it.orderingField
+                id = it.orderingField,
+                name = it.orderingField,
+                categoryName = orderedFiledTitle,
             ),
             Filter(
-                orderedFiledTitle,
-                DASH_SIGN + it.orderingField,
-                it.reverseOrder
+                id = it.reverseOrder,
+                name = DASH_SIGN + it.orderingField,
+                categoryName = orderedFiledTitle,
             )
         )
     }

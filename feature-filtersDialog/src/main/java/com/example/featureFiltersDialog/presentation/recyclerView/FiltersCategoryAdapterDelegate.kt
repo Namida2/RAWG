@@ -53,8 +53,8 @@ class FiltersCategoryAdapterDelegate(
 }
 
 class FiltersCategoryViewHolder(
-    private val selectedBackground: Int,
-    private val defaultDrawable: Int,
+    selectedBackground: Int,
+    defaultDrawable: Int,
     private val callback: FiltersContainerAdapterDelegateCallback,
     private val binding: LayoutFiltersContainerBinding
 ) : BaseViewHolder<FilterCategory, LayoutFiltersContainerBinding>(binding) {
@@ -67,15 +67,24 @@ class FiltersCategoryViewHolder(
                 val newFiltersList = this.filters.toMutableList()
                 newFiltersList[position] = filter.copy(isSelected = !filter.isSelected)
                 this.filters = newFiltersList
-                if (this.isSingleSelectable) funDeselectLastFilter()
-                positionOfLastSelectedFilter = position
+                if (this.isSingleSelectable) {
+                    funDeselectLastFilter()
+                    positionOfLastSelectedFilter =
+                        if(position == positionOfLastSelectedFilter) -1 else position
+                }
                 callback.onNewFilter(this)
                 adapter.submitList(this.filters as List<BaseRecyclerViewType>)
             }
         }
     }
     private val adapter: BaseRecyclerViewAdapter = BaseRecyclerViewAdapter(
-        listOf(FiltersAdapterDelegate(selectedBackground, defaultDrawable, onFilterSelectedCallback))
+        listOf(
+            FiltersAdapterDelegate(
+                selectedBackground,
+                defaultDrawable,
+                onFilterSelectedCallback
+            )
+        )
     ).also {
         with(binding) {
             filtersContainerRecyclerView.adapter = it
@@ -90,17 +99,21 @@ class FiltersCategoryViewHolder(
     }
 
     override fun onBind(item: FilterCategory) {
-        filterCategory = item
+        filterCategory = item.also { category ->
+            if (category.isSingleSelectable)
+                positionOfLastSelectedFilter =
+                    category.filters.indexOfFirst { it.isSelected }
+        }
         adapter.submitList(item.filters as List<BaseRecyclerViewType>?)
     }
 
     private fun funDeselectLastFilter() {
-        if(positionOfLastSelectedFilter == -1) return
+        if (positionOfLastSelectedFilter == -1) return
         with(filterCategory!!) {
             val lastSelectedFilter = this.filters[positionOfLastSelectedFilter]
             val newFiltersList = this.filters.toMutableList()
             newFiltersList[positionOfLastSelectedFilter] = lastSelectedFilter.copy(
-                isSelected = !lastSelectedFilter.isSelected
+                isSelected = false
             )
             this.filters = newFiltersList
         }

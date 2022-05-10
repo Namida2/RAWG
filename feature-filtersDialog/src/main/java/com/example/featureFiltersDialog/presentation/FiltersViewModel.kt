@@ -19,10 +19,12 @@ import com.example.core.domain.tools.constants.StringConstants.DEFAULT_METACRITI
 import com.example.core.domain.tools.constants.StringConstants.DEFAULT_START_DATE
 import com.example.core.domain.tools.constants.StringConstants.FILTER_CATEGORY_NOT_FOUND
 import com.example.core.domain.tools.constants.StringConstants.DASH_SIGN
+import com.example.core.domain.tools.constants.StringConstants.EMPTY_STRING
 import com.example.core.domain.tools.enums.RequestParams
 import com.example.core.domain.tools.enums.getOrderedFields
 import com.example.core.domain.tools.extensions.logD
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
+import com.example.featureFiltersDialog.domain.di.FiltersDepsStore.onNewRequestCallback
 import com.example.featureFiltersDialog.domain.entities.toDateString
 import com.example.featureFiltersDialog.presentation.recyclerView.FiltersContainerAdapterDelegateCallback
 import java.util.*
@@ -47,23 +49,18 @@ sealed interface FilterVMEvents<out T> {
 }
 
 class FiltersViewModel(
-    private val filtersHolder: FiltersHolder,
-    private val onNewRequestCallback: OnNewGetRequestCallback<GamesGetRequest>
+    private val filtersHolder: FiltersHolder
 ) : ViewModel(), FiltersContainerAdapterDelegateCallback {
 
-    private var minMetacriticLastSaved = DEFAULT_METACRITIC
-    private var maxMetacriticLastSaved = DEFAULT_METACRITIC
-    var startDateLastSaved: String
-    var endDateLastSaved: String
+    lateinit var minMetacriticLastSaved: String
+    lateinit var maxMetacriticLastSaved: String
+    lateinit var startDateLastSaved: String
+    lateinit var endDateLastSaved: String
     private val _events = MutableLiveData<FilterVMEvents<Any>>()
     private var currentFilterItems = mutableListOf<BaseRecyclerViewType>()
     val events: LiveData<FilterVMEvents<Any>> = _events
 
-    init {
-        val today = Calendar.getInstance().timeInMillis.toDateString(DASH_SIGN)
-        startDateLastSaved = DEFAULT_START_DATE
-        endDateLastSaved = today
-    }
+    init { resetStringValues() }
 
     fun getFilters() {
         if (currentFilterItems.isEmpty())
@@ -74,9 +71,9 @@ class FiltersViewModel(
     fun onAcceptButtonClick() {
         val builder = GamesGetRequest.Builder()
         builder.setMetacritic(
-            if (minMetacriticLastSaved == DEFAULT_METACRITIC)
+            if (minMetacriticLastSaved == EMPTY_STRING)
                 MIN_METACRITIC.toString() else minMetacriticLastSaved,
-            if (maxMetacriticLastSaved == DEFAULT_METACRITIC)
+            if (maxMetacriticLastSaved == EMPTY_STRING)
                 MAX_METACRITIC.toString() else maxMetacriticLastSaved,
         )
         builder.setDates(startDateLastSaved, endDateLastSaved)
@@ -95,7 +92,7 @@ class FiltersViewModel(
                 }
             }
         }
-        onNewRequestCallback.onNewRequest(builder.build().also {
+        onNewRequestCallback?.onNewRequest(builder.build().also {
             logD(it.getParams().toString())
         })
     }
@@ -117,6 +114,7 @@ class FiltersViewModel(
             )
         }
         filtersHolder.filters = newList.toMutableList()
+        resetStringValues()
         prepareFiltersForView()
         _events.value = FilterVMEvents.OnFilterClearedEvent(
             SingleEvent(currentFilterItems)
@@ -210,6 +208,14 @@ class FiltersViewModel(
         _events.value = FilterVMEvents.OnNewFilterItemsEvent(
             SingleEvent(filterItems)
         )
+    }
+
+    private fun resetStringValues() {
+        val today = Calendar.getInstance().timeInMillis.toDateString(DASH_SIGN)
+        startDateLastSaved = DEFAULT_START_DATE
+        endDateLastSaved = today
+        minMetacriticLastSaved = EMPTY_STRING
+        maxMetacriticLastSaved = EMPTY_STRING
     }
 
 }

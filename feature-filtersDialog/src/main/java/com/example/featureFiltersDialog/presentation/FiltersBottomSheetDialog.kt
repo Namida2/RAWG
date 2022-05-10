@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.core.domain.tools.constants.StringConstants.DEFAULT_START_DATE
@@ -24,10 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
     private var binding: DialogFiltersBinding? = null
-    // TODO: Add making requests after setting filters,
-    //  game detailScreen and implement the myLikes //STOPPED//
-    // TODO: Change to byActivityViewModels and debug filtering
-    private val viewModel by viewModels<FiltersViewModel> { ViewModelFactory }
+    // TODO: game detailScreen and implement the myLikes //STOPPED//
+    private val viewModel by activityViewModels<FiltersViewModel> { ViewModelFactory }
     private lateinit var adapter: BaseRecyclerViewAdapter
 
     companion object {
@@ -55,7 +54,6 @@ class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val today = Calendar.getInstance().timeInMillis.toDateString()
         with(binding!!) {
             filtersContainerRecyclerView.adapter = adapter
             filtersContainerRecyclerView.setHasFixedSize(true)
@@ -67,8 +65,10 @@ class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
                 this@FiltersBottomSheetDialog.dismiss()
             }
             clearButton.setOnClickListener { viewModel.onClearButtonClick() }
-            releaseStartDateTextView.text = DEFAULT_START_DATE
-            releaseEndDateTextView.text = today
+            releaseStartDateTextView.text = viewModel.startDateLastSaved
+            releaseEndDateTextView.text = viewModel.endDateLastSaved
+            metacriticMinTexView.setText(viewModel.minMetacriticLastSaved)
+            metacriticMaxTexView.setText(viewModel.maxMetacriticLastSaved)
             setListeners()
         }
         observeViewModelEvents()

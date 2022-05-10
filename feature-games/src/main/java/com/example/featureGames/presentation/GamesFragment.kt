@@ -13,25 +13,28 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.core.R
 import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.interfaces.OnNewGetRequestCallback
-import com.example.core.domain.interfaces.remoteRepository.GetRequest
 import com.example.core.domain.tools.constants.Constants.DEFAULT_SPAN_COUNT
 import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
 import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.createMessageAlertDialog
+import com.example.core.domain.tools.extensions.logD
 import com.example.core.domain.tools.extensions.logE
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
+import com.example.featureGameDetails.presentation.GameDetailsFragment
 import com.example.featureGames.databinding.FragmentGamesBinding
 import com.example.featureGames.domain.ViewModelFactory
+import com.example.featureGames.domain.model.Game
 import com.example.featureGames.presentation.recyclerView.RecyclerViewScrollListener
 import com.example.featureGames.presentation.recyclerView.delegates.GameErrorPageAdapterDelegate
 import com.example.featureGames.presentation.recyclerView.delegates.GamesAdapterDelegate
+import com.example.featureGames.presentation.recyclerView.delegates.GamesAdapterDelegateCallback
 import com.example.featureGames.presentation.recyclerView.delegates.GamesPlaceholderDelegate
 import com.example.featureGames.presentation.recyclerView.itemDecorations.GamesItemDecorations
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import kotlin.properties.Delegates
 
-class GamesFragment : Fragment() {
+class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
     private var smallMargin by Delegates.notNull<Int>()
     private var largeMargin by Delegates.notNull<Int>()
     private var topMargin by Delegates.notNull<Int>()
@@ -55,7 +58,7 @@ class GamesFragment : Fragment() {
         )[GamesViewModel::class.java].also { it.getGames() }
         adapter = BaseRecyclerViewAdapter(
             listOf(
-                GamesAdapterDelegate(),
+                GamesAdapterDelegate(this),
                 GamesPlaceholderDelegate(),
                 GameErrorPageAdapterDelegate(viewModel)
             )
@@ -102,7 +105,9 @@ class GamesFragment : Fragment() {
         observeOnStateChangedEvent()
     }
 
-    fun getOnNewRequestCallback (): OnNewGetRequestCallback<GamesGetRequest> = viewModel
+    fun getOnNewRequestCallback(): OnNewGetRequestCallback<GamesGetRequest> = viewModel.also {
+        logD(screenTag.toString())
+    }
 
     private fun observeSingleEventsEvent() {
         viewModel.singleEvents.observe(viewLifecycleOwner) {
@@ -148,12 +153,23 @@ class GamesFragment : Fragment() {
                     super.onDismissed(transientBottomBar, event)
                     viewModel.snackBarIsShowing = false
                 }
-            })
-            .setTextColor(ContextCompat.getColor(requireContext(), R.color.white)).show()
+            }).setTextColor(ContextCompat.getColor(requireContext(), R.color.white)).show()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+    }
+
+    override fun onGameClick(game: Game) {
+        val containerViewId = (binding?.root?.parent?.parent as ViewGroup).id
+        parentFragmentManager.beginTransaction()
+            .replace( containerViewId, GameDetailsFragment(), "")
+            .addToBackStack("")
+            .commit()
+    }
+
+    override fun onGameLikeButtonClick(game: Game) {
+        TODO("Not yet implemented")
     }
 }

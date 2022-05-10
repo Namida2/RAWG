@@ -9,6 +9,7 @@
     android:layout_marginBottom="8dp"
     android:clickable="true"
     android:focusable="true"
+    app:cardElevation="8dp"
     app:cardBackgroundColor="@color/blackLite"
     app:cardCornerRadius="90dp">
 

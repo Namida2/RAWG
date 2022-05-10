@@ -1,26 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:background="@color/black">
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:background="@color/black">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="90dp"
+            android:layout_marginStart="100dp"
+            android:layout_marginEnd="100dp"
+            android:layout_marginTop="12dp"
+            android:layout_height="2dp"/>
+
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/searchEditText"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="38dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
             android:background="@drawable/bg_rounded_black_lite_16"
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="12dp"
@@ -43,7 +50,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:orientation="horizontal">
 
             <TextView
@@ -85,8 +92,6 @@
                 android:text="0000.00.00"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
-
-
         </LinearLayout>
 
         <LinearLayout
@@ -110,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:backgroundTint="@color/blackLite"
-                android:ems="3"
+                android:ems="4"
                 android:fontFamily="@font/montserrat_medium"
                 android:hint="70"
                 android:inputType="number"
@@ -145,32 +150,6 @@
                 android:textCursorDrawable="@null"
                 android:textSize="12sp" />
         </LinearLayout>
-    </LinearLayout>
-
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="100dp"
-        android:elevation="8dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="90dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/filtersContainerRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="184dp"
-        tools:listitem="@layout/layout_filter" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:cardBackgroundColor="@color/blackAlpha70"
-        app:cardCornerRadius="16dp"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -180,32 +159,44 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/clearButton"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:layout_weight="1"
                 android:background="@drawable/bg_black_lite_stroke_gradient_blue_to_pink_8"
                 android:fontFamily="@font/montserrat_medium"
-                android:minHeight="36dp"
+                android:minHeight="28dp"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
                 android:text="Cleare"
-                android:textSize="12sp"
                 android:textAllCaps="false"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/applyButton"
                 style="@style/buttonStyle"
-                android:layout_width="0dp"
-                android:textSize="12sp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_weight="1"
-                android:text="Apply" />
+                android:layout_marginStart="24dp"
+                android:minWidth="104dp"
+                android:text="Apply"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            app:cardBackgroundColor="@color/blackLite"
+            app:cardCornerRadius="90dp"
+            android:layout_marginTop="24dp"
+            android:layout_height="1dp"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/filtersContainerRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/layout_filter" />
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

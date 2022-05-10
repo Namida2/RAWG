@@ -20,11 +20,11 @@ import com.example.rawg.presentation.viewPager.GamePagerAdapter
 import com.example.rawg.presentation.viewPager.getCurrentFragment
 import com.google.android.material.tabs.TabLayoutMediator
 
+// TODO: App a GamesViewPagerFragment, GameScreenDetails and like games //STOPPED//
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private val gameScreenTags = GameScreenTags.values()
-    private var positionOfLastSelectedGameFragment = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         iniBinding()
