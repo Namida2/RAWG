@@ -21,7 +21,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-// TODO: App a GamesViewPagerFragment, GameScreenDetails and like games //STOPPED//
+// TODO: Add a GameScreenDetails, like games and a localStorage //STOPPED//
 class MainActivity : AppCompatActivity(), NavigationCallback {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
