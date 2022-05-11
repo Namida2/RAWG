@@ -1,4 +1,4 @@
-package com.example.featureGameDetails.presentation.viewPager
+package com.example.featureGameDetails.presentation.viewPager.adapterDelegates
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

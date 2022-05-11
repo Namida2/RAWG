@@ -1,33 +1,36 @@
 package com.example.rawg.presentation
 
 import android.os.Bundle
-import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.doOnPreDraw
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.core.domain.tools.constants.Constants.NUM_PAGES
+import com.example.core.domain.interfaces.NavigationCallback
 import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
-import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.createMessageAlertDialog
+import com.example.core.domain.tools.extensions.logD
 import com.example.core.domain.tools.extensions.prepareFadeInAnimation
-import com.example.featureFiltersDialog.domain.di.FiltersDepsStore
-import com.example.featureFiltersDialog.presentation.FiltersBottomSheetDialog
-import com.example.featureGames.presentation.GamesFragment
+import com.example.featureGameDetails.presentation.GameDetailsFragment
+import com.example.featureGamesViewPager.domain.di.GamesViewPagerDepsStore
+import com.example.featureGamesViewPager.presentation.GamesViewPagerFragment
 import com.example.rawg.databinding.ActivityMainBinding
 import com.example.rawg.domain.ViewModelFactory
 import com.example.rawg.domain.tools.appComponent
-import com.example.rawg.presentation.viewPager.GamePagerAdapter
-import com.example.rawg.presentation.viewPager.getCurrentFragment
-import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 // TODO: App a GamesViewPagerFragment, GameScreenDetails and like games //STOPPED//
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity(), NavigationCallback {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
-    private val gameScreenTags = GameScreenTags.values()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        iniBinding()
+        binding = ActivityMainBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
         getViewModel()
         observeViewModelStates()
         viewModel.readFilters()
@@ -39,35 +42,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         )[MainViewModel::class.java]
     }
 
-    private fun iniBinding() {
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        initViewPager()
-        binding.filtersCardView.setOnClickListener(this)
-    }
-
-    override fun onClick(v: View?) {
-        FiltersDepsStore.deps = appComponent
-        FiltersDepsStore.onNewRequestCallback = (binding.viewPager
-            .getCurrentFragment<GamesFragment>(supportFragmentManager))?.getOnNewRequestCallback()
-        FiltersBottomSheetDialog.getNewInstance()
-            ?.show(supportFragmentManager, "")
-    }
-
-    private fun initViewPager() {
-        with(binding) {
-            viewPager.adapter = GamePagerAdapter(this@MainActivity, gameScreenTags)
-            viewPager.offscreenPageLimit = NUM_PAGES
-            TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                tab.text = gameScreenTags[position].screenTag
-            }.attach()
-        }
-    }
-
-    override fun onBackPressed() {
-        if (binding.viewPager.currentItem == 0) super.onBackPressed()
-        else binding.viewPager.currentItem = binding.viewPager.currentItem - 1
-    }
-
     private fun observeViewModelStates() {
         viewModel.state.observe(this) {
             when (it) {
@@ -75,10 +49,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     createMessageAlertDialog(checkNetworkConnectionMessage)
                         ?.show(supportFragmentManager, "")
                 is MainVMStates.FiltersLoadedSuccessfully -> {
-                    setContentView(binding.root)
-                    binding.root.doOnPreDraw { rootView ->
-                        rootView.prepareFadeInAnimation().start()
-                    }
+                    GamesViewPagerDepsStore.navigationCallback = this
+                    supportFragmentManager.beginTransaction()
+                        .replace(binding.root.id, GamesViewPagerFragment()).commitNow()
                 }
                 is MainVMStates.Error -> {
                     createMessageAlertDialog(it.message)
@@ -88,6 +61,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 is MainVMStates.Default -> {}
             }
         }
+    }
+
+    override fun navigateTo(destination: Fragment) {
+        logD("navigateTo")
+        supportFragmentManager.beginTransaction()
+            .replace(binding.root.id, destination)
+            .addToBackStack("")
+            .commit()
     }
 
 }

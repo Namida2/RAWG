@@ -1,4 +1,4 @@
-package com.example.rawg.presentation.viewPager
+package com.example.featureGamesViewPager.presentation.viewPager
 
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment

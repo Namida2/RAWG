@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="page_large_margin">16dp</dimen>
+    <dimen name="page_small_margin">8dp</dimen>
+    <dimen name="current_page_margin">32dp</dimen>
+
+    <item name="default_scale" format="float" type="dimen">0.12</item>
+
+</resources>

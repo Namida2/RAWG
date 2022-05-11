@@ -37,6 +37,7 @@ dependencies {
     implementation project(":core")
 
     implementation 'com.google.dagger:dagger:2.41'
+    implementation project(path: ':dependencyDescription')
     kapt 'com.google.dagger:dagger-compiler:2.41'
 
     implementation 'androidx.fragment:fragment-ktx:1.4.1'

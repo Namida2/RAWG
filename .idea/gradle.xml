@@ -12,9 +12,11 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/dependencyDescription" />
             <option value="$PROJECT_DIR$/feature-filtersDialog" />
             <option value="$PROJECT_DIR$/feature-gameDetails" />
             <option value="$PROJECT_DIR$/feature-games" />
+            <option value="$PROJECT_DIR$/feature-gamesViewPager" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

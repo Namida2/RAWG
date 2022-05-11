@@ -23,6 +23,7 @@ import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
 import com.example.featureGameDetails.presentation.GameDetailsFragment
 import com.example.featureGames.databinding.FragmentGamesBinding
 import com.example.featureGames.domain.ViewModelFactory
+import com.example.featureGames.domain.di.GamesDepsStore
 import com.example.featureGames.domain.model.Game
 import com.example.featureGames.presentation.recyclerView.RecyclerViewScrollListener
 import com.example.featureGames.presentation.recyclerView.delegates.GameErrorPageAdapterDelegate
@@ -32,6 +33,7 @@ import com.example.featureGames.presentation.recyclerView.delegates.GamesPlaceho
 import com.example.featureGames.presentation.recyclerView.itemDecorations.GamesItemDecorations
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.transition.MaterialFadeThrough
 import kotlin.properties.Delegates
 
 class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
@@ -162,14 +164,12 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
     }
 
     override fun onGameClick(game: Game) {
-        val containerViewId = (binding?.root?.parent?.parent as ViewGroup).id
-        parentFragmentManager.beginTransaction()
-            .replace( containerViewId, GameDetailsFragment(), "")
-            .addToBackStack("")
-            .commit()
+        logD("onGameClick")
+        GamesDepsStore.navigationCallback?.navigateTo(GameDetailsFragment())
     }
 
     override fun onGameLikeButtonClick(game: Game) {
         TODO("Not yet implemented")
     }
+
 }
