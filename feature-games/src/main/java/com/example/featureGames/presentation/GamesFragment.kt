@@ -33,7 +33,7 @@ import com.example.featureGames.presentation.recyclerView.delegates.GamesPlaceho
 import com.example.featureGames.presentation.recyclerView.itemDecorations.GamesItemDecorations
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.transition.MaterialFadeThrough
+import com.google.android.material.transition.platform.MaterialElevationScale
 import kotlin.properties.Delegates
 
 class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
@@ -89,6 +89,9 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        exitTransition = MaterialElevationScale(false).apply {
+            duration = resources.getInteger(R.integer.transitionAnimationDuration).toLong()
+        }
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
         logE("recyclerView: ${binding!!.gamesRecyclerView.hashCode()}")
@@ -163,9 +166,9 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
         binding = null
     }
 
-    override fun onGameClick(game: Game) {
+    override fun onGameClick(gameRootView: View) {
         logD("onGameClick")
-        GamesDepsStore.navigationCallback?.navigateTo(GameDetailsFragment())
+        GamesDepsStore.navigationCallback?.navigateTo(GameDetailsFragment(), gameRootView, "end")
     }
 
     override fun onGameLikeButtonClick(game: Game) {

@@ -11,6 +11,7 @@
 
         <androidx.viewpager2.widget.ViewPager2
             android:layout_width="match_parent"
+            android:transitionName="end"
             android:id="@+id/screenshotViewPager"
             android:layout_height="match_parent" />
 

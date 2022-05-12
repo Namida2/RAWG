@@ -17,6 +17,7 @@ import com.example.featureGameDetails.domain.entities.GameScreenshot
 import com.example.featureGameDetails.presentation.viewPager.GamePageTransformer
 import com.example.featureGameDetails.presentation.viewPager.adapterDelegates.GameScreenshotAdapterDelegate
 import com.example.featureGameDetails.presentation.viewPager.itemDecorations.GameScreenshotsItemDecorations
+import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialFadeThrough
 import kotlin.properties.Delegates
 
@@ -49,11 +50,15 @@ class GameDetailsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        enterTransition = MaterialFadeThrough()
-        reenterTransition = MaterialFadeThrough()
+//        enterTransition = MaterialFadeThrough()
+//        reenterTransition = MaterialFadeThrough()
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            duration = resources.getInteger(
+                com.example.core.R.integer.transitionAnimationDuration
+            ).toLong()
+        }
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
-
         binding?.screenshotViewPager?.adapter = adapter
         binding?.screenshotViewPager?.offscreenPageLimit = 1
         binding?.screenshotViewPager?.addItemDecoration(

@@ -1,6 +1,7 @@
 package com.example.featureGames.presentation.recyclerView.delegates
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.example.core.domain.tools.extensions.precomputeAndSetText
@@ -12,7 +13,7 @@ import com.example.featureGames.databinding.LayoutGameBinding
 import com.example.featureGames.domain.model.Game
 
 interface GamesAdapterDelegateCallback {
-    fun onGameClick(game: Game)
+    fun onGameClick(gameRootView: View)
     fun onGameLikeButtonClick(game: Game)
 }
 
@@ -32,7 +33,7 @@ class GamesAdapterDelegate(
             LayoutGameBinding.inflate(inflater, container, false).also {
                 it.root.setOnClickListener { view ->
                     view?.tag?.let { tag ->
-                        callback.onGameClick(tag as Game)
+                        callback.onGameClick(tag as View)
                     }
                 }
                 it.likeButtonContainer.setOnClickListener { view ->
@@ -61,7 +62,8 @@ class GamesViewGolder(
 
     override fun onBind(item: Game) {
         with(binding) {
-            root.tag = item
+            root.tag = root
+            root.transitionName = item.id.toString()
             gameName.precomputeAndSetText(item.name)
             addedCount.precomputeAndSetText(item.added.toString())
             metacriticRating.precomputeAndSetText(item.metacritic.toString())

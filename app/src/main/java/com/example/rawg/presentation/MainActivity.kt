@@ -1,25 +1,19 @@
 package com.example.rawg.presentation
 
 import android.os.Bundle
-import androidx.activity.OnBackPressedCallback
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.core.domain.interfaces.NavigationCallback
 import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
 import com.example.core.domain.tools.extensions.createMessageAlertDialog
 import com.example.core.domain.tools.extensions.logD
-import com.example.core.domain.tools.extensions.prepareFadeInAnimation
-import com.example.featureGameDetails.presentation.GameDetailsFragment
 import com.example.featureGamesViewPager.domain.di.GamesViewPagerDepsStore
 import com.example.featureGamesViewPager.presentation.GamesViewPagerFragment
 import com.example.rawg.databinding.ActivityMainBinding
 import com.example.rawg.domain.ViewModelFactory
 import com.example.rawg.domain.tools.appComponent
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 // TODO: Add a GameScreenDetails, like games and a localStorage //STOPPED//
 class MainActivity : AppCompatActivity(), NavigationCallback {
@@ -63,12 +57,14 @@ class MainActivity : AppCompatActivity(), NavigationCallback {
         }
     }
 
-    override fun navigateTo(destination: Fragment) {
+    override fun navigateTo(destination: Fragment, sharedEView: View?, tag: String) {
         logD("navigateTo")
         supportFragmentManager.beginTransaction()
             .replace(binding.root.id, destination)
             .addToBackStack("")
-            .commit()
+            .also { transaction ->
+                sharedEView?.let{ transaction.addSharedElement(it, tag)}
+            }.commit()
     }
 
 }

@@ -15,6 +15,7 @@ import com.example.featureGamesViewPager.databinding.FragmentGamesViewPagerBindi
 import com.example.featureGamesViewPager.presentation.viewPager.GamePagerAdapter
 import com.example.featureGamesViewPager.presentation.viewPager.getCurrentFragment
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.transition.MaterialFade
 import com.google.android.material.transition.MaterialFadeThrough
 
 class GamesViewPagerFragment : Fragment(), View.OnClickListener {
