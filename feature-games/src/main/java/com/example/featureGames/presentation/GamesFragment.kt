@@ -26,14 +26,10 @@ import com.example.featureGames.domain.ViewModelFactory
 import com.example.featureGames.domain.di.GamesDepsStore
 import com.example.featureGames.domain.model.Game
 import com.example.featureGames.presentation.recyclerView.RecyclerViewScrollListener
-import com.example.featureGames.presentation.recyclerView.delegates.GameErrorPageAdapterDelegate
-import com.example.featureGames.presentation.recyclerView.delegates.GamesAdapterDelegate
-import com.example.featureGames.presentation.recyclerView.delegates.GamesAdapterDelegateCallback
-import com.example.featureGames.presentation.recyclerView.delegates.GamesPlaceholderDelegate
+import com.example.featureGames.presentation.recyclerView.delegates.*
 import com.example.featureGames.presentation.recyclerView.itemDecorations.GamesItemDecorations
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.transition.platform.MaterialElevationScale
 import kotlin.properties.Delegates
 
 class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
@@ -89,9 +85,6 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        exitTransition = MaterialElevationScale(false).apply {
-            duration = resources.getInteger(R.integer.transitionAnimationDuration).toLong()
-        }
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
         logE("recyclerView: ${binding!!.gamesRecyclerView.hashCode()}")
@@ -166,9 +159,13 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
         binding = null
     }
 
-    override fun onGameClick(gameRootView: View) {
-        logD("onGameClick")
-        GamesDepsStore.navigationCallback?.navigateTo(GameDetailsFragment(), gameRootView, "end")
+    override fun onGameClick(clickedGameInfo: ClickedGameInfo) {
+        logD(clickedGameInfo.gameId.toString())
+        GamesDepsStore.navigationCallback?.navigateTo(
+            GameDetailsFragment(),
+            clickedGameInfo.gameRootView,
+            resources.getString(R.string.defaultEndTransitionName)
+        )
     }
 
     override fun onGameLikeButtonClick(game: Game) {

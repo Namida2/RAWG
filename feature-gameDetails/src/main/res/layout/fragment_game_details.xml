@@ -2,6 +2,7 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/black"
     android:layout_height="match_parent">
     <LinearLayout
@@ -11,14 +12,16 @@
 
         <androidx.viewpager2.widget.ViewPager2
             android:layout_width="match_parent"
-            android:transitionName="end"
             android:id="@+id/screenshotViewPager"
+            android:transitionName="@string/defaultEndTransitionName"
             android:layout_height="match_parent" />
 
         <LinearLayout
+            android:id="@+id/ratings"
             android:layout_marginTop="16dp"
             android:orientation="horizontal"
-            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <LinearLayout
@@ -52,7 +55,92 @@
                 app:cardBackgroundColor="@color/blackLite"
                 android:layout_height="40dp"/>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_twitch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/twitchCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="102"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                    app:layout_constraintStart_toEndOf="@+id/imageView"
+                    app:layout_constraintTop_toTopOf="@+id/imageView" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_reddit"
+                    app:layout_constraintStart_toEndOf="@id/twitchCount"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/redditTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="7063"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+                    app:layout_constraintStart_toEndOf="@+id/imageView2"
+                    app:layout_constraintTop_toTopOf="@+id/imageView2" />
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/ic_you_tube"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+                <TextView
+                    android:id="@+id/youtubeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="7063"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+                    app:layout_constraintStart_toEndOf="@+id/imageView4"
+                    app:layout_constraintTop_toTopOf="@+id/imageView4" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="1dp"
+                android:layout_marginStart="16dp"
+                app:cardBackgroundColor="@color/blackLite"
+                android:layout_height="40dp"/>
+
             <LinearLayout
+                android:layout_marginStart="16dp"
                 android:layout_width="wrap_content"
                 android:orientation="vertical"
                 android:layout_height="wrap_content">
@@ -76,6 +164,310 @@
                     android:fontFamily="@font/montserrat_medium"
                     android:textColor="@color/green"/>
             </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/progressContainer"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Exceptional:"
+                android:textSize="10sp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/white"/>
+
+            <View
+                android:layout_width="280dp"
+                android:layout_height="6dp"
+                android:layout_marginTop="4dp"
+                android:id="@+id/exceptionalProgress"
+                android:background="@drawable/bg_solid_gradient_blue_to_pink" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recommended:"
+                android:layout_marginTop="6dp"
+                android:textSize="10sp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/white"/>
+
+            <View
+                android:layout_marginTop="4dp"
+                android:layout_width="200dp"
+                android:layout_height="6dp"
+                android:id="@+id/recommendedProgress"
+                android:background="@drawable/bg_solid_gradient_blue_to_pink" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Meh:"
+                android:layout_marginTop="6dp"
+                android:textSize="10sp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/white"/>
+
+            <View
+                android:layout_marginTop="4dp"
+                android:layout_width="120dp"
+                android:layout_height="6dp"
+                android:id="@+id/mehProgress"
+                android:background="@drawable/bg_solid_gradient_blue_to_pink" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Skip:"
+                android:layout_marginTop="6dp"
+                android:textSize="10sp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/white"/>
+
+            <View
+                android:layout_marginTop="4dp"
+                android:layout_width="60dp"
+                android:layout_height="6dp"
+                android:id="@+id/skipProgress"
+                android:background="@drawable/bg_solid_gradient_blue_to_pink" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Released: "
+                android:textSize="12sp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:textColor="@color/white"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2009.02.05"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/releasedAtRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="About:"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:text="From PlayStation Studios and Bluepoint Games comes a remake of the PlayStation classic, Demon’s Souls. Entirely rebuilt from the ground up and masterfully enhanced… "
+                android:textSize="12sp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/white"/>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/applyButton"
+                style="@style/buttonStyle"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Read more"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/yetTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Yet: "
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/yetCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="139"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/yetTextView"
+                    app:layout_constraintStart_toEndOf="@+id/yetTextView"
+                    app:layout_constraintTop_toTopOf="@+id/yetTextView" />
+
+                <TextView
+                    android:id="@+id/beatenTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Beaten: "
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/yetTextView" />
+
+                <TextView
+                    android:id="@+id/beatenCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="115"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/beatenTextView"
+                    app:layout_constraintStart_toEndOf="@+id/beatenTextView"
+                    app:layout_constraintTop_toTopOf="@+id/beatenTextView" />
+
+                <TextView
+                    android:id="@+id/droppedTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Beaten: "
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/beatenTextView" />
+
+                <TextView
+                    android:id="@+id/droppedCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="115"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/droppedTextView"
+                    app:layout_constraintStart_toEndOf="@+id/droppedTextView"
+                    app:layout_constraintTop_toTopOf="@+id/droppedTextView" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:orientation="vertical"
+                android:layout_marginStart="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/ownedTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Owned: "
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/ownedCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="139"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/ownedTextView"
+                    app:layout_constraintStart_toEndOf="@+id/ownedTextView"
+                    app:layout_constraintTop_toTopOf="@+id/ownedTextView" />
+
+                <TextView
+                    android:id="@+id/toPlayTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Toplay: "
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ownedTextView" />
+
+                <TextView
+                    android:id="@+id/toPlayCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="115"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/toPlayTextView"
+                    app:layout_constraintStart_toEndOf="@+id/toPlayTextView"
+                    app:layout_constraintTop_toTopOf="@+id/toPlayTextView" />
+
+                <TextView
+                    android:id="@+id/playingTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Playing: "
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/toPlayCount" />
+
+                <TextView
+                    android:id="@+id/playingCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="115"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/playingTextView"
+                    app:layout_constraintStart_toEndOf="@+id/playingTextView"
+                    app:layout_constraintTop_toTopOf="@+id/playingTextView" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
 

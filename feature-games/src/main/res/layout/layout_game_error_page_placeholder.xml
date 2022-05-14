@@ -4,10 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:shimmer_auto_start="true"
-    app:shimmer_base_color="@color/gray"
     app:shimmer_dropoff="200"
-    app:shimmer_duration="1400"
-    app:shimmer_highlight_color="@color/blackLite">
+    app:shimmer_duration="1400">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"

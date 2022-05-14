@@ -7,6 +7,7 @@ import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.core.domain.tools.extensions.prepareDefaultSpringAnimation
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.BaseViewHolder
 import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
@@ -82,5 +83,8 @@ class GameErrorPageViewHolder(
 ) : BaseViewHolder<GameErrorPagePlaceHolder, LayoutGameErrorPagePlaceholderBinding>(binding) {
     override fun onBind(item: GameErrorPagePlaceHolder) {
         binding.container.tag = item.page
+        binding.root.prepareDefaultSpringAnimation(
+            binding.root.height/6.toFloat()
+        ).start()
     }
 }

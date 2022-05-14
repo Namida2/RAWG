@@ -5,7 +5,8 @@
     <dimen name="games_top_margin">56dp</dimen>
     <dimen name="filters_top_margin">168dp</dimen>
 
-    <item name="transitionAnimationDuration" type="integer">300</item>
-    <item name="dismissDialogTime" type="integer">120</item>
+    <item name="defaultSpringStartPosition" type="integer">200</item>
+    <item name="defaultAnimationDuration" type="integer">360</item>
+    <item name="defaultAnimationDelay" type="integer">120</item>
     <item name="navigationUIStartDelay" type="integer">200</item>
 </resources>

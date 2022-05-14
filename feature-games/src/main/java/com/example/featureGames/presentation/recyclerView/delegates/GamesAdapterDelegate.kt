@@ -5,6 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.example.core.domain.tools.extensions.precomputeAndSetText
+import com.example.core.domain.tools.extensions.prepareDefaultSpringAnimation
+import com.example.core.domain.tools.extensions.prepareScaleAnimation
+import com.example.core.domain.tools.extensions.prepareSlideUpFromBottom
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.BaseViewHolder
 import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
@@ -13,9 +16,11 @@ import com.example.featureGames.databinding.LayoutGameBinding
 import com.example.featureGames.domain.model.Game
 
 interface GamesAdapterDelegateCallback {
-    fun onGameClick(gameRootView: View)
+    fun onGameClick(clickedGameInfo: ClickedGameInfo)
     fun onGameLikeButtonClick(game: Game)
 }
+
+data class ClickedGameInfo(val gameRootView: View, val gameId: Int)
 
 class GamesAdapterDelegate(
     private val callback: GamesAdapterDelegateCallback
@@ -32,14 +37,13 @@ class GamesAdapterDelegate(
         return GamesViewGolder(
             LayoutGameBinding.inflate(inflater, container, false).also {
                 it.root.setOnClickListener { view ->
-                    view?.tag?.let { tag ->
-                        callback.onGameClick(tag as View)
-                    }
+                    view?.tag?.let { tag -> callback.onGameClick(tag as ClickedGameInfo) }
+                }
+                it.gamePreviewImage.setOnClickListener { view ->
+                    view?.tag?.let { tag -> callback.onGameClick(tag as ClickedGameInfo) }
                 }
                 it.likeButtonContainer.setOnClickListener { view ->
-                    view?.tag?.let { tag ->
-                        callback.onGameLikeButtonClick(tag as Game)
-                    }
+                    view?.tag?.let { tag -> callback.onGameLikeButtonClick(tag as Game) }
                 }
             }
         )
@@ -49,7 +53,6 @@ class GamesAdapterDelegate(
     private val diffItemCallback = object : DiffUtil.ItemCallback<Game>() {
         override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean =
             newItem.id == oldItem.id
-
         override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean =
             newItem == oldItem
     }
@@ -62,7 +65,9 @@ class GamesViewGolder(
 
     override fun onBind(item: Game) {
         with(binding) {
-            root.tag = root
+            val tag = ClickedGameInfo(root, item.id)
+            root.tag = tag
+            gamePreviewImage.tag = tag
             root.transitionName = item.id.toString()
             gameName.precomputeAndSetText(item.name)
             addedCount.precomputeAndSetText(item.added.toString())

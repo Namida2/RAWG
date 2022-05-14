@@ -3,6 +3,7 @@ package com.example.featureGames.presentation.recyclerView.delegates
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import com.example.core.domain.tools.extensions.prepareDefaultSpringAnimation
 import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.BaseViewHolder
@@ -31,5 +32,9 @@ class GamesPlaceholderDelegate: RecyclerViewAdapterDelegate<GamePlaceHolder, Lay
 class GamesPlaceHolderViewGolder(
     private val binding: LayoutGamePlaceholderBinding
 ): BaseViewHolder<GamePlaceHolder, LayoutGamePlaceholderBinding>(binding) {
-    override fun onBind(item: GamePlaceHolder) = Unit
+    override fun onBind(item: GamePlaceHolder) {
+        binding.root.prepareDefaultSpringAnimation(
+            springStartPosition = binding.root.height/6.toFloat()
+        ).start()
+    }
 }

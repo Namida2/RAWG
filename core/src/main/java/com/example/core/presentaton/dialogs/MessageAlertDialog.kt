@@ -58,7 +58,7 @@ class MessageAlertDialog(
             actionButton.setOnClickListener {
                 action?.let { notNullAction -> notNullAction() }
                 CoroutineScope(Main).launch(coroutineExceptionHandler) {
-                    delay(requireContext().resources.getInteger(R.integer.dismissDialogTime).toLong())
+                    delay(requireContext().resources.getInteger(R.integer.defaultAnimationDelay).toLong())
                     dismiss()
                 }
             }
