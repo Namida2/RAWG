@@ -48,7 +48,6 @@ class GameDetailsFragment : Fragment() {
             duration = resources.getInteger(com.example.core.R.integer.defaultAnimationDuration).toLong()
             scrimColor = Color.TRANSPARENT
         }
-
     }
 
     override fun onCreateView(

@@ -20,6 +20,7 @@
             android:layout_height="164dp"
             android:clickable="true"
             android:focusable="true"
+            app:rippleColor="@color/white"
             app:cardCornerRadius="16dp"
             app:cardElevation="8dp">
 
@@ -28,7 +29,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:background="@color/blackLite"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/im_game" />
 
             <com.google.android.material.card.MaterialCardView

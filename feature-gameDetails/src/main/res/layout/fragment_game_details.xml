@@ -2,20 +2,19 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/black"
     android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="match_parent">
-
+        <!--ScreenShots-->
         <androidx.viewpager2.widget.ViewPager2
             android:layout_width="match_parent"
             android:id="@+id/screenshotViewPager"
             android:transitionName="@string/defaultEndTransitionName"
             android:layout_height="match_parent" />
-
+        <!--Ratings-->
         <LinearLayout
             android:id="@+id/ratings"
             android:layout_marginTop="16dp"
@@ -166,7 +165,7 @@
             </LinearLayout>
 
         </LinearLayout>
-
+        <!--ProgressBars-->
         <LinearLayout
             android:id="@+id/progressContainer"
             android:layout_marginTop="24dp"
@@ -240,7 +239,7 @@
                 android:background="@drawable/bg_solid_gradient_blue_to_pink" />
 
         </LinearLayout>
-
+        <!--ReleasedAt-->
         <LinearLayout
             android:layout_marginTop="24dp"
             android:orientation="horizontal"
@@ -263,12 +262,11 @@
                 android:fontFamily="@font/montserrat_medium"
                 android:textColor="@color/white"/>
         </LinearLayout>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/releasedAtRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-
+        <!--About-->
         <LinearLayout
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
@@ -281,7 +279,7 @@
                 android:layout_height="wrap_content"
                 android:text="About:"
                 android:textSize="12sp"
-                android:fontFamily="@font/montserrat_medium"
+                android:fontFamily="@font/montserrat_semi_bold"
                 android:textColor="@color/white"/>
 
             <TextView
@@ -304,8 +302,7 @@
                 android:text="Read more"
                 android:textSize="12sp" />
         </LinearLayout>
-
-
+        <!--AddingStatuses-->
         <LinearLayout
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
@@ -313,7 +310,6 @@
             android:layout_marginTop="24dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
@@ -390,7 +386,6 @@
                     app:layout_constraintStart_toEndOf="@+id/droppedTextView"
                     app:layout_constraintTop_toTopOf="@+id/droppedTextView" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:orientation="vertical"
                 android:layout_marginStart="24dp"
@@ -468,10 +463,124 @@
                     app:layout_constraintStart_toEndOf="@+id/playingTextView"
                     app:layout_constraintTop_toTopOf="@+id/playingTextView" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
         </LinearLayout>
-
-
+        <!--GoToButtons-->
+        <LinearLayout
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/goToRedditButton"
+                style="@style/buttonStyle"
+                android:drawableEnd="@drawable/ic_reddit"
+                android:layout_marginStart="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Go to reddit"
+                android:textSize="12sp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/goToWebsiteButton"
+                style="@style/buttonStyle"
+                android:drawableEnd="@drawable/ic_firefox"
+                android:layout_marginStart="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Go to website"
+                android:textSize="12sp" />
+        </LinearLayout>
+        <!--GoToButtons-->
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/goToMetacriticButton"
+                style="@style/buttonStyle"
+                android:drawableEnd="@drawable/ic_metacritic"
+                android:layout_marginStart="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Go to metacritic"
+                android:textSize="12sp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/goToTrailerButton"
+                style="@style/buttonStyle"
+                android:drawableEnd="@drawable/ic_you_tube"
+                android:layout_marginStart="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Go to trailer"
+                android:textSize="12sp" />
+        </LinearLayout>
+        <!--Genres-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/genresRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <!--Tags-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tagsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <!--Requirements-->
+        <LinearLayout
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="32dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Requirements"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:textColor="@color/white"/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Minimum:"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:textColor="@color/white"/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Minimum: OS: Windows 10 Processor: INTEL CORE I5-8400 or AMD RYZEN 3 3300X Memory: 12 GB RAM Graphics: NVIDIA GEFORCE GTX 1060 3 GB or AMD RADEON RX 580 4 GB DirectX: Version 12 Storage: 60 GB available space Sound Card: Windows Compatible Audio Device Additional Notes:"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:textColor="@color/white"/>
+            <TextView
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recommended:"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:textColor="@color/white"/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Recommended: OS: Windows 10/11 Processor: INTEL CORE I7-8700K or AMD RYZEN 5 3600X Memory: 16 GB RAM Graphics: NVIDIA GEFORCE GTX 1070 8 GB or AMD RADEON RX VEGA 56 8 GB DirectX: Version 12 Storage: 60 GB available space Sound Card: Windows Compatible Audio Device Additional Notes:"     android:textSize="12sp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+        <!--Where to buy-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/storesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 
