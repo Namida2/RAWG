@@ -1,6 +1,6 @@
 package com.example.featureGames.domain.repositories
 
-import com.example.featureGames.data.entities.rawGameResponse.GamesResponse
+import com.example.core_game.data.rawGameResponse.GamesResponse
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
 

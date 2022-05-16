@@ -1,20 +1,24 @@
 package com.example.featureGames.domain.useCase
 
-import com.example.core.domain.entities.GameNetworkExceptions
+import com.example.core.domain.entities.tools.GameNetworkExceptions
 import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.logD
 import com.example.featureGames.data.entities.imageLoader.GameBackgroundImageUrlInfo
-import com.example.featureGames.data.entities.rawGameResponse.GamesResponse
-import com.example.featureGames.data.entities.rawGameResponse.RAWGame
+import com.example.core_game.data.rawGameResponse.GamesResponse
+import com.example.core_game.data.rawGameResponse.RAWGame
+import com.example.core_game.domain.GameBackgroundImageChanges
+import com.example.core_game.domain.GameScreenInfo
+import com.example.core_game.domain.GamesHolder
+import com.example.core_game.domain.NewGamesForScreen
 import com.example.featureGames.data.imageLoaders.LoadedImageInfo
 import com.example.featureGames.data.imageLoaders.interfaces.ImagesLoader
 import com.example.featureGames.data.imageLoaders.interfaces.ImagesLoaderResultHandler
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueue
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueueResultHandler
 import com.example.featureGames.data.requestQueue.interfaces.RequestsQueueChanges
-import com.example.featureGames.domain.model.*
-import com.example.featureGames.domain.model.interfaces.GameScreenItemType
+import com.example.featureGames.domain.entities.*
+import com.example.core_game.domain.interfaces.GameScreenItemType
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -32,7 +36,7 @@ class AllGamesUseCase @AssistedInject constructor(
     @Assisted override var screenTag: GameScreenTags,
     @Assisted private var coroutineScope: CoroutineScope,
     private val gamesHolder: GamesHolder,
-    private val gamesMapper: Game.GameMapper,
+    private val gamesMapper: com.example.core_game.domain.Game.GameMapper,
     private val imagesLoader: ImagesLoader<GameBackgroundImageUrlInfo>,
     private val requestsQueueGames: RequestQueue<GamesGetRequest, GamesResponse, GameNetworkExceptions>
 ) : GamesUseCase, RequestQueueResultHandler<GamesResponse>,
@@ -80,7 +84,7 @@ class AllGamesUseCase @AssistedInject constructor(
     override fun getScreenInfo(): GameScreenInfo =
         gamesHolder.getScreenInfo(screenTag)
 
-    override fun getGamesByPage(page: Int): List<Game> =
+    override fun getGamesByPage(page: Int): List<com.example.core_game.domain.Game> =
         gamesHolder.getGamesByScreenTagAndPage(screenTag, page)
 
     override fun onNetworkConnected(coroutineScope: CoroutineScope) {

@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.core.domain.entities.GameNetworkExceptions
-import com.example.core.domain.entities.Message
-import com.example.core.domain.entities.NetworkConnectionListener.isNetworkConnected
-import com.example.core.domain.entities.NetworkConnectionListener.networkConnectionChanges
-import com.example.core.domain.entities.SingleEvent
+import com.example.core.domain.entities.tools.GameNetworkExceptions
+import com.example.core.domain.entities.tools.Message
+import com.example.core.domain.entities.tools.NetworkConnectionListener.isNetworkConnected
+import com.example.core.domain.entities.tools.NetworkConnectionListener.networkConnectionChanges
+import com.example.core.domain.entities.tools.SingleEvent
 import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.interfaces.OnNewGetRequestCallback
 import com.example.core.domain.interfaces.OnPositionChangeListener
@@ -23,8 +23,11 @@ import com.example.core.domain.tools.enums.ResponseCodes
 import com.example.core.domain.tools.extensions.logD
 import com.example.core.domain.tools.extensions.logE
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
-import com.example.featureGames.domain.model.*
-import com.example.featureGames.domain.model.interfaces.GameScreenItemType
+import com.example.core_game.domain.GameBackgroundImageChanges
+import com.example.core_game.domain.GameScreenInfo
+import com.example.core_game.domain.NewGamesForScreen
+import com.example.featureGames.domain.entities.*
+import com.example.core_game.domain.interfaces.GameScreenItemType
 import com.example.featureGames.domain.useCase.GamesUseCase
 import com.example.featureGames.domain.useCase.GamesUseCaseFactory
 import com.example.featureGames.presentation.recyclerView.delegates.GameErrorPageAdapterDelegateCallback
@@ -227,7 +230,7 @@ class GamesViewModel(
 //        logD("gamesBackgroundImageChanges, page: ${changes.page}")
         if (this.gameScreenInfo.tag != changes.screenTag) return
         currentScreenItems[changes.page]!!.indexOfFirst { type ->
-            if (type is Game) type.id == changes.game.id else false
+            if (type is com.example.core_game.domain.Game) type.id == changes.game.id else false
         }.also { index ->
             if (index == -1) throw IllegalArgumentException(GAME_NOT_FOUND + changes.game.id)
             currentScreenItems[changes.page]!![index] = changes.game

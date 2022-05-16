@@ -6,13 +6,12 @@ import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.core.domain.entities.SingleEvent
+import com.example.core.domain.entities.tools.SingleEvent
 import com.example.core.domain.entities.filters.Filter
 import com.example.core.domain.entities.filters.FilterCategory
 import com.example.core.domain.entities.filters.FilterCategoryName
 import com.example.core.domain.entities.filters.FiltersHolder
 import com.example.core.domain.entities.requests.GamesGetRequest
-import com.example.core.domain.interfaces.OnNewGetRequestCallback
 import com.example.core.domain.tools.constants.Constants.MAX_METACRITIC
 import com.example.core.domain.tools.constants.Constants.MIN_METACRITIC
 import com.example.core.domain.tools.constants.StringConstants.DEFAULT_METACRITIC

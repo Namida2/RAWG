@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.core.domain.entities.Message
-import com.example.core.domain.entities.NetworkConnectionListener
+import com.example.core.domain.entities.tools.Message
+import com.example.core.domain.entities.tools.NetworkConnectionListener
 import com.example.core.domain.interfaces.Stateful
 import com.example.core.domain.tools.constants.Messages.defaultErrorMessage
 import com.example.core.domain.tools.extensions.logD

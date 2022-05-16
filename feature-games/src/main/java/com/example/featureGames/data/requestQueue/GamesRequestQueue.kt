@@ -1,14 +1,14 @@
 package com.example.featureGames.data.requestQueue
 
-import com.example.core.domain.entities.GameNetworkExceptions
+import com.example.core.domain.entities.tools.GameNetworkExceptions
 import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.tools.enums.ResponseCodes
 import com.example.core.domain.tools.extensions.logD
-import com.example.featureGames.data.entities.rawGameResponse.GamesResponse
+import com.example.core_game.data.rawGameResponse.GamesResponse
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueue
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueueResultHandler
 import com.example.featureGames.data.requestQueue.interfaces.RequestsQueueChanges
-import com.example.featureGames.domain.model.GameRequestInfo
+import com.example.featureGames.domain.entities.GameRequestInfo
 import com.example.featureGames.domain.repositories.RAWGamesService
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main

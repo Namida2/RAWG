@@ -5,15 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.example.core.domain.tools.extensions.precomputeAndSetText
-import com.example.core.domain.tools.extensions.prepareDefaultSpringAnimation
-import com.example.core.domain.tools.extensions.prepareScaleAnimation
-import com.example.core.domain.tools.extensions.prepareSlideUpFromBottom
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.BaseViewHolder
 import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
 import com.example.featureGames.R
 import com.example.featureGames.databinding.LayoutGameBinding
-import com.example.featureGames.domain.model.Game
+import com.example.core_game.domain.Game
 
 interface GamesAdapterDelegateCallback {
     fun onGameClick(clickedGameInfo: ClickedGameInfo)

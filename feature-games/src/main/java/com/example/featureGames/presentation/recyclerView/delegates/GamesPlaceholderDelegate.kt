@@ -9,7 +9,7 @@ import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.BaseViewHolder
 import com.example.featureGames.R
 import com.example.featureGames.databinding.LayoutGamePlaceholderBinding
-import com.example.featureGames.domain.model.GamePlaceHolder
+import com.example.featureGames.domain.entities.GamePlaceHolder
 
 class GamesPlaceholderDelegate: RecyclerViewAdapterDelegate<GamePlaceHolder, LayoutGamePlaceholderBinding> {
     override val layoutId: Int

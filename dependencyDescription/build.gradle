@@ -31,5 +31,6 @@ android {
 
 dependencies {
     implementation project(':core')
+    implementation project(':core-game')
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 }

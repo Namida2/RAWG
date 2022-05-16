@@ -13,7 +13,7 @@ import com.example.core.presentaton.recyclerView.BaseViewHolder
 import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
 import com.example.featureGames.R
 import com.example.featureGames.databinding.LayoutGameErrorPagePlaceholderBinding
-import com.example.featureGames.domain.model.GameErrorPagePlaceHolder
+import com.example.featureGames.domain.entities.GameErrorPagePlaceHolder
 
 
  interface GameErrorPageAdapterDelegateCallback {

@@ -5,8 +5,10 @@
     <dimen name="games_top_margin">56dp</dimen>
     <dimen name="filters_top_margin">168dp</dimen>
 
-    <item name="defaultSpringStartPosition" type="integer">200</item>
+    <item name="defaultSpringStartPosition" type="integer">160</item>
+    <item name="smallSpringStartPosition" type="integer">100</item>
     <item name="defaultAnimationDuration" type="integer">360</item>
     <item name="defaultAnimationDelay" type="integer">120</item>
+    <item name="smallAnimationDelay" type="integer">40</item>
     <item name="navigationUIStartDelay" type="integer">200</item>
 </resources>

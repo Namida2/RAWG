@@ -1,7 +1,7 @@
 package com.example.core.domain.tools.constants
 
 import com.example.core.R
-import com.example.core.domain.entities.Message
+import com.example.core.domain.entities.tools.Message
 
 object Messages {
     val defaultErrorMessage = Message(

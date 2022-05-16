@@ -1,12 +1,11 @@
 package com.example.featureGames.domain.useCase
 
-import com.example.core.domain.entities.GameNetworkExceptions
+import com.example.core.domain.entities.tools.GameNetworkExceptions
 import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.tools.enums.GameScreenTags
-import com.example.featureGames.domain.model.Game
-import com.example.featureGames.domain.model.GameBackgroundImageChanges
-import com.example.featureGames.domain.model.GameScreenInfo
-import com.example.featureGames.domain.model.NewGamesForScreen
+import com.example.core_game.domain.GameBackgroundImageChanges
+import com.example.core_game.domain.GameScreenInfo
+import com.example.core_game.domain.NewGamesForScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +16,6 @@ interface GamesUseCase {
     val responseHttpExceptions: Flow<GameNetworkExceptions>
     suspend fun readGames(request: GamesGetRequest)
     fun getScreenInfo(): GameScreenInfo
-    fun getGamesByPage(page: Int): List<Game>
+    fun getGamesByPage(page: Int): List<com.example.core_game.domain.Game>
     fun onNetworkConnected(coroutineScope: CoroutineScope)
 }

@@ -2,63 +2,69 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/black"
-    android:layout_height="match_parent">
+    android:transitionName="@string/defaultEndTransitionName">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <!--ScreenShots-->
+
         <androidx.viewpager2.widget.ViewPager2
-            android:layout_width="match_parent"
             android:id="@+id/screenshotViewPager"
-            android:transitionName="@string/defaultEndTransitionName"
-            android:layout_height="match_parent" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black" />
+
         <!--Ratings-->
         <LinearLayout
-            android:id="@+id/ratings"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
+            android:id="@+id/ratingsContainer"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:orientation="vertical"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_height="wrap_content">
+                android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rating"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/montserrat_semi_bold"
                     android:layout_gravity="center"
-                    android:textColor="@color/white"/>
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Rating"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
                 <TextView
                     android:id="@+id/ratingTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4.95"
-                    android:layout_marginTop="2dp"
-                    android:textSize="16sp"
                     android:layout_gravity="center"
+                    android:layout_marginTop="2dp"
                     android:fontFamily="@font/montserrat_medium"
-                    android:textColor="@color/green"/>
+                    android:text="4.95"
+                    android:textColor="@color/green"
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="1dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="16dp"
-                app:cardBackgroundColor="@color/blackLite"
-                android:layout_height="40dp"/>
+                app:cardBackgroundColor="@color/blackLite" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
-                android:orientation="vertical"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_height="wrap_content">
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/imageView"
@@ -134,15 +140,15 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="1dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="16dp"
-                app:cardBackgroundColor="@color/blackLite"
-                android:layout_height="40dp"/>
+                app:cardBackgroundColor="@color/blackLite" />
 
             <LinearLayout
-                android:layout_marginStart="16dp"
                 android:layout_width="wrap_content"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -152,168 +158,176 @@
                     android:text="Metascore"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
+
                 <TextView
                     android:id="@+id/metacriticTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="96"
-                    android:layout_marginTop="2dp"
-                    android:textSize="16sp"
                     android:layout_gravity="center"
+                    android:layout_marginTop="2dp"
                     android:fontFamily="@font/montserrat_medium"
-                    android:textColor="@color/green"/>
+                    android:text="96"
+                    android:textColor="@color/green"
+                    android:textSize="16sp" />
             </LinearLayout>
 
         </LinearLayout>
         <!--ProgressBars-->
         <LinearLayout
             android:id="@+id/progressContainer"
-            android:layout_marginTop="24dp"
-            android:orientation="vertical"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Exceptional:"
-                android:textSize="10sp"
                 android:fontFamily="@font/montserrat_medium"
-                android:textColor="@color/white"/>
+                android:text="Exceptional:"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
 
             <View
+                android:id="@+id/exceptionalProgress"
                 android:layout_width="280dp"
                 android:layout_height="6dp"
                 android:layout_marginTop="4dp"
-                android:id="@+id/exceptionalProgress"
                 android:background="@drawable/bg_solid_gradient_blue_to_pink" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Recommended:"
                 android:layout_marginTop="6dp"
-                android:textSize="10sp"
                 android:fontFamily="@font/montserrat_medium"
-                android:textColor="@color/white"/>
+                android:text="Recommended:"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
 
             <View
-                android:layout_marginTop="4dp"
+                android:id="@+id/recommendedProgress"
                 android:layout_width="200dp"
                 android:layout_height="6dp"
-                android:id="@+id/recommendedProgress"
+                android:layout_marginTop="4dp"
                 android:background="@drawable/bg_solid_gradient_blue_to_pink" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Meh:"
                 android:layout_marginTop="6dp"
-                android:textSize="10sp"
                 android:fontFamily="@font/montserrat_medium"
-                android:textColor="@color/white"/>
+                android:text="Meh:"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
 
             <View
-                android:layout_marginTop="4dp"
+                android:id="@+id/mehProgress"
                 android:layout_width="120dp"
                 android:layout_height="6dp"
-                android:id="@+id/mehProgress"
+                android:layout_marginTop="4dp"
                 android:background="@drawable/bg_solid_gradient_blue_to_pink" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Skip:"
                 android:layout_marginTop="6dp"
-                android:textSize="10sp"
                 android:fontFamily="@font/montserrat_medium"
-                android:textColor="@color/white"/>
+                android:text="Skip:"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
 
             <View
-                android:layout_marginTop="4dp"
+                android:id="@+id/skipProgress"
                 android:layout_width="60dp"
                 android:layout_height="6dp"
-                android:id="@+id/skipProgress"
+                android:layout_marginTop="4dp"
                 android:background="@drawable/bg_solid_gradient_blue_to_pink" />
 
         </LinearLayout>
         <!--ReleasedAt-->
         <LinearLayout
-            android:layout_marginTop="24dp"
-            android:orientation="horizontal"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
+            android:id="@+id/releasedAtContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Released: "
-                android:textSize="12sp"
                 android:fontFamily="@font/montserrat_semi_bold"
-                android:textColor="@color/white"/>
+                android:text="Released: "
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2009.02.05"
-                android:textSize="12sp"
                 android:fontFamily="@font/montserrat_medium"
-                android:textColor="@color/white"/>
+                android:text="2009.02.05"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
         </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/releasedAtRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
         <!--About-->
         <LinearLayout
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:orientation="vertical"
+            android:id="@+id/aboutContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="About:"
-                android:textSize="12sp"
                 android:fontFamily="@font/montserrat_semi_bold"
-                android:textColor="@color/white"/>
+                android:text="About:"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
-                android:text="From PlayStation Studios and Bluepoint Games comes a remake of the PlayStation classic, Demon’s Souls. Entirely rebuilt from the ground up and masterfully enhanced… "
-                android:textSize="12sp"
+                android:layout_marginTop="10dp"
                 android:fontFamily="@font/montserrat_medium"
-                android:textColor="@color/white"/>
+                android:text="From PlayStation Studios and Bluepoint Games comes a remake of the PlayStation classic, Demon’s Souls. Entirely rebuilt from the ground up and masterfully enhanced… "
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/applyButton"
                 style="@style/buttonStyle"
-                android:layout_marginTop="12dp"
-                android:layout_marginStart="0dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="12dp"
                 android:text="Read more"
                 android:textSize="12sp" />
         </LinearLayout>
         <!--AddingStatuses-->
         <LinearLayout
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:orientation="horizontal"
-            android:layout_marginTop="24dp"
+            android:id="@+id/addedStatusContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal">
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/yetTextView"
@@ -386,11 +400,12 @@
                     app:layout_constraintStart_toEndOf="@+id/droppedTextView"
                     app:layout_constraintTop_toTopOf="@+id/droppedTextView" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:orientation="vertical"
-                android:layout_marginStart="24dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/ownedTextView"
@@ -466,121 +481,138 @@
         </LinearLayout>
         <!--GoToButtons-->
         <LinearLayout
+            android:id="@+id/goToButtonsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/goToRedditButton"
-                style="@style/buttonStyle"
-                android:drawableEnd="@drawable/ic_reddit"
-                android:layout_marginStart="0dp"
-                android:layout_width="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Go to reddit"
-                android:textSize="12sp" />
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/goToWebsiteButton"
-                style="@style/buttonStyle"
-                android:drawableEnd="@drawable/ic_firefox"
-                android:layout_marginStart="0dp"
-                android:layout_width="wrap_content"
+                android:layout_marginStart="16dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/goToRedditButton"
+                    style="@style/buttonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:drawableEnd="@drawable/ic_reddit"
+                    android:text="Go to reddit"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/goToWebsiteButton"
+                    style="@style/buttonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:drawableEnd="@drawable/ic_firefox"
+                    android:text="Go to website"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Go to website"
-                android:textSize="12sp" />
-        </LinearLayout>
-        <!--GoToButtons-->
-        <LinearLayout
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/goToMetacriticButton"
-                style="@style/buttonStyle"
-                android:drawableEnd="@drawable/ic_metacritic"
-                android:layout_marginStart="0dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Go to metacritic"
-                android:textSize="12sp" />
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/goToTrailerButton"
-                style="@style/buttonStyle"
-                android:drawableEnd="@drawable/ic_you_tube"
-                android:layout_marginStart="0dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Go to trailer"
-                android:textSize="12sp" />
+                android:layout_marginStart="16dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/goToMetacriticButton"
+                    style="@style/buttonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:drawableEnd="@drawable/ic_metacritic"
+                    android:text="Go to metacritic"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/goToTrailerButton"
+                    style="@style/buttonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:drawableEnd="@drawable/ic_you_tube"
+                    android:text="Go to trailer"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
         <!--Genres-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/genresRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
         <!--Tags-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tagsRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
         <!--Requirements-->
         <LinearLayout
+            android:id="@+id/requirementsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="32dp"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:gravity="center"
                 android:text="Requirements"
-                android:gravity="center"
-                android:textSize="12sp"
-                android:fontFamily="@font/montserrat_semi_bold"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
             <TextView
-                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:gravity="center"
                 android:text="Minimum:"
-                android:gravity="center"
-                android:textSize="12sp"
-                android:fontFamily="@font/montserrat_semi_bold"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
             <TextView
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Minimum: OS: Windows 10 Processor: INTEL CORE I5-8400 or AMD RYZEN 3 3300X Memory: 12 GB RAM Graphics: NVIDIA GEFORCE GTX 1060 3 GB or AMD RADEON RX 580 4 GB DirectX: Version 12 Storage: 60 GB available space Sound Card: Windows Compatible Audio Device Additional Notes:"
-                android:textSize="12sp"
+                android:layout_marginTop="10dp"
                 android:fontFamily="@font/montserrat_semi_bold"
-                android:textColor="@color/white"/>
+                android:text="Minimum: OS: Windows 10 Processor: INTEL CORE I5-8400 or AMD RYZEN 3 3300X Memory: 12 GB RAM Graphics: NVIDIA GEFORCE GTX 1060 3 GB or AMD RADEON RX 580 4 GB DirectX: Version 12 Storage: 60 GB available space Sound Card: Windows Compatible Audio Device Additional Notes:"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
             <TextView
-                android:layout_marginTop="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Recommended:"
-                android:gravity="center"
-                android:textSize="12sp"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/montserrat_semi_bold"
-                android:textColor="@color/white"/>
+                android:gravity="center"
+                android:text="Recommended:"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
             <TextView
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Recommended: OS: Windows 10/11 Processor: INTEL CORE I7-8700K or AMD RYZEN 5 3600X Memory: 16 GB RAM Graphics: NVIDIA GEFORCE GTX 1070 8 GB or AMD RADEON RX VEGA 56 8 GB DirectX: Version 12 Storage: 60 GB available space Sound Card: Windows Compatible Audio Device Additional Notes:"     android:textSize="12sp"
+                android:layout_marginTop="10dp"
                 android:fontFamily="@font/montserrat_semi_bold"
-                android:textColor="@color/white"/>
+                android:text="Recommended: OS: Windows 10/11 Processor: INTEL CORE I7-8700K or AMD RYZEN 5 3600X Memory: 16 GB RAM Graphics: NVIDIA GEFORCE GTX 1070 8 GB or AMD RADEON RX VEGA 56 8 GB DirectX: Version 12 Storage: 60 GB available space Sound Card: Windows Compatible Audio Device Additional Notes:"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
         </LinearLayout>
-        <!--Where to buy-->
+        <!--Stores-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/storesRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 

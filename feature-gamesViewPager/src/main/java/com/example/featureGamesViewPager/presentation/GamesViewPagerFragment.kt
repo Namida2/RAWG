@@ -76,8 +76,8 @@ class GamesViewPagerFragment : BaseFragment(), View.OnClickListener {
         startEnterSpringAnimation(
             listOf(binding!!.toolBar, binding!!.tabLayout, binding!!.viewPager)
                 .onEach { view -> view.alpha = 0f },
-            resources.getInteger(com.example.core.R.integer.defaultSpringStartPosition).toFloat(),
-            resources.getInteger(com.example.core.R.integer.defaultAnimationDelay).toLong()
+            springStartPosition = resources.getInteger(com.example.core.R.integer.defaultSpringStartPosition).toFloat(),
+            delayBetweenAnimations = resources.getInteger(com.example.core.R.integer.defaultAnimationDelay).toLong()
         )
     }
 

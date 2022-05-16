@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -21,10 +22,11 @@ import com.example.core.domain.tools.extensions.logD
 import com.example.core.domain.tools.extensions.logE
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
 import com.example.featureGameDetails.presentation.GameDetailsFragment
+import com.example.featureGameDetails.presentation.GameDetailsFragment.Companion.GAME_ID_TAG
 import com.example.featureGames.databinding.FragmentGamesBinding
 import com.example.featureGames.domain.ViewModelFactory
 import com.example.featureGames.domain.di.GamesDepsStore
-import com.example.featureGames.domain.model.Game
+import com.example.core_game.domain.Game
 import com.example.featureGames.presentation.recyclerView.RecyclerViewScrollListener
 import com.example.featureGames.presentation.recyclerView.delegates.*
 import com.example.featureGames.presentation.recyclerView.itemDecorations.GamesItemDecorations
@@ -160,9 +162,10 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
     }
 
     override fun onGameClick(clickedGameInfo: ClickedGameInfo) {
-        logD(clickedGameInfo.gameId.toString())
         GamesDepsStore.navigationCallback?.navigateTo(
-            GameDetailsFragment(),
+            GameDetailsFragment().also {
+                it.arguments = bundleOf(GAME_ID_TAG to clickedGameInfo.gameId)
+            },
             clickedGameInfo.gameRootView,
             resources.getString(R.string.defaultEndTransitionName)
         )
