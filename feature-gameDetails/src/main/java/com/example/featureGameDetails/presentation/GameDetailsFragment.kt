@@ -12,6 +12,9 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
+import com.example.core.domain.tools.extensions.createMessageAlertDialog
 import com.example.core.presentaton.fragments.BaseFragment
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
 import com.example.core_game.domain.Game
@@ -27,15 +30,16 @@ import com.google.android.material.transition.platform.MaterialFadeThrough
 import com.google.android.material.transition.platform.MaterialSharedAxis
 import kotlin.properties.Delegates
 
-// TODO: Get details about the game, add queue, add fields to the Game entity //STOPPED//
+// TODO: Complete the GameDetailsScreen, implement the likes of games and saving them to the local storage //STOPPED//
 class GameDetailsFragment : BaseFragment() {
     private var defaultScale by Delegates.notNull<Float>()
     private var currentPageMargin by Delegates.notNull<Int>()
     private var pageLargeMargin by Delegates.notNull<Int>()
     private var pageSmallMargin by Delegates.notNull<Int>()
     private var gameId by Delegates.notNull<Int>()
+
     private var binding: FragmentGameDetailsBinding? = null
-    private val viewModel by viewModels<GameDetailsViewModel> { ViewModelFactory }
+    private lateinit var viewModel: GameDetailsViewModel
     private val adapter = BaseRecyclerViewAdapter(
         listOf(GameScreenshotAdapterDelegate())
     )
@@ -51,6 +55,7 @@ class GameDetailsFragment : BaseFragment() {
         pageLargeMargin = resources.getDimensionPixelSize(R.dimen.page_large_margin)
         pageSmallMargin = resources.getDimensionPixelSize(R.dimen.page_small_margin)
         currentPageMargin = resources.getDimensionPixelSize(R.dimen.current_page_margin)
+        viewModel = ViewModelProvider(this, ViewModelFactory(gameId))[GameDetailsViewModel::class.java]
         viewModel.getDetails(gameId)
     }
 
@@ -72,11 +77,17 @@ class GameDetailsFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        initViewPager()
         postponeEnterTransition()
-        view.doOnPreDraw {
-            startPostponedEnterTransition()
+        observeViewModelEvents()
+        observeViewModelStates()
+        view.doOnPreDraw { startPostponedEnterTransition(); animateFirstVisit() }
+        binding!!.ratingsContainer.setOnClickListener {
             animateFirstVisit()
         }
+    }
+
+    private fun initViewPager() {
         binding?.screenshotViewPager?.adapter = adapter
         binding?.screenshotViewPager?.offscreenPageLimit = 1
         binding?.screenshotViewPager?.addItemDecoration(
@@ -86,18 +97,6 @@ class GameDetailsFragment : BaseFragment() {
             GamePageTransformer(defaultScale, currentPageMargin, pageLargeMargin)
         )
         adapter.submitList(getPostImagesList())
-        binding!!.ratingsContainer.setOnClickListener {
-            animateFirstVisit()
-        }
-        iniViews(viewModel.getGameById(gameId))
-    }
-
-    private fun iniViews(game: Game) {
-        with(binding!!) {
-            metacriticTextView.text = game.metacritic.toString()
-            ratingTextView.text = game.rating.toString()
-
-        }
     }
 
     private fun animateFirstVisit() {
@@ -126,12 +125,50 @@ class GameDetailsFragment : BaseFragment() {
         binding = null
     }
 
+    private fun observeViewModelEvents() {
+        viewModel.events.observe(viewLifecycleOwner) {
+            when(it) {
+                is GameDetailsVMEvents.NewScreenshotsListEvent -> {
+
+                }
+                is GameDetailsVMEvents.LostNetworkConnectionEvent -> {
+                    it.value.getData() ?: return@observe
+                    requireContext().createMessageAlertDialog(checkNetworkConnectionMessage)
+                        ?.show(parentFragmentManager, "")
+                }
+            }
+        }
+    }
+
+    private fun observeViewModelStates() {
+        viewModel.state.observe(viewLifecycleOwner) {
+            when(it) {
+                is GameDetailsVMEStates.GameDetailsExists -> iniViews(it.game)
+                is GameDetailsVMEStates.Default -> Unit
+            }
+        }
+    }
+
+    private fun iniViews(game: Game) {
+        with(binding!!) {
+            metacriticTextView.text = game.metacritic.toString()
+            ratingTextView.text = game.rating.toString()
+            twitchCountTextView.text = game.gameDetails?.twitchCount.toString()
+            redditCountTextView.text = game.gameDetails?.twitchCount.toString()
+            youtubeCountTextView.text = game.gameDetails?.twitchCount.toString()
+
+            releasedAtTextViw.text = game.released.toString()
+            descriptionTextView.text = game.gameDetails?.description
+
+        }
+    }
+
     private fun getPostImagesList(): List<GameScreenshot> = listOf(
-        GameScreenshot(BitmapDrawable(resources, BitmapFactory.decodeResource(resources, R.drawable.im_game_test))),
-        GameScreenshot(BitmapDrawable(resources, BitmapFactory.decodeResource(resources, R.drawable.im_game_test))),
-        GameScreenshot(BitmapDrawable(resources, BitmapFactory.decodeResource(resources, R.drawable.im_game_test))),
-        GameScreenshot(BitmapDrawable(resources, BitmapFactory.decodeResource(resources, R.drawable.im_game_test))),
-        GameScreenshot(BitmapDrawable(resources, BitmapFactory.decodeResource(resources, R.drawable.im_game_test)),)
+        GameScreenshot(BitmapFactory.decodeResource(resources, R.drawable.im_game_test)),
+        GameScreenshot(BitmapFactory.decodeResource(resources, R.drawable.im_game_test)),
+        GameScreenshot(BitmapFactory.decodeResource(resources, R.drawable.im_game_test)),
+        GameScreenshot(BitmapFactory.decodeResource(resources, R.drawable.im_game_test)),
+        GameScreenshot(BitmapFactory.decodeResource(resources, R.drawable.im_game_test)),
     )
 
 }

@@ -19,19 +19,27 @@ data class Game(
     var genres: List<Genre>?,
     var stores: List<StoreInfo>?,
     var tags: List<Tag>?,
-    var shortScreenshots: List<Bitmap>? = null,
+    var shortScreenshots: MutableMap<String, Bitmap?>?,
     var backgroundImage: Bitmap? = null,
-    var isLiked: Boolean = false
+    var isLiked: Boolean = false,
+    var gameDetails: GameDetails? = null
 ) : BaseRecyclerViewType {
     class GameMapper @Inject constructor() : RAWGame.Mapper<Game> {
-        override fun map(RAW: RAWGame): Game =
-            with(RAW) {
+        override fun map(rawGame: RAWGame): Game =
+            with(rawGame) {
                 Game(
                     id, name, released, rating,
                     ratingTop, ratings, added,
                     addedByStatus, metacritic,
                     platformsInfo, genres,
-                    stores, tags
+                    stores, tags, kotlin.run {
+                        val screenshots = mutableMapOf<String, Bitmap?>()
+                        rawGame.shortScreenshots?.forEach() { screenshot ->
+                            val ulr = screenshot.image ?: return@forEach
+                            screenshots[ulr] = null
+                        }
+                        screenshots
+                    }
                 )
             }
     }

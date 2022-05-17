@@ -39,6 +39,6 @@ class GameScreenshotViewHolder(
     private val binding: LayoutGameScreenshotBinding
 ) : BaseViewHolder<GameScreenshot, LayoutGameScreenshotBinding>(binding) {
     override fun onBind(item: GameScreenshot) {
-        binding.screenShotImageView.setImageDrawable(item.screenshot)
+        binding.screenShotImageView.setImageBitmap(item.screenshot)
     }
 }

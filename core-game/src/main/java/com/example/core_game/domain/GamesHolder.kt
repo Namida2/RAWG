@@ -6,6 +6,8 @@ import com.example.core.domain.tools.constants.StringConstants.GAME_NOT_FOUND
 import com.example.core.domain.tools.constants.StringConstants.GAME_SCREEN_TYPE_MISMATCH
 import com.example.core.domain.tools.constants.StringConstants.PAGE_NOT_FOUND
 import com.example.core.domain.tools.enums.GameScreenTags
+import com.example.core.domain.tools.extensions.logD
+import com.example.core_game.data.rawGameResponse.ShortScreenshot
 import com.example.core_game.domain.interfaces.GameScreenItemType
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -62,6 +64,16 @@ class GamesHolder @Inject constructor() {
             _gamesBackgroundImageChanges.emit(
                 GameBackgroundImageChanges(screenTag, page, games[it])
             )
+        }
+    }
+
+    fun addShortGameScreenshot(gameId: Int, screenshotUrl: String, shortScreenshot: Bitmap) {
+        games.indexOfFirst {
+            it.id == gameId
+        }.let {
+            if (it == -1) throw java.lang.IllegalArgumentException(GAME_NOT_FOUND + gameId)
+            games[it].shortScreenshots?.set(screenshotUrl, (shortScreenshot))
+            logD("addShortGameScreenshot: gameName: ${games[it].name}")
         }
     }
 

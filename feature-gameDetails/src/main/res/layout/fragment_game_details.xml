@@ -76,7 +76,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/twitchCount"
+                    android:id="@+id/twitchCountTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -95,11 +95,11 @@
                     android:layout_height="14dp"
                     android:layout_marginStart="16dp"
                     android:src="@drawable/ic_reddit"
-                    app:layout_constraintStart_toEndOf="@id/twitchCount"
+                    app:layout_constraintStart_toEndOf="@id/twitchCountTextView"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/redditTextView"
+                    android:id="@+id/redditCountTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -123,7 +123,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
                 <TextView
-                    android:id="@+id/youtubeTextView"
+                    android:id="@+id/youtubeCountTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -182,13 +182,29 @@
             android:layout_marginEnd="16dp"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Exceptional:"
-                android:textColor="@color/white"
-                android:textSize="10sp" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Exceptional:  "
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/exceptionalCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="5670"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
 
             <View
                 android:id="@+id/exceptionalProgress"
@@ -197,14 +213,28 @@
                 android:layout_marginTop="4dp"
                 android:background="@drawable/bg_solid_gradient_blue_to_pink" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_marginTop="6dp"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Recommended:"
-                android:textColor="@color/white"
-                android:textSize="10sp" />
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Recommended:  "
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+                <TextView
+                    android:id="@+id/recommendedCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="2060"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+            </LinearLayout>
 
             <View
                 android:id="@+id/recommendedProgress"
@@ -213,14 +243,27 @@
                 android:layout_marginTop="4dp"
                 android:background="@drawable/bg_solid_gradient_blue_to_pink" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_marginTop="6dp"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Meh:"
-                android:textColor="@color/white"
-                android:textSize="10sp" />
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Meh:  "
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+                <TextView
+                    android:id="@+id/mehCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="310"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+            </LinearLayout>
 
             <View
                 android:id="@+id/mehProgress"
@@ -229,14 +272,27 @@
                 android:layout_marginTop="4dp"
                 android:background="@drawable/bg_solid_gradient_blue_to_pink" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_marginTop="6dp"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="Skip:"
-                android:textColor="@color/white"
-                android:textSize="10sp" />
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Skip:  "
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+                <TextView
+                    android:id="@+id/skipCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="310"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+            </LinearLayout>
 
             <View
                 android:id="@+id/skipProgress"
@@ -265,6 +321,7 @@
                 android:textSize="12sp" />
 
             <TextView
+                android:id="@+id/releasedAtTextViw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_medium"
@@ -295,6 +352,7 @@
                 android:textSize="12sp" />
 
             <TextView
+                android:id="@+id/descriptionTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

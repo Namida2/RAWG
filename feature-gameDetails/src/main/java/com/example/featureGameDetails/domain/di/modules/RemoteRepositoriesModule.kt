@@ -1,5 +1,7 @@
 package com.example.featureGameDetails.domain.di.modules
 
+import com.example.core.data.imageLoaders.GameScreenshotUrlInfo
+import com.example.core.data.imageLoaders.interfaces.ImagesLoader
 import com.example.featureGameDetails.domain.repositories.GameDetailsService
 import dagger.Binds
 import dagger.Module

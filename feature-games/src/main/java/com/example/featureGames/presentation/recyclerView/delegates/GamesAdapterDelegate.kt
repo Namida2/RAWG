@@ -5,12 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.example.core.domain.tools.extensions.precomputeAndSetText
+import com.example.core.domain.tools.extensions.startDefaultRecyclerViewItemAnimation
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.BaseViewHolder
 import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
+import com.example.core_game.domain.Game
 import com.example.featureGames.R
 import com.example.featureGames.databinding.LayoutGameBinding
-import com.example.core_game.domain.Game
 
 interface GamesAdapterDelegateCallback {
     fun onGameClick(clickedGameInfo: ClickedGameInfo)
@@ -50,16 +51,15 @@ class GamesAdapterDelegate(
     private val diffItemCallback = object : DiffUtil.ItemCallback<Game>() {
         override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean =
             newItem.id == oldItem.id
+
         override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean =
             newItem == oldItem
     }
-
 }
 
 class GamesViewGolder(
     private val binding: LayoutGameBinding
 ) : BaseViewHolder<Game, LayoutGameBinding>(binding) {
-
     override fun onBind(item: Game) {
         with(binding) {
             val tag = ClickedGameInfo(root, item.id)
@@ -71,6 +71,8 @@ class GamesViewGolder(
             metacriticRating.precomputeAndSetText(item.metacritic.toString())
             gamePreviewImage.setImageBitmap(item.backgroundImage)
         }
+        if(item.backgroundImage == null)
+            binding.root.startDefaultRecyclerViewItemAnimation()
     }
 }
 

@@ -1,9 +1,9 @@
-package com.example.featureGames.data.imageLoaders.interfaces
+package com.example.core.data.imageLoaders.interfaces
 
-import androidx.annotation.MainThread
-import com.example.featureGames.data.imageLoaders.LoadedImageInfo
+import android.graphics.Bitmap
 import kotlinx.coroutines.CoroutineScope
 
+data class LoadedImageInfo<T : ImageUrlInfo>(val imageUrlInfo: T, val bitmap: Bitmap)
 interface ImagesLoaderResultHandler<T : ImageUrlInfo> {
     suspend fun onImageLoaded(loadedImageInfo: LoadedImageInfo<T>)
 }

@@ -3,15 +3,16 @@ package com.example.core.domain.tools.extensions
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.Interpolator
 import android.view.animation.LinearInterpolator
-import android.view.animation.OvershootInterpolator
 import androidx.core.animation.doOnEnd
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 
-fun View.prepareFadeInAnimation (
-    duration: Long = 360,
+fun View.prepareFadeInAnimation(
+    duration: Long = 160,
     startDelay: Long = 0,
     doOnEnd: () -> Unit = {}
 ): ObjectAnimator {
@@ -24,20 +25,30 @@ fun View.prepareFadeInAnimation (
     }
 }
 
-fun View.prepareScaleAnimation (
-    duration: Long = 360,
+fun View.prepareScaleAnimation(
+    duration: Long = 160,
     startDelay: Long = 0,
+    interpolator: Interpolator,
+    startAlpha: Float = 0f,
+    scale: Float = 0.8f,
     doOnEnd: () -> Unit = {}
 ): ObjectAnimator {
-    val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0.8f, 1f)
-    val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0.8f, 1f)
-    val alpha = PropertyValuesHolder.ofFloat(View.ALPHA, 0f, 1f)
+    val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, scale, 1f)
+    val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, scale, 1f)
+    val alpha = PropertyValuesHolder.ofFloat(View.ALPHA, startAlpha, 1f)
     return ObjectAnimator.ofPropertyValuesHolder(this, scaleX, scaleY, alpha).apply {
-        interpolator = OvershootInterpolator()
+        this.interpolator = interpolator
         this.duration = duration
         this.startDelay = startDelay
         doOnEnd { doOnEnd.invoke() }
     }
+}
+
+fun View.startDefaultRecyclerViewItemAnimation(heightScale: Float = 16f) {
+    this.prepareDefaultSpringAnimation(
+        this.height / heightScale,
+        springDampingRatio = SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY
+    ).start()
 }
 
 fun View.prepareDefaultSpringAnimation(
@@ -50,11 +61,28 @@ fun View.prepareDefaultSpringAnimation(
         setStartValue(springStartPosition)
         spring.stiffness = springStiffness
         spring.dampingRatio = springDampingRatio
+    }
+
+fun View.prepareSlideDownFromTop(
+    distance: Int,
+    duration: Long = 160,
+    startDelay: Long = 0,
+    startAlpha: Float = 1f,
+    doOnEnd: () -> Unit = {}
+): ObjectAnimator {
+    val alpha = PropertyValuesHolder.ofFloat(View.ALPHA, startAlpha, 1f)
+    val translationY = PropertyValuesHolder.ofFloat(View.TRANSLATION_Y, 0f, distance.toFloat())
+    return ObjectAnimator.ofPropertyValuesHolder(this, alpha, translationY).apply {
+        interpolator = AccelerateInterpolator()
+        this.duration = duration
+        this.startDelay = startDelay
+        doOnEnd { doOnEnd.invoke() }
+    }
 }
 
 fun View.prepareSlideUpFromBottom(
     distance: Int,
-    duration: Long = 250,
+    duration: Long = 160,
     startDelay: Long = 0,
     doOnEnd: () -> Unit = {}
 ): ObjectAnimator {

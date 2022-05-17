@@ -60,13 +60,13 @@ sealed interface GamesVMSingleEvents<out T> {
 class GamesViewModel(
     screenTag: GameScreenTags,
     gamesUseCaseFactory: GamesUseCaseFactory,
-    private val remoteRepositoryScope: CoroutineScope = CoroutineScope(SupervisorJob() + Main.immediate)
+    private val scopeForAsyncWork: CoroutineScope = CoroutineScope(SupervisorJob() + Main.immediate)
 ) : ViewModel(), OnPositionChangeListener, Stateful,
     GameScreenInfo.Mapper<PageToListRecyclerViewItems>, GameErrorPageAdapterDelegateCallback,
     OnNewGetRequestCallback<GamesGetRequest> {
     var snackBarIsShowing = false
     private var gamesUseCase: GamesUseCase =
-        gamesUseCaseFactory.create(screenTag, remoteRepositoryScope)
+        gamesUseCaseFactory.create(screenTag, scopeForAsyncWork)
     private var gameScreenInfo = gamesUseCase.getScreenInfo()
     private var currentScreenItems = mutableMapOf<Int, MutableList<BaseRecyclerViewType>>()
     private val _singleEvents = MutableLiveData<GamesVMSingleEvents<Any>>()
@@ -79,9 +79,9 @@ class GamesViewModel(
         viewModelScope.launch {
             networkConnectionChanges.collect { isConnected ->
                 logD(screenTag.toString())
-                if (isConnected) gamesUseCase.onNetworkConnected(remoteRepositoryScope)
+                if (isConnected) gamesUseCase.onNetworkConnected(scopeForAsyncWork)
                 else {
-                    remoteRepositoryScope.coroutineContext.job.cancelChildren()
+                    scopeForAsyncWork.coroutineContext.job.cancelChildren()
                     _singleEvents.value = GamesVMSingleEvents.NetworkConnectionLostEvent()
                 }
             }
@@ -91,7 +91,7 @@ class GamesViewModel(
     fun getGames() {
         logD("getGames: ${gameScreenInfo.tag}")
         if (gameScreenInfo.screenItems.isEmpty()) {
-            remoteRepositoryScope.launch {
+            scopeForAsyncWork.launch {
                 gamesUseCase.readGames(gameScreenInfo.request.copy())
             }
             currentScreenItems[gameScreenInfo.request.getPage()] = getPlaceholders().toMutableList()
@@ -102,7 +102,7 @@ class GamesViewModel(
     override fun onGameErrorPagePlaceHolderClick(page: Int) {
         currentScreenItems[page] = getPlaceholders().toMutableList()
         onNewGameScreenItemsEvent()
-        remoteRepositoryScope.launch {
+        scopeForAsyncWork.launch {
             gamesUseCase.readGames(gameScreenInfo.request.copy(page = page))
         }
     }
@@ -159,7 +159,7 @@ class GamesViewModel(
         gameScreenInfo.request = gameScreenInfo.request.next()
         currentScreenItems[gameScreenInfo.request.getPage()] = getPlaceholders().toMutableList()
         onNewGameScreenItemsEvent()
-        remoteRepositoryScope.launch {
+        scopeForAsyncWork.launch {
             //Use copy to create a new request with the same params but different link
             //to don't change the page after adding new placeholders
             gamesUseCase.readGames(gameScreenInfo.request.copy())
@@ -245,7 +245,7 @@ class GamesViewModel(
         gameScreenInfo.request = request
         gameScreenInfo.screenItems[request.getPage()] = GameScreenItemType.GamePlaceHolderType(request.getPage())
         currentScreenItems[request.getPage()] = getPlaceholders().toMutableList()
-        remoteRepositoryScope.launch {
+        scopeForAsyncWork.launch {
             gamesUseCase.readGames(gameScreenInfo.request.copy())
         }
         resetState()

@@ -6,12 +6,13 @@ import com.example.core.domain.tools.constants.StringConstants.UNKNOWN_VIEW_MODE
 import com.example.featureGameDetails.domain.di.GameDetailsDepsStore
 import com.example.featureGameDetails.presentation.GameDetailsViewModel
 
-object ViewModelFactory : ViewModelProvider.Factory {
+class ViewModelFactory(private val gameId: Int) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
         when (modelClass) {
             GameDetailsViewModel::class.java ->
                 GameDetailsViewModel(
-                    GameDetailsDepsStore.appComponent!!.provideGetGameDetailsUseCase()
+                    gameId,
+                    GameDetailsDepsStore.appComponent!!.provideGetGameDetailsUseCaseImplFactory()
                 )
             else -> throw IllegalArgumentException(UNKNOWN_VIEW_MODEL_CLASS)
         } as T

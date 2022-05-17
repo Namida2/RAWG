@@ -2,8 +2,8 @@ package com.example.featureGames.domain.di.modules
 
 import android.content.Context
 import com.example.featureGames.data.imageLoaders.GameImageLoader
-import com.example.featureGames.data.imageLoaders.interfaces.ImagesLoader
-import com.example.featureGames.data.entities.imageLoader.GameBackgroundImageUrlInfo
+import com.example.core.data.imageLoaders.interfaces.ImagesLoader
+import com.example.core.data.imageLoaders.GameScreenshotUrlInfo
 import com.example.featureGames.domain.repositories.RAWGamesService
 import dagger.Module
 import dagger.Provides
@@ -18,6 +18,6 @@ class RemoteRepositoriesModule {
         retrofit.create(RAWGamesService::class.java)
 
     @Provides
-    fun provideImagesLoader(applicationContext: Context): ImagesLoader<GameBackgroundImageUrlInfo> =
+    fun provideImagesLoader(applicationContext: Context): ImagesLoader<GameScreenshotUrlInfo> =
         GameImageLoader(applicationContext)
 }
