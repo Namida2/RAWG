@@ -8,6 +8,7 @@ import com.example.core.domain.tools.constants.Constants.GAME_IMAGE_HEIGHT
 import com.example.core.domain.tools.constants.Constants.GAME_IMAGE_WIDTH
 import com.example.core.domain.tools.extensions.logE
 import com.example.core.data.imageLoaders.GameScreenshotUrlInfo
+import com.example.core.data.imageLoaders.interfaces.ImageUrlInfo
 import com.example.core.data.imageLoaders.interfaces.ImagesLoader
 import com.example.core.data.imageLoaders.interfaces.ImagesLoaderResultHandler
 import com.example.core.data.imageLoaders.interfaces.LoadedImageInfo
@@ -17,21 +18,15 @@ import kotlinx.coroutines.Dispatchers.Main
 import java.util.*
 import javax.inject.Inject
 
-typealias GameLoadedImageInfo = LoadedImageInfo<GameScreenshotUrlInfo>
-
-class GameImageLoader @Inject constructor(
+class GameImageLoader<T: ImageUrlInfo> @Inject constructor(
     private val context: Context
-) : ImagesLoader<GameScreenshotUrlInfo> {
-    private val imageUrlsInfo =
-        Collections.synchronizedList(mutableListOf<GameScreenshotUrlInfo>())
-    override lateinit var onResultHandler: ImagesLoaderResultHandler<GameScreenshotUrlInfo>
-    private val coroutineExceptionHandler =
-        CoroutineExceptionHandler { coroutineContext, throwable ->
-            logE("$this: coroutineContext: $coroutineContext, throwable: $throwable")
-        }
+) : ImagesLoader<T> {
+    private val imageUrlsInfo = Collections.synchronizedList(mutableListOf<T>())
+    override lateinit var onResultHandler: ImagesLoaderResultHandler<T>
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable -> logE("$this: coroutineContext: $coroutineContext, throwable: $throwable") }
     private val defaultContext = Job() + Main.immediate
     override fun loadImage(
-        imageUrlInfo: GameScreenshotUrlInfo,
+        imageUrlInfo: T,
         coroutineScope: CoroutineScope
     ) {
         imageUrlsInfo.add(imageUrlInfo)
@@ -47,7 +42,7 @@ class GameImageLoader @Inject constructor(
     }
 
     private fun getImage(
-        imageUrlInfo: GameScreenshotUrlInfo,
+        imageUrlInfo: T,
         coroutineScope: CoroutineScope
     ) {
         coroutineScope.launch(IO + coroutineExceptionHandler) {
@@ -59,11 +54,11 @@ class GameImageLoader @Inject constructor(
         }
     }
 
-    private suspend fun onImageLoaded(imageUrlInfo: GameScreenshotUrlInfo, bitmap: Bitmap) {
+    private suspend fun onImageLoaded(imageUrlInfo: T, bitmap: Bitmap) {
         //Use new job to avoid cancellation of passed coroutineContext's job
         withContext(defaultContext) {
             imageUrlsInfo.remove(imageUrlInfo)
-            onResultHandler.onImageLoaded(GameLoadedImageInfo(imageUrlInfo, bitmap))
+            onResultHandler.onImageLoaded(LoadedImageInfo(imageUrlInfo, bitmap))
         }
     }
 }

@@ -6,5 +6,5 @@ import retrofit2.http.Path
 
 interface GameDetailsService {
     @GET("games/{id}")
-    suspend fun getDevelopers(@Path("id") id: Int): GameDetailsResponse
+    suspend fun getDetails(@Path("id") id: Int): GameDetailsResponse
 }

@@ -11,4 +11,5 @@
     <item name="defaultAnimationDelay" type="integer">120</item>
     <item name="smallAnimationDelay" type="integer">40</item>
     <item name="navigationUIStartDelay" type="integer">200</item>
+
 </resources>

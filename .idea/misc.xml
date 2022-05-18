@@ -10,11 +10,13 @@
         <entry key="..\:/Projects/AndroidProjects/RAWG/app/src/main/res/drawable/bg_tab_indicator.xml" value="0.238" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/app/src/main/res/layout/layout_game_card.xml" value="0.25" />
+        <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/drawable/bg_accept_button_dialog.xml" value="0.2735" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/drawable/bg_black_lite_rouded.xml" value="0.368" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/drawable/bg_black_lite_rounded.xml" value="0.2805" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/drawable/bg_black_lite_stroke_gradient_blue_to_pink.xml" value="0.368" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/drawable/bg_black_lite_stroke_gradient_blue_to_pink_8.xml" value="0.368" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/drawable/bg_black_lite_stroke_gradient_blue_to_pink_90.xml" value="0.1785" />
+        <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/drawable/bg_cancel_button_dialog.xml" value="0.2735" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/drawable/bg_dialog_message.xml" value="0.3545" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/drawable/bg_dialog_message_button.xml" value="0.3545" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/drawable/bg_gradient_pink_to_purple.xml" value="0.1" />
@@ -25,7 +27,8 @@
         <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/drawable/ic_heart_fill.xml" value="0.2805" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/drawable/ic_search.xml" value="0.3405" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/drawable/ic_xbox.xml" value="0.368" />
-        <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/layout/dialog_message.xml" value="0.5" />
+        <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/layout/dialog_closed_question.xml" value="0.33" />
+        <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/layout/dialog_message.xml" value="0.48428835489833644" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/core/src/main/res/layout/fragment_games_view_pager.xml" value="0.14724310776942356" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/feature-filtersDialog/src/main/res/layout/dialog_calendar.xml" value="0.5" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/feature-filtersDialog/src/main/res/layout/dialog_filters.xml" value="0.33" />
@@ -34,7 +37,7 @@
         <entry key="..\:/Projects/AndroidProjects/RAWG/feature-filtersDialog/src/main/res/layout/layout_filter_name.xml" value="1.0" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/feature-filtersDialog/src/main/res/layout/layout_filters_container.xml" value="0.30128205128205127" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/feature-gameDetails/src/main/res/drawable/bg_progress_bar.xml" value="0.353" />
-        <entry key="..\:/Projects/AndroidProjects/RAWG/feature-gameDetails/src/main/res/layout/fragment_game_details.xml" value="0.33" />
+        <entry key="..\:/Projects/AndroidProjects/RAWG/feature-gameDetails/src/main/res/layout/fragment_game_details.xml" value="0.3516778523489933" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/feature-gameDetails/src/main/res/layout/fragmnet_game_details.xml" value="0.2" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/feature-gameDetails/src/main/res/layout/layout_game_screenshot.xml" value="0.24089635854341737" />
         <entry key="..\:/Projects/AndroidProjects/RAWG/feature-games/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />

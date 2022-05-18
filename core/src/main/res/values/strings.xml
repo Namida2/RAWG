@@ -4,7 +4,7 @@
     <string name="defaultEndTransitionName">end</string>
 
     <string name="defaultTitle">Oops!</string>
-    <string name="defaultMessage">Something went wrong, please try again later</string>
+    <string name="defaultMessage">Something went wrong, please try again.</string>
     <string name="networkConnectionMessage">Please check your network connection.</string>
 
     <string name="badGatewayTitle">502</string>

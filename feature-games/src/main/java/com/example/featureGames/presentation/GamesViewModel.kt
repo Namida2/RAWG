@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.entities.tools.GameNetworkExceptions
 import com.example.core.domain.entities.tools.Message
 import com.example.core.domain.entities.tools.NetworkConnectionListener.isNetworkConnected
 import com.example.core.domain.entities.tools.NetworkConnectionListener.networkConnectionChanges
 import com.example.core.domain.entities.tools.SingleEvent
-import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.interfaces.OnNewGetRequestCallback
 import com.example.core.domain.interfaces.OnPositionChangeListener
 import com.example.core.domain.interfaces.Stateful
@@ -26,8 +26,9 @@ import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
 import com.example.core_game.domain.GameBackgroundImageChanges
 import com.example.core_game.domain.GameScreenInfo
 import com.example.core_game.domain.NewGamesForScreen
-import com.example.featureGames.domain.entities.*
 import com.example.core_game.domain.interfaces.GameScreenItemType
+import com.example.featureGames.domain.entities.GameErrorPagePlaceHolder
+import com.example.featureGames.domain.entities.GamePlaceHolder
 import com.example.featureGames.domain.useCase.GamesUseCase
 import com.example.featureGames.domain.useCase.GamesUseCaseFactory
 import com.example.featureGames.presentation.recyclerView.delegates.GameErrorPageAdapterDelegateCallback
@@ -47,6 +48,7 @@ sealed class GamesVMStats : Stateful.State {
         val message: Message = defaultErrorMessage
     ) : GamesVMStats(), Stateful.TerminatingState
 }
+
 sealed interface GamesVMSingleEvents<out T> {
     val event: SingleEvent<out T>
 
@@ -100,10 +102,14 @@ class GamesViewModel(
     }
 
     override fun onGameErrorPagePlaceHolderClick(page: Int) {
-        currentScreenItems[page] = getPlaceholders().toMutableList()
-        onNewGameScreenItemsEvent()
-        scopeForAsyncWork.launch {
-            gamesUseCase.readGames(gameScreenInfo.request.copy(page = page))
+        // To avoid multiple clicks
+        if (currentScreenItems[page]?.first() is GameErrorPagePlaceHolder) {
+            currentScreenItems[page] = getPlaceholders().toMutableList()
+            logD("currentScreenItems: ${currentScreenItems.keys}")
+            onNewGameScreenItemsEvent()
+            scopeForAsyncWork.launch {
+                gamesUseCase.readGames(gameScreenInfo.request.copy(page = page))
+            }
         }
     }
 
@@ -194,8 +200,12 @@ class GamesViewModel(
                     else -> addGamePageErrorPlaceHolder(networkException.page)
                 }
             }
-            is GameNetworkExceptions.GameSocketException -> addGamePageErrorPlaceHolder(networkException.page)
-            is GameNetworkExceptions.DefaultPageException -> addGamePageErrorPlaceHolder(networkException.page)
+            is GameNetworkExceptions.GameSocketException -> addGamePageErrorPlaceHolder(
+                networkException.page
+            )
+            is GameNetworkExceptions.DefaultPageException -> addGamePageErrorPlaceHolder(
+                networkException.page
+            )
         }
     }
 
@@ -243,7 +253,8 @@ class GamesViewModel(
         onNewGameScreenItemsEvent()
         gameScreenInfo.screenItems.clear()
         gameScreenInfo.request = request
-        gameScreenInfo.screenItems[request.getPage()] = GameScreenItemType.GamePlaceHolderType(request.getPage())
+        gameScreenInfo.screenItems[request.getPage()] =
+            GameScreenItemType.GamePlaceHolderType(request.getPage())
         currentScreenItems[request.getPage()] = getPlaceholders().toMutableList()
         scopeForAsyncWork.launch {
             gamesUseCase.readGames(gameScreenInfo.request.copy())

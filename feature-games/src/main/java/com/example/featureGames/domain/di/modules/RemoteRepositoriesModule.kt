@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.featureGames.data.imageLoaders.GameImageLoader
 import com.example.core.data.imageLoaders.interfaces.ImagesLoader
 import com.example.core.data.imageLoaders.GameScreenshotUrlInfo
+import com.example.core.data.imageLoaders.interfaces.ImageUrlInfo
 import com.example.featureGames.domain.repositories.RAWGamesService
 import dagger.Module
 import dagger.Provides

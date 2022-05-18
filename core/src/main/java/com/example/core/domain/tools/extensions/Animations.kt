@@ -25,6 +25,21 @@ fun View.prepareFadeInAnimation(
     }
 }
 
+fun View.prepareIncreaseHeightAnimation(
+    duration: Long = 160,
+    startDelay: Long = 0,
+    interpolator: Interpolator,
+    doOnEnd: () -> Unit = {}
+): ObjectAnimator {
+    val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0f, 1f)
+    return ObjectAnimator.ofPropertyValuesHolder(this, scaleX).apply {
+        this.interpolator = interpolator
+        this.duration = duration
+        this.startDelay = startDelay
+        doOnEnd { doOnEnd.invoke() }
+    }
+}
+
 fun View.prepareScaleAnimation(
     duration: Long = 160,
     startDelay: Long = 0,

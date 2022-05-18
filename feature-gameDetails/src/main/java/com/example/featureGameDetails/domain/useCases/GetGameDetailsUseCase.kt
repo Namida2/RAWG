@@ -13,7 +13,9 @@ import com.example.featureGameDetails.domain.repositories.GameDetailsService
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -39,12 +41,22 @@ class GetGameDetailsUseCaseImpl @AssistedInject constructor(
         val game = gamesHolder.getGameById(gameId).also { loadImages(it) }
         if(game.gameDetails != null) return game
         return game.also { it.gameDetails = mapper.map(
-            gameDetailsService.getDevelopers(gameId)
+            gameDetailsService.getDetails(gameId)
         ) }
     }
 
     override fun onNetworkConnected(gameId: Int) {
+        coroutineScope.coroutineContext[CoroutineExceptionHandler]
         imagesLoader.onNetworkConnected(coroutineScope)
+    }
+
+    override suspend fun onImageLoaded(loadedImageInfo: LoadedImageInfo<GameScreenshotUrlInfo>) {
+        _onNewScreenshotLoaded.emit(loadedImageInfo.bitmap)
+        gamesHolder.addShortGameScreenshot(
+            loadedImageInfo.imageUrlInfo.gameId,
+            loadedImageInfo.imageUrlInfo.url,
+            loadedImageInfo.bitmap
+        )
     }
 
     private fun loadImages(game: Game) {
@@ -58,15 +70,6 @@ class GetGameDetailsUseCaseImpl @AssistedInject constructor(
                 coroutineScope
             )
         }
-    }
-
-    override suspend fun onImageLoaded(loadedImageInfo: LoadedImageInfo<GameScreenshotUrlInfo>) {
-        _onNewScreenshotLoaded.tryEmit(loadedImageInfo.bitmap)
-        gamesHolder.addShortGameScreenshot(
-            loadedImageInfo.imageUrlInfo.gameId,
-            loadedImageInfo.imageUrlInfo.url,
-            loadedImageInfo.bitmap
-        )
     }
 }
 

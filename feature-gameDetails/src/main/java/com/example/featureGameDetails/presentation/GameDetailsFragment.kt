@@ -2,19 +2,19 @@ package com.example.featureGameDetails.presentation
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.text.Html
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
 import com.example.core.domain.tools.extensions.createMessageAlertDialog
+import com.example.core.domain.tools.extensions.showIfNotAdded
+import com.example.core.presentaton.dialogs.ClosedQuestionDialog
 import com.example.core.presentaton.fragments.BaseFragment
 import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
 import com.example.core_game.domain.Game
@@ -26,8 +26,6 @@ import com.example.featureGameDetails.presentation.viewPager.GamePageTransformer
 import com.example.featureGameDetails.presentation.viewPager.adapterDelegates.GameScreenshotAdapterDelegate
 import com.example.featureGameDetails.presentation.viewPager.itemDecorations.GameScreenshotsItemDecorations
 import com.google.android.material.transition.platform.MaterialContainerTransform
-import com.google.android.material.transition.platform.MaterialFadeThrough
-import com.google.android.material.transition.platform.MaterialSharedAxis
 import kotlin.properties.Delegates
 
 // TODO: Complete the GameDetailsScreen, implement the likes of games and saving them to the local storage //STOPPED//
@@ -36,6 +34,12 @@ class GameDetailsFragment : BaseFragment() {
     private var currentPageMargin by Delegates.notNull<Int>()
     private var pageLargeMargin by Delegates.notNull<Int>()
     private var pageSmallMargin by Delegates.notNull<Int>()
+    private var closedQuestionDialog = ClosedQuestionDialog<Unit>(
+        onNegative = {
+
+        }, onPositive = {
+
+        })
     private var gameId by Delegates.notNull<Int>()
 
     private var binding: FragmentGameDetailsBinding? = null
@@ -43,9 +47,11 @@ class GameDetailsFragment : BaseFragment() {
     private val adapter = BaseRecyclerViewAdapter(
         listOf(GameScreenshotAdapterDelegate())
     )
+
     companion object {
         const val GAME_ID_TAG = "GAME_ID_TAG"
     }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val outValue = TypedValue()
@@ -55,7 +61,8 @@ class GameDetailsFragment : BaseFragment() {
         pageLargeMargin = resources.getDimensionPixelSize(R.dimen.page_large_margin)
         pageSmallMargin = resources.getDimensionPixelSize(R.dimen.page_small_margin)
         currentPageMargin = resources.getDimensionPixelSize(R.dimen.current_page_margin)
-        viewModel = ViewModelProvider(this, ViewModelFactory(gameId))[GameDetailsViewModel::class.java]
+        viewModel =
+            ViewModelProvider(this, ViewModelFactory(gameId))[GameDetailsViewModel::class.java]
         viewModel.getDetails(gameId)
     }
 
@@ -114,9 +121,12 @@ class GameDetailsFragment : BaseFragment() {
                 binding!!.requirementsContainer,
                 binding!!.storesRecyclerView,
             ).onEach { view -> view.alpha = 0f },
-            springStartPosition = resources.getInteger(com.example.core.R.integer.smallSpringStartPosition).toFloat(),
-            delayBetweenAnimations = resources.getInteger(com.example.core.R.integer.smallAnimationDelay).toLong(),
-            startDelay = resources.getInteger(com.example.core.R.integer.smallSpringStartPosition).toLong(),
+            springStartPosition = resources.getInteger(com.example.core.R.integer.smallSpringStartPosition)
+                .toFloat(),
+            delayBetweenAnimations = resources.getInteger(com.example.core.R.integer.smallAnimationDelay)
+                .toLong(),
+            startDelay = resources.getInteger(com.example.core.R.integer.smallSpringStartPosition)
+                .toLong(),
         )
     }
 
@@ -127,14 +137,18 @@ class GameDetailsFragment : BaseFragment() {
 
     private fun observeViewModelEvents() {
         viewModel.events.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 is GameDetailsVMEvents.NewScreenshotsListEvent -> {
-
+                    adapter.submitList(it.value.getData() ?: return@observe)
                 }
                 is GameDetailsVMEvents.LostNetworkConnectionEvent -> {
                     it.value.getData() ?: return@observe
                     requireContext().createMessageAlertDialog(checkNetworkConnectionMessage)
                         ?.show(parentFragmentManager, "")
+                }
+                is GameDetailsVMEvents.OnError -> {
+                    it.value.getData() ?: return@observe
+                    closedQuestionDialog.showIfNotAdded(parentFragmentManager, "")
                 }
             }
         }
@@ -142,23 +156,27 @@ class GameDetailsFragment : BaseFragment() {
 
     private fun observeViewModelStates() {
         viewModel.state.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 is GameDetailsVMEStates.GameDetailsExists -> iniViews(it.game)
+                is GameDetailsVMEStates.ReadingGameDetails -> Unit
                 is GameDetailsVMEStates.Default -> Unit
             }
         }
     }
 
+    // TODO: Continue to visualise the game details data //STOPPED//
     private fun iniViews(game: Game) {
         with(binding!!) {
             metacriticTextView.text = game.metacritic.toString()
             ratingTextView.text = game.rating.toString()
             twitchCountTextView.text = game.gameDetails?.twitchCount.toString()
-            redditCountTextView.text = game.gameDetails?.twitchCount.toString()
-            youtubeCountTextView.text = game.gameDetails?.twitchCount.toString()
+            redditCountTextView.text = game.gameDetails?.redditCount.toString()
+            youtubeCountTextView.text = game.gameDetails?.youtubeCount.toString()
 
             releasedAtTextViw.text = game.released.toString()
-            descriptionTextView.text = game.gameDetails?.description
+            descriptionTextView.text = Html.fromHtml(
+                game.gameDetails?.description, Html.FROM_HTML_MODE_LEGACY
+            ).toString().trim()
 
         }
     }

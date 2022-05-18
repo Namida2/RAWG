@@ -10,10 +10,7 @@ import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.logD
 import com.example.core_game.data.rawGameResponse.GamesResponse
 import com.example.core_game.data.rawGameResponse.RAWGame
-import com.example.core_game.domain.GameBackgroundImageChanges
-import com.example.core_game.domain.GameScreenInfo
-import com.example.core_game.domain.GamesHolder
-import com.example.core_game.domain.NewGamesForScreen
+import com.example.core_game.domain.*
 import com.example.core_game.domain.interfaces.GameScreenItemType
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueue
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueueResultHandler
@@ -35,7 +32,7 @@ class AllGamesUseCase @AssistedInject constructor(
     @Assisted override var screenTag: GameScreenTags,
     @Assisted private var coroutineScope: CoroutineScope,
     private val gamesHolder: GamesHolder,
-    private val gamesMapper: com.example.core_game.domain.Game.GameMapper,
+    private val gamesMapper: Game.GameMapper,
     private val imagesLoader: ImagesLoader<GameScreenshotUrlInfo>,
     private val requestsQueueGames: RequestQueue<GamesGetRequest, GamesResponse, GameNetworkExceptions>
 ) : GamesUseCase, RequestQueueResultHandler<GamesResponse>,
