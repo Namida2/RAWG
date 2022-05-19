@@ -3,8 +3,6 @@ package com.example.featureGameDetails.presentation.viewPager.itemDecorations
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.example.core.domain.tools.extensions.logD
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
 
 class GameScreenshotsItemDecorations(
     private val margin: Int,

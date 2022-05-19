@@ -1,6 +1,6 @@
 package com.example.core_game.data.rawGameResponse
 
-class Rating {
+class RAWGRating {
     var id = 0
     var title: String? = null
     var count = 0

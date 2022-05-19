@@ -13,7 +13,7 @@ class RAWGame {
     var rating = 0.0
     @SerializedName("rating_top")
     var ratingTop = 0
-    var ratings: List<Rating>? = null
+    var ratings: List<RAWGRating>? = null
     @SerializedName("ratings_count")
     var ratingsCount = 0
     @SerializedName("reviews_text_count")

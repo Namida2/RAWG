@@ -5,12 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.domain.entities.filters.Filter
 import com.example.core.domain.entities.tools.Message
 import com.example.core.domain.entities.tools.NetworkConnectionListener
 import com.example.core.domain.entities.tools.SingleEvent
 import com.example.core.domain.interfaces.Stateful
 import com.example.core.domain.tools.constants.Messages.defaultErrorMessage
 import com.example.core.domain.tools.extensions.logD
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.core_game.domain.Game
 import com.example.featureGameDetails.domain.entities.GameScreenshot
 import com.example.featureGameDetails.domain.useCases.GetGameDetailsUseCaseFactory
@@ -23,9 +25,9 @@ sealed interface GameDetailsVMEvents<T> {
         override val value: SingleEvent<List<GameScreenshot>>
     ) : GameDetailsVMEvents<List<GameScreenshot>>
 
-    object LostNetworkConnectionEvent : GameDetailsVMEvents<Unit> {
+    class LostNetworkConnectionEvent(
         override val value: SingleEvent<out Unit> = SingleEvent(Unit)
-    }
+    ) : GameDetailsVMEvents<Unit>
 
     class OnError(
         override val value: SingleEvent<out Message>
@@ -47,10 +49,11 @@ class GameDetailsViewModel(
     private val currentGameScreenshots = mutableListOf<GameScreenshot>()
     private val getGameDetailsUseCase = getGameDetailsUseCaseFactory.create(scopeForAsyncWork)
     private val _events = MutableLiveData<GameDetailsVMEvents<out Any>>()
-    private val _state = MutableLiveData<GameDetailsVMEStates>()
+    private val _state = MutableLiveData<GameDetailsVMEStates>(GameDetailsVMEStates.Default)
     private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
         resetState()
         logD("$coroutineContext: $throwable")
+        throwable.printStackTrace()
         _events.value = GameDetailsVMEvents.OnError(SingleEvent(defaultErrorMessage))
     }
     val events: LiveData<GameDetailsVMEvents<out Any>> = _events
@@ -72,21 +75,48 @@ class GameDetailsViewModel(
                     else getGameDetailsUseCase.onNetworkConnected(gameId)
                 else {
                     scopeForAsyncWork.coroutineContext.job.cancelChildren()
-                    _events.value = GameDetailsVMEvents.LostNetworkConnectionEvent
+                    _events.value = GameDetailsVMEvents.LostNetworkConnectionEvent()
                 }
             }
         }
     }
 
     fun getDetails(gameId: Int) {
-        if (state.value == GameDetailsVMEStates.ReadingGameDetails) return
+        if (state.value != GameDetailsVMEStates.Default) return
         setNewState(GameDetailsVMEStates.ReadingGameDetails)
         scopeForAsyncWork.launch(exceptionHandler) {
             currentGame = getGameDetailsUseCase.getGameDetails(gameId)
+            getGameStores(currentGame!!)
             setNewState(GameDetailsVMEStates.GameDetailsExists(currentGame!!))
             addScreenshots(currentGame?.shortScreenshots?.values?.toList() ?: return@launch)
         }
     }
+
+    fun getReleasedInPlatforms(game: Game): List<BaseRecyclerViewType> =
+        game.gameDetails?.platforms?.map {
+            Filter(it.platform?.id.toString(), it.platform?.name ?: return@map null)
+        }?.filterNotNull() ?: emptyList()
+    fun getGameGenres(game: Game): List<BaseRecyclerViewType> =
+        game.gameDetails?.genres?.map {
+            Filter(it.id.toString(), it.name ?: return@map null)
+        }?.filterNotNull() ?: emptyList()
+    fun getGameTags(game: Game): List<BaseRecyclerViewType> =
+        game.gameDetails?.tags?.map {
+            Filter(it.id.toString(), it.name ?: return@map null)
+        }?.filterNotNull() ?: emptyList()
+    fun getGameDevelopers(game: Game): List<BaseRecyclerViewType> =
+        game.gameDetails?.tags?.map {
+            Filter(it.id.toString(), it.name ?: return@map null)
+        }?.filterNotNull() ?: emptyList()
+    fun getGamePublishers(game: Game): List<BaseRecyclerViewType> =
+        game.gameDetails?.publishers?.map {
+            Filter(it.id.toString(), it.name ?: return@map null)
+        }?.filterNotNull() ?: emptyList()
+    fun getGameStores(game: Game): List<BaseRecyclerViewType> =
+        game.gameDetails?.stores?.map {
+            Filter(it.store?.id.toString(), it.store?.name ?: return@map null)
+        }?.filterNotNull() ?: emptyList()
+
 
     private suspend fun addScreenshots(list: List<Bitmap?>) {
         withContext(viewModelScope.coroutineContext) {

@@ -1,5 +1,6 @@
 package com.example.core_game.data.gameDetailsResponce
 
+import com.example.core_game.data.rawGameResponse.RAWGRating
 import com.google.gson.annotations.SerializedName
 
 class GameDetailsResponse {
@@ -23,7 +24,7 @@ class GameDetailsResponse {
     var rating = 0.0
     @SerializedName("rating_top")
     var ratingTop = 0
-    var ratings: ArrayList<Rating>? = null
+    var ratings: ArrayList<RAWGRating>? = null
     var reactions: Any? = null
     var added = 0
     @SerializedName("added_by_status")

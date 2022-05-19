@@ -9,7 +9,7 @@
     <item name="smallSpringStartPosition" type="integer">100</item>
     <item name="defaultAnimationDuration" type="integer">360</item>
     <item name="defaultAnimationDelay" type="integer">120</item>
-    <item name="smallAnimationDelay" type="integer">40</item>
-    <item name="navigationUIStartDelay" type="integer">200</item>
+    <item name="smallAnimationDelay" type="integer">20</item>
+    <item name="defaultStartDelay" type="integer">200</item>
 
 </resources>

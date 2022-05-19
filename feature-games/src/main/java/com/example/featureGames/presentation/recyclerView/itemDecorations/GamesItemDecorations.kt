@@ -5,7 +5,7 @@ package com.example.featureGames.presentation.recyclerView.itemDecorations
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewAdapter
 import com.example.featureGames.domain.entities.GameErrorPagePlaceHolder
 
 class GamesItemDecorations(

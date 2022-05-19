@@ -1,680 +1,916 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
     android:background="@color/black"
     android:transitionName="@string/defaultEndTransitionName">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <!--ScreenShots-->
+        android:animateLayoutChanges="true">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/screenshotViewPager"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/black" />
-
-        <!--Ratings-->
-        <LinearLayout
-            android:id="@+id/ratingsContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal">
-
+            android:layout_marginBottom="32dp"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical">
+            <!--ScreenShots-->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/screenshotViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="68dp"
+                android:background="@color/black" />
+            <!--Ratings-->
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Rating"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/ratingTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="2dp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="4.95"
-                    android:textColor="@color/green"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="1dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="16dp"
-                app:cardBackgroundColor="@color/blackLite" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ratingsContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/ic_twitch"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/twitchCountTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="102"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView"
-                    app:layout_constraintStart_toEndOf="@+id/imageView"
-                    app:layout_constraintTop_toTopOf="@+id/imageView" />
-
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/ic_reddit"
-                    app:layout_constraintStart_toEndOf="@id/twitchCountTextView"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/redditCountTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="7063"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-                    app:layout_constraintStart_toEndOf="@+id/imageView2"
-                    app:layout_constraintTop_toTopOf="@+id/imageView2" />
-
-                <ImageView
-                    android:id="@+id/imageView4"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:src="@drawable/ic_you_tube"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-                <TextView
-                    android:id="@+id/youtubeCountTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="7063"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-                    app:layout_constraintStart_toEndOf="@+id/imageView4"
-                    app:layout_constraintTop_toTopOf="@+id/imageView4" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="1dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="16dp"
-                app:cardBackgroundColor="@color/blackLite" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Metascore"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/metacriticTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="2dp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="96"
-                    android:textColor="@color/green"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-        </LinearLayout>
-        <!--ProgressBars-->
-        <LinearLayout
-            android:id="@+id/progressContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Exceptional:  "
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-
-                <TextView
-                    android:id="@+id/exceptionalCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="5670"
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-
-            </LinearLayout>
-
-            <View
-                android:id="@+id/exceptionalProgress"
-                android:layout_width="280dp"
-                android:layout_height="6dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/bg_solid_gradient_blue_to_pink" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="6dp"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Recommended:  "
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-                <TextView
-                    android:id="@+id/recommendedCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="2060"
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <View
-                android:id="@+id/recommendedProgress"
-                android:layout_width="200dp"
-                android:layout_height="6dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/bg_solid_gradient_blue_to_pink" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="6dp"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Meh:  "
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-                <TextView
-                    android:id="@+id/mehCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="310"
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <View
-                android:id="@+id/mehProgress"
-                android:layout_width="120dp"
-                android:layout_height="6dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/bg_solid_gradient_blue_to_pink" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="6dp"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Skip:  "
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-                <TextView
-                    android:id="@+id/skipCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="310"
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <View
-                android:id="@+id/skipProgress"
-                android:layout_width="60dp"
-                android:layout_height="6dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/bg_solid_gradient_blue_to_pink" />
-
-        </LinearLayout>
-        <!--ReleasedAt-->
-        <LinearLayout
-            android:id="@+id/releasedAtContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_semi_bold"
-                android:text="Released: "
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/releasedAtTextViw"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="2009.02.05"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/releasedAtRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <!--About-->
-        <LinearLayout
-            android:id="@+id/aboutContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_semi_bold"
-                android:text="About:"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/descriptionTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:lineSpacingExtra="4dp"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="From PlayStation Studios and Bluepoint Games comes a remake of the PlayStation classic, Demon’s Souls. Entirely rebuilt from the ground up and masterfully enhanced… "
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/applyButton"
-                style="@style/buttonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="12dp"
-                android:text="Read more"
-                android:textSize="12sp" />
-        </LinearLayout>
-        <!--AddingStatuses-->
-        <LinearLayout
-            android:id="@+id/addedStatusContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
-            android:orientation="horizontal">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/yetTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Yet: "
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/yetCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="139"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/yetTextView"
-                    app:layout_constraintStart_toEndOf="@+id/yetTextView"
-                    app:layout_constraintTop_toTopOf="@+id/yetTextView" />
-
-                <TextView
-                    android:id="@+id/beatenTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Beaten: "
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/yetTextView" />
-
-                <TextView
-                    android:id="@+id/beatenCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="115"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/beatenTextView"
-                    app:layout_constraintStart_toEndOf="@+id/beatenTextView"
-                    app:layout_constraintTop_toTopOf="@+id/beatenTextView" />
-
-                <TextView
-                    android:id="@+id/droppedTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Beaten: "
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/beatenTextView" />
-
-                <TextView
-                    android:id="@+id/droppedCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="115"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/droppedTextView"
-                    app:layout_constraintStart_toEndOf="@+id/droppedTextView"
-                    app:layout_constraintTop_toTopOf="@+id/droppedTextView" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/ownedTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Owned: "
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/ownedCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="139"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/ownedTextView"
-                    app:layout_constraintStart_toEndOf="@+id/ownedTextView"
-                    app:layout_constraintTop_toTopOf="@+id/ownedTextView" />
-
-                <TextView
-                    android:id="@+id/toPlayTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Toplay: "
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ownedTextView" />
-
-                <TextView
-                    android:id="@+id/toPlayCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="115"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/toPlayTextView"
-                    app:layout_constraintStart_toEndOf="@+id/toPlayTextView"
-                    app:layout_constraintTop_toTopOf="@+id/toPlayTextView" />
-
-                <TextView
-                    android:id="@+id/playingTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Playing: "
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/toPlayCount" />
-
-                <TextView
-                    android:id="@+id/playingCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="115"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/playingTextView"
-                    app:layout_constraintStart_toEndOf="@+id/playingTextView"
-                    app:layout_constraintTop_toTopOf="@+id/playingTextView" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
-        <!--GoToButtons-->
-        <LinearLayout
-            android:id="@+id/goToButtonsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/goToRedditButton"
-                    style="@style/buttonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="0dp"
-                    android:drawableEnd="@drawable/ic_reddit"
-                    android:text="Go to reddit"
-                    android:textSize="12sp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/goToWebsiteButton"
-                    style="@style/buttonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="0dp"
-                    android:drawableEnd="@drawable/ic_firefox"
-                    android:text="Go to website"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/goToMetacriticButton"
-                    style="@style/buttonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="0dp"
-                    android:drawableEnd="@drawable/ic_metacritic"
-                    android:text="Go to metacritic"
-                    android:textSize="12sp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/goToTrailerButton"
-                    style="@style/buttonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="0dp"
-                    android:drawableEnd="@drawable/ic_you_tube"
-                    android:text="Go to trailer"
-                    android:textSize="12sp" />
-            </LinearLayout>
-        </LinearLayout>
-        <!--Genres-->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/genresRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <!--Tags-->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tagsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <!--Requirements-->
-        <LinearLayout
-            android:id="@+id/requirementsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="32dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_semi_bold"
-                android:gravity="center"
-                android:text="Requirements"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/montserrat_semi_bold"
-                android:gravity="center"
-                android:text="Minimum:"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:lineSpacingExtra="4dp"
-                android:fontFamily="@font/montserrat_semi_bold"
-                android:text="Minimum: OS: Windows 10 Processor: INTEL CORE I5-8400 or AMD RYZEN 3 3300X Memory: 12 GB RAM Graphics: NVIDIA GEFORCE GTX 1060 3 GB or AMD RADEON RX 580 4 GB DirectX: Version 12 Storage: 60 GB available space Sound Card: Windows Compatible Audio Device Additional Notes:"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:fontFamily="@font/montserrat_semi_bold"
-                android:gravity="center"
-                android:text="Recommended:"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
+                android:animateLayoutChanges="true"
+                android:orientation="horizontal">
 
-            <TextView
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:text="Rating"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/ratingTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="4.95"
+                        android:textColor="@color/green"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="1dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="16dp"
+                    app:cardBackgroundColor="@color/blackLite" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/ic_twitch"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/twitchCountTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="102"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                        app:layout_constraintStart_toEndOf="@+id/imageView"
+                        app:layout_constraintTop_toTopOf="@+id/imageView" />
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/ic_reddit"
+                        app:layout_constraintStart_toEndOf="@id/twitchCountTextView"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/redditCountTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="7063"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+                        app:layout_constraintStart_toEndOf="@+id/imageView2"
+                        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+
+                    <ImageView
+                        android:id="@+id/imageView4"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/ic_you_tube"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+                    <TextView
+                        android:id="@+id/youtubeCountTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="7063"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+                        app:layout_constraintStart_toEndOf="@+id/imageView4"
+                        app:layout_constraintTop_toTopOf="@+id/imageView4" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="1dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="16dp"
+                    app:cardBackgroundColor="@color/blackLite" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:text="Metascore"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/metacriticTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="96"
+                        android:textColor="@color/green"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+            <!--ProgressBars-->
+            <LinearLayout
+                android:id="@+id/progressContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:lineSpacingExtra="4dp"
-                android:fontFamily="@font/montserrat_semi_bold"
-                android:text="Recommended: OS: Windows 10/11 Processor: INTEL CORE I7-8700K or AMD RYZEN 5 3600X Memory: 16 GB RAM Graphics: NVIDIA GEFORCE GTX 1070 8 GB or AMD RADEON RX VEGA 56 8 GB DirectX: Version 12 Storage: 60 GB available space Sound Card: Windows Compatible Audio Device Additional Notes:"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="18dp"
+                android:layout_marginEnd="16dp"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+            </LinearLayout>
+            <!--ReleasedIn-->
+            <LinearLayout
+                android:id="@+id/releasedInContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:text="Released in: "
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/released_in_text_viw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="2009.02.05"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/released_in_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+            </LinearLayout>
+            <!--About-->
+            <LinearLayout
+                android:id="@+id/aboutContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="About:"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/descriptionTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:lineSpacingExtra="4dp"
+                    android:maxLines="8"
+                    android:text="From PlayStation Studios and Bluepoint Games comes a remake of the PlayStation classic, Demon’s Souls. Entirely rebuilt from the ground up and masterfully enhanced… "
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/show_more_button"
+                    style="@style/buttonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/showMore"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <!--AddingStatuses-->
+            <LinearLayout
+                android:id="@+id/addedStatusContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:animateLayoutChanges="true"
+                android:orientation="horizontal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/yetTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:text="Yet: "
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/yet_status_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="139"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/yetTextView"
+                        app:layout_constraintStart_toEndOf="@+id/yetTextView"
+                        app:layout_constraintTop_toTopOf="@+id/yetTextView" />
+
+                    <TextView
+                        android:id="@+id/beatenTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:text="Beaten: "
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/yetTextView" />
+
+                    <TextView
+                        android:id="@+id/beaten_status_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="115"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/beatenTextView"
+                        app:layout_constraintStart_toEndOf="@+id/beatenTextView"
+                        app:layout_constraintTop_toTopOf="@+id/beatenTextView" />
+
+                    <TextView
+                        android:id="@+id/droppedTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:text="Dropped: "
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/beatenTextView" />
+
+                    <TextView
+                        android:id="@+id/droppe_statusd_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="115"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/droppedTextView"
+                        app:layout_constraintStart_toEndOf="@+id/droppedTextView"
+                        app:layout_constraintTop_toTopOf="@+id/droppedTextView" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/ownedTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:text="Owned: "
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/owned_status_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="139"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/ownedTextView"
+                        app:layout_constraintStart_toEndOf="@+id/ownedTextView"
+                        app:layout_constraintTop_toTopOf="@+id/ownedTextView" />
+
+                    <TextView
+                        android:id="@+id/toPlayTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:text="Toplay: "
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ownedTextView" />
+
+                    <TextView
+                        android:id="@+id/to_play_status_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="115"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/toPlayTextView"
+                        app:layout_constraintStart_toEndOf="@+id/toPlayTextView"
+                        app:layout_constraintTop_toTopOf="@+id/toPlayTextView" />
+
+                    <TextView
+                        android:id="@+id/playingTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:text="Playing: "
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/to_play_status_count" />
+
+                    <TextView
+                        android:id="@+id/playing_status_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="115"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/playingTextView"
+                        app:layout_constraintStart_toEndOf="@+id/playingTextView"
+                        app:layout_constraintTop_toTopOf="@+id/playingTextView" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+            <!--GoToButtons-->
+            <LinearLayout
+                android:id="@+id/goToButtonsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/goToRedditButton"
+                        style="@style/buttonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0dp"
+                        android:drawableEnd="@drawable/ic_reddit"
+                        android:text="Go to reddit"
+                        android:textSize="12sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/goToWebsiteButton"
+                        style="@style/buttonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0dp"
+                        android:drawableEnd="@drawable/ic_firefox"
+                        android:text="Go to website"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/goToMetacriticButton"
+                        style="@style/buttonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0dp"
+                        android:drawableEnd="@drawable/ic_metacritic"
+                        android:text="Go to metacritic"
+                        android:textSize="12sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/goToTrailerButton"
+                        style="@style/buttonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0dp"
+                        android:drawableEnd="@drawable/ic_you_tube"
+                        android:text="Go to trailer"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+            <!--Genres-->
+            <LinearLayout
+                android:id="@+id/genresContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/genresTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Genres: "
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/genresRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+            </LinearLayout>
+            <!--Tags-->
+            <LinearLayout
+                android:id="@+id/tagsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tagsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Tags: "
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/tagsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+            </LinearLayout>
+            <!--OtherData-->
+            <LinearLayout
+                android:id="@+id/otherDataContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:animateLayoutChanges="true"
+                android:orientation="horizontal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/playtimeTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:text="Playtime: "
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/playtime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="139"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/playtimeTextView"
+                        app:layout_constraintStart_toEndOf="@+id/playtimeTextView"
+                        app:layout_constraintTop_toTopOf="@+id/playtimeTextView" />
+
+                    <TextView
+                        android:id="@+id/achievementsTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:text="Achievments: "
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/playtimeTextView" />
+
+                    <TextView
+                        android:id="@+id/achievementsCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="115"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/achievementsTextView"
+                        app:layout_constraintStart_toEndOf="@+id/achievementsTextView"
+                        app:layout_constraintTop_toTopOf="@+id/achievementsTextView" />
+
+                    <TextView
+                        android:id="@+id/textReviewsTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:text="Text Reviews: "
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/achievementsTextView" />
+
+                    <TextView
+                        android:id="@+id/textReviewsCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="115"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/textReviewsTextView"
+                        app:layout_constraintStart_toEndOf="@+id/textReviewsTextView"
+                        app:layout_constraintTop_toTopOf="@+id/textReviewsTextView" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/addedTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:text="Added: "
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/addedCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="139"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/addedTextView"
+                        app:layout_constraintStart_toEndOf="@+id/addedTextView"
+                        app:layout_constraintTop_toTopOf="@+id/addedTextView" />
+
+                    <TextView
+                        android:id="@+id/ratingTopTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:text="RatingTop: "
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/addedTextView" />
+
+                    <TextView
+                        android:id="@+id/ratingTop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="115"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/ratingTopTextView"
+                        app:layout_constraintStart_toEndOf="@+id/ratingTopTextView"
+                        app:layout_constraintTop_toTopOf="@+id/ratingTopTextView" />
+
+                    <TextView
+                        android:id="@+id/reviewsTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:text="Reviews: "
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ratingTop" />
+
+                    <TextView
+                        android:id="@+id/reviewsCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="115"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/reviewsTextView"
+                        app:layout_constraintStart_toEndOf="@+id/reviewsTextView"
+                        app:layout_constraintTop_toTopOf="@+id/reviewsTextView" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+            <!--Developers-->
+            <LinearLayout
+                android:id="@+id/developersContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/developersTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Developers: "
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/developersRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+            </LinearLayout>
+            <!--Publishers-->
+            <LinearLayout
+                android:id="@+id/publisherContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/publishersTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Publishers: "
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/publishersRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+            </LinearLayout>
+            <!--Requirements-->
+            <LinearLayout
+                android:id="@+id/requirementsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:gravity="center"
+                    android:text="Requirements"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/requirementsMin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:lineSpacingExtra="4dp"
+                    android:text="Minimum: OS: Windows 10 Processor: INTEL CORE I5-8400 or AMD RYZEN 3 3300X Memory: 12 GB RAM Graphics: NVIDIA GEFORCE GTX 1060 3 GB or AMD RADEON RX 580 4 GB DirectX: Version 12 Storage: 60 GB available space Sound Card: Windows Compatible Audio Device Additional Notes:"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/requirementsRec"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:lineSpacingExtra="4dp"
+                    android:text="Recommended: OS: Windows 10/11 Processor: INTEL CORE I7-8700K or AMD RYZEN 5 3600X Memory: 16 GB RAM Graphics: NVIDIA GEFORCE GTX 1070 8 GB or AMD RADEON RX VEGA 56 8 GB DirectX: Version 12 Storage: 60 GB available space Sound Card: Windows Compatible Audio Device Additional Notes:"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <!--Stores-->
+            <LinearLayout
+                android:id="@+id/storesContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/storesTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Where to buy: "
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/storesRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+            </LinearLayout>
         </LinearLayout>
-        <!--Stores-->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/storesRecyclerView"
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:background="@color/blackAlpha70"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:navigationIcon="@drawable/ic_arrow_left">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-</androidx.core.widget.NestedScrollView>
+                <TextView
+                    android:id="@+id/gameName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text="Bloodstained: Ritual of the Night"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/likeCardView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/likeCardView"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_marginEnd="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/blackLite"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_heart_fill" />
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

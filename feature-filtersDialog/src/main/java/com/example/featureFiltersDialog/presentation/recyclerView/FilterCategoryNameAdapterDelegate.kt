@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.example.core.domain.entities.filters.FilterCategoryName
 import com.example.core.domain.tools.extensions.precomputeAndSetText
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
-import com.example.core.presentaton.recyclerView.BaseViewHolder
-import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
+import com.example.core.presentaton.recyclerView.base.BaseViewHolder
+import com.example.core.presentaton.recyclerView.base.RecyclerViewAdapterDelegate
 import com.example.featureFiltersDialog.R
 import com.example.featureFiltersDialog.databinding.LayoutFilterNameBinding
 

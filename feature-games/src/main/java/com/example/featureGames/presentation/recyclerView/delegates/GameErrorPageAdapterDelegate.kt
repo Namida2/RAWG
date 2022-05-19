@@ -7,11 +7,10 @@ import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.core.domain.tools.extensions.prepareDefaultSpringAnimation
 import com.example.core.domain.tools.extensions.startDefaultRecyclerViewItemAnimation
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
-import com.example.core.presentaton.recyclerView.BaseViewHolder
-import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
+import com.example.core.presentaton.recyclerView.base.BaseViewHolder
+import com.example.core.presentaton.recyclerView.base.RecyclerViewAdapterDelegate
 import com.example.featureGames.R
 import com.example.featureGames.databinding.LayoutGameErrorPagePlaceholderBinding
 import com.example.featureGames.domain.entities.GameErrorPagePlaceHolder

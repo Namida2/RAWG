@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.example.core.domain.tools.extensions.precomputeAndSetText
 import com.example.core.domain.tools.extensions.startDefaultRecyclerViewItemAnimation
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
-import com.example.core.presentaton.recyclerView.BaseViewHolder
-import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
+import com.example.core.presentaton.recyclerView.base.BaseViewHolder
+import com.example.core.presentaton.recyclerView.base.RecyclerViewAdapterDelegate
 import com.example.core_game.domain.Game
 import com.example.featureGames.R
 import com.example.featureGames.databinding.LayoutGameBinding

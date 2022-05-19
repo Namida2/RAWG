@@ -22,7 +22,7 @@ import com.example.core.domain.tools.constants.StringConstants.EMPTY_STRING
 import com.example.core.domain.tools.enums.RequestParams
 import com.example.core.domain.tools.enums.getOrderedFields
 import com.example.core.domain.tools.extensions.logD
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.featureFiltersDialog.domain.di.FiltersDepsStore.onNewRequestCallback
 import com.example.featureFiltersDialog.domain.entities.toDateString
 import com.example.featureFiltersDialog.presentation.recyclerView.FiltersContainerAdapterDelegateCallback

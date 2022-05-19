@@ -1,16 +1,16 @@
-package com.example.featureFiltersDialog.presentation.recyclerView
+package com.example.core.presentaton.recyclerView.delegates
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import com.example.core.R
+import com.example.core.databinding.LayoutFilterBinding
 import com.example.core.domain.entities.filters.Filter
 import com.example.core.domain.tools.extensions.precomputeAndSetText
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
-import com.example.core.presentaton.recyclerView.BaseViewHolder
-import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
-import com.example.featureFiltersDialog.R
-import com.example.featureFiltersDialog.databinding.LayoutFilterBinding
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
+import com.example.core.presentaton.recyclerView.base.BaseViewHolder
+import com.example.core.presentaton.recyclerView.base.RecyclerViewAdapterDelegate
 
 fun interface FilterAdapterDelegateCallback {
     fun onFilterClick(filter: Filter)
@@ -19,7 +19,7 @@ fun interface FilterAdapterDelegateCallback {
 class FiltersAdapterDelegate(
     private val selectedBackground: Int,
     private val defaultDrawable: Int,
-    private val callback: FilterAdapterDelegateCallback
+    private val callback: FilterAdapterDelegateCallback? = null
 ) : RecyclerViewAdapterDelegate<Filter, LayoutFilterBinding>, View.OnClickListener {
     override val layoutId: Int
         get() = R.layout.layout_filter
@@ -40,11 +40,13 @@ class FiltersAdapterDelegate(
     private val diffItemCallback = object : DiffUtil.ItemCallback<Filter>() {
         override fun areItemsTheSame(oldItem: Filter, newItem: Filter): Boolean =
             oldItem.categoryName + oldItem.id == newItem.categoryName + newItem.id
-        override fun areContentsTheSame(oldItem: Filter, newItem: Filter): Boolean = oldItem == newItem
+
+        override fun areContentsTheSame(oldItem: Filter, newItem: Filter): Boolean =
+            oldItem == newItem
     }
 
     override fun onClick(v: View?) {
-        v?.tag?.let { callback.onFilterClick(it as Filter) }
+        v?.tag?.let { callback?.onFilterClick(it as Filter) }
     }
 }
 

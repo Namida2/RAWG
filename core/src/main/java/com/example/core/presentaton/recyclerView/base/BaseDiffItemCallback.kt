@@ -1,4 +1,4 @@
-package com.example.core.presentaton.recyclerView
+package com.example.core.presentaton.recyclerView.base
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.viewbinding.ViewBinding

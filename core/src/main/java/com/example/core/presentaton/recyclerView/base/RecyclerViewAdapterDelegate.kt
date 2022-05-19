@@ -1,10 +1,9 @@
-package com.example.core.presentaton.recyclerView
+package com.example.core.presentaton.recyclerView.base
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.viewbinding.ViewBinding
-import java.util.zip.Inflater
 
 interface RecyclerViewAdapterDelegate<RecyclerViewItem: BaseRecyclerViewType, Binding: ViewBinding> {
     val layoutId: Int

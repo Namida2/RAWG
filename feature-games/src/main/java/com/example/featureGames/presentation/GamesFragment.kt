@@ -20,7 +20,7 @@ import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.createMessageAlertDialog
 import com.example.core.domain.tools.extensions.logD
 import com.example.core.domain.tools.extensions.logE
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewAdapter
 import com.example.featureGameDetails.presentation.GameDetailsFragment
 import com.example.featureGameDetails.presentation.GameDetailsFragment.Companion.GAME_ID_TAG
 import com.example.featureGames.databinding.FragmentGamesBinding

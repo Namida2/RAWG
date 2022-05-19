@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/screenShotImageView"
         android:layout_width="match_parent"
-        android:src="@drawable/im_game_test"
+        android:src="@drawable/ic_screenshot_placeholder"
         android:scaleType="centerCrop"
         android:layout_height="178dp"/>
 

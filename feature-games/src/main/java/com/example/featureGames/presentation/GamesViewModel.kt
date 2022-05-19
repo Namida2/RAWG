@@ -22,7 +22,7 @@ import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.enums.ResponseCodes
 import com.example.core.domain.tools.extensions.logD
 import com.example.core.domain.tools.extensions.logE
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.core_game.domain.GameBackgroundImageChanges
 import com.example.core_game.domain.GameScreenInfo
 import com.example.core_game.domain.NewGamesForScreen

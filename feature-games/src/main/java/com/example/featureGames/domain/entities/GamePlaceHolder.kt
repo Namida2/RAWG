@@ -1,6 +1,6 @@
 package com.example.featureGames.domain.entities
 
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 
 data class GamePlaceHolder(val id: Int = nextId): BaseRecyclerViewType {
     companion object {

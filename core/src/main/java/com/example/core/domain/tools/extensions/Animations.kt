@@ -12,7 +12,7 @@ import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 
 fun View.prepareFadeInAnimation(
-    duration: Long = 160,
+    duration: Long = 260,
     startDelay: Long = 0,
     doOnEnd: () -> Unit = {}
 ): ObjectAnimator {
@@ -26,7 +26,7 @@ fun View.prepareFadeInAnimation(
 }
 
 fun View.prepareIncreaseHeightAnimation(
-    duration: Long = 160,
+    duration: Long = 260,
     startDelay: Long = 0,
     interpolator: Interpolator,
     doOnEnd: () -> Unit = {}
@@ -41,7 +41,7 @@ fun View.prepareIncreaseHeightAnimation(
 }
 
 fun View.prepareScaleAnimation(
-    duration: Long = 160,
+    duration: Long = 260,
     startDelay: Long = 0,
     interpolator: Interpolator,
     startAlpha: Float = 0f,
@@ -80,7 +80,7 @@ fun View.prepareDefaultSpringAnimation(
 
 fun View.prepareSlideDownFromTop(
     distance: Int,
-    duration: Long = 160,
+    duration: Long = 260,
     startDelay: Long = 0,
     startAlpha: Float = 1f,
     doOnEnd: () -> Unit = {}
@@ -97,7 +97,7 @@ fun View.prepareSlideDownFromTop(
 
 fun View.prepareSlideUpFromBottom(
     distance: Int,
-    duration: Long = 160,
+    duration: Long = 260,
     startDelay: Long = 0,
     doOnEnd: () -> Unit = {}
 ): ObjectAnimator {

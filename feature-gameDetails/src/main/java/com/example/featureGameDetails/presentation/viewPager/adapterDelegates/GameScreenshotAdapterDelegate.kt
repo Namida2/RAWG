@@ -2,10 +2,12 @@ package com.example.featureGameDetails.presentation.viewPager.adapterDelegates
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.OvershootInterpolator
 import androidx.recyclerview.widget.DiffUtil
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
-import com.example.core.presentaton.recyclerView.BaseViewHolder
-import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
+import com.example.core.domain.tools.extensions.prepareScaleAnimation
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
+import com.example.core.presentaton.recyclerView.base.BaseViewHolder
+import com.example.core.presentaton.recyclerView.base.RecyclerViewAdapterDelegate
 import com.example.featureGameDetails.R
 import com.example.featureGameDetails.databinding.LayoutGameScreenshotBinding
 import com.example.featureGameDetails.domain.entities.GameScreenshot
@@ -40,5 +42,6 @@ class GameScreenshotViewHolder(
 ) : BaseViewHolder<GameScreenshot, LayoutGameScreenshotBinding>(binding) {
     override fun onBind(item: GameScreenshot) {
         binding.screenShotImageView.setImageBitmap(item.screenshot)
+        binding.root.prepareScaleAnimation(interpolator = OvershootInterpolator()).start()
     }
 }

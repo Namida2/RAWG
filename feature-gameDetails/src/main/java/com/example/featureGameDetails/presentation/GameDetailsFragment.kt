@@ -1,5 +1,6 @@
 package com.example.featureGameDetails.presentation
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -8,18 +9,33 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.core.domain.tools.constants.Constants.AVERAGE_FILTERS_LIST_SIZE
+import com.example.core.domain.tools.constants.Constants.DEFAULT_SPAN_COUNT
+import com.example.core.domain.tools.constants.Constants.DESCRIPTION_MAX_LINES
 import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
+import com.example.core.domain.tools.constants.StringConstants.COLON_SIGN
+import com.example.core.domain.tools.constants.StringConstants.HOURS
+import com.example.core.domain.tools.constants.StringConstants.PC_SLUG
 import com.example.core.domain.tools.extensions.createMessageAlertDialog
+import com.example.core.domain.tools.extensions.logD
 import com.example.core.domain.tools.extensions.showIfNotAdded
 import com.example.core.presentaton.dialogs.ClosedQuestionDialog
 import com.example.core.presentaton.fragments.BaseFragment
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewAdapter
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
+import com.example.core.presentaton.recyclerView.delegates.FiltersAdapterDelegate
 import com.example.core_game.domain.Game
 import com.example.featureGameDetails.R
 import com.example.featureGameDetails.databinding.FragmentGameDetailsBinding
+import com.example.featureGameDetails.databinding.LayoutRatingBinding
 import com.example.featureGameDetails.domain.entities.GameScreenshot
 import com.example.featureGameDetails.domain.entities.ViewModelFactory
 import com.example.featureGameDetails.presentation.viewPager.GamePageTransformer
@@ -34,19 +50,25 @@ class GameDetailsFragment : BaseFragment() {
     private var currentPageMargin by Delegates.notNull<Int>()
     private var pageLargeMargin by Delegates.notNull<Int>()
     private var pageSmallMargin by Delegates.notNull<Int>()
+    private val platformsAdapter = BaseRecyclerViewAdapter(getFiltersAdapterDelegate())
+    private val genresAdapter = BaseRecyclerViewAdapter(getFiltersAdapterDelegate())
+    private val tagsAdapter = BaseRecyclerViewAdapter(getFiltersAdapterDelegate())
+    private val developersAdapter = BaseRecyclerViewAdapter(getFiltersAdapterDelegate())
+    private val publishersAdapter = BaseRecyclerViewAdapter(getFiltersAdapterDelegate())
+    private val storesAdapter = BaseRecyclerViewAdapter(getFiltersAdapterDelegate())
+    private var gameId by Delegates.notNull<Int>()
+    private var descriptionMaxLines = DESCRIPTION_MAX_LINES
+    private var binding: FragmentGameDetailsBinding? = null
+    private lateinit var viewModel: GameDetailsViewModel
+    private val adapter = BaseRecyclerViewAdapter(
+        listOf(GameScreenshotAdapterDelegate())
+    )
     private var closedQuestionDialog = ClosedQuestionDialog<Unit>(
         onNegative = {
 
         }, onPositive = {
 
         })
-    private var gameId by Delegates.notNull<Int>()
-
-    private var binding: FragmentGameDetailsBinding? = null
-    private lateinit var viewModel: GameDetailsViewModel
-    private val adapter = BaseRecyclerViewAdapter(
-        listOf(GameScreenshotAdapterDelegate())
-    )
 
     companion object {
         const val GAME_ID_TAG = "GAME_ID_TAG"
@@ -63,7 +85,6 @@ class GameDetailsFragment : BaseFragment() {
         currentPageMargin = resources.getDimensionPixelSize(R.dimen.current_page_margin)
         viewModel =
             ViewModelProvider(this, ViewModelFactory(gameId))[GameDetailsViewModel::class.java]
-        viewModel.getDetails(gameId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,15 +105,24 @@ class GameDetailsFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initViewPager()
-        postponeEnterTransition()
         observeViewModelEvents()
         observeViewModelStates()
+        viewModel.getDetails(gameId)
+        initViewPager()
+        postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition(); animateFirstVisit() }
         binding!!.ratingsContainer.setOnClickListener {
             animateFirstVisit()
         }
     }
+
+    private fun getFiltersAdapterDelegate(): List<FiltersAdapterDelegate> =
+        listOf(
+            FiltersAdapterDelegate(
+                com.example.core.R.drawable.bg_black_lite_stroke_gradient_blue_to_pink_90,
+                com.example.core.R.drawable.bg_black_lite_rounded,
+            )
+        )
 
     private fun initViewPager() {
         binding?.screenshotViewPager?.adapter = adapter
@@ -109,23 +139,18 @@ class GameDetailsFragment : BaseFragment() {
     private fun animateFirstVisit() {
         startEnterSpringAnimation(
             listOf(
-                binding!!.screenshotViewPager,
-                binding!!.ratingsContainer,
-                binding!!.progressContainer,
-                binding!!.releasedAtContainer,
-                binding!!.aboutContainer,
-                binding!!.addedStatusContainer,
-                binding!!.goToButtonsContainer,
-                binding!!.genresRecyclerView,
-                binding!!.tagsRecyclerView,
-                binding!!.requirementsContainer,
-                binding!!.storesRecyclerView,
+                binding!!.appBar, binding!!.screenshotViewPager,
+                binding!!.ratingsContainer, binding!!.progressContainer,
+                binding!!.releasedInContainer, binding!!.aboutContainer,
+                binding!!.addedStatusContainer, binding!!.goToButtonsContainer,
+                binding!!.genresRecyclerView, binding!!.tagsRecyclerView,
+                binding!!.requirementsContainer, binding!!.storesRecyclerView,
             ).onEach { view -> view.alpha = 0f },
             springStartPosition = resources.getInteger(com.example.core.R.integer.smallSpringStartPosition)
                 .toFloat(),
             delayBetweenAnimations = resources.getInteger(com.example.core.R.integer.smallAnimationDelay)
                 .toLong(),
-            startDelay = resources.getInteger(com.example.core.R.integer.smallSpringStartPosition)
+            startDelay = resources.getInteger(com.example.core.R.integer.defaultStartDelay)
                 .toLong(),
         )
     }
@@ -165,28 +190,114 @@ class GameDetailsFragment : BaseFragment() {
     }
 
     // TODO: Continue to visualise the game details data //STOPPED//
+    @SuppressLint("SetTextI18n")
     private fun iniViews(game: Game) {
         with(binding!!) {
-            metacriticTextView.text = game.metacritic.toString()
-            ratingTextView.text = game.rating.toString()
-            twitchCountTextView.text = game.gameDetails?.twitchCount.toString()
-            redditCountTextView.text = game.gameDetails?.redditCount.toString()
+            gameName.text =             game.name.toString()
+            ratingTextView.text =       game.rating.toString()
+            releasedInTextViw.text =    game.released.toString()
+            metacriticTextView.text =   game.metacritic.toString()
+            twitchCountTextView.text =  game.gameDetails?.twitchCount.toString()
+            redditCountTextView.text =  game.gameDetails?.redditCount.toString()
             youtubeCountTextView.text = game.gameDetails?.youtubeCount.toString()
+            descriptionTextView.text =  game.gameDetails?.description
+            showMoreButton.setOnClickListener {
+                descriptionMaxLines = if(descriptionMaxLines == DESCRIPTION_MAX_LINES) {
+                    showMoreButton.text = resources.getString(R.string.showLess)
+                    Int.MAX_VALUE
+                } else {
+                    showMoreButton.text = resources.getString(R.string.showMore)
+                    DESCRIPTION_MAX_LINES
+                }
+                descriptionTextView.maxLines = descriptionMaxLines
+            }
+            yetStatusCount.text =       game.addedByStatus?.yet.toString()
+            ownedStatusCount.text =     game.addedByStatus?.owned.toString()
+            beatenStatusCount.text =    game.addedByStatus?.beaten.toString()
+            toPlayStatusCount.text =    game.addedByStatus?.toplay.toString()
+            playingStatusCount.text =   game.addedByStatus?.playing.toString()
+            droppeStatusdCount.text =   game.addedByStatus?.dropped.toString()
 
-            releasedAtTextViw.text = game.released.toString()
-            descriptionTextView.text = Html.fromHtml(
-                game.gameDetails?.description, Html.FROM_HTML_MODE_LEGACY
-            ).toString().trim()
+            ratingTop.text =         game.ratingTop.toString()
+            addedCount.text =        game.gameDetails?.added.toString()
+            reviewsCount.text =      game.gameDetails?.reviewsCount.toString()
+            playtime.text =          game.gameDetails?.playtime.toString() + HOURS
+            textReviewsCount.text =  game.gameDetails?.reviewsTextCount.toString()
+            achievementsCount.text = game.gameDetails?.achievementsCount.toString()
+            game.gameDetails?.platforms?.find {
+                it.platform?.slug == PC_SLUG
+            }.let {
+                if(it == null) {
+                    requirementsContainer.visibility = View.GONE
+                    return@let
+                }
+                it.requirements?.minimum?.let { requirements ->
+                    requirementsMin.text = Html.fromHtml(
+                        requirements, Html.FROM_HTML_MODE_LEGACY
+                    ).toString().trim()
+                }
+                it.requirements?.recommended?.let { requirements ->
+                    requirementsRec.text = Html.fromHtml(
+                        requirements, Html.FROM_HTML_MODE_LEGACY
+                    ).toString().trim()
+                }
+            }
+            showRatings(game)
+            showFilters(game)
+        }
+    }
 
+    private fun showFilters(game: Game) {
+        with(binding!!) {
+            showFilters(tagsContainer, tagsRecyclerView, tagsAdapter, viewModel.getGameTags(game))
+            showFilters(storesContainer, storesRecyclerView, storesAdapter, viewModel.getGameStores(game))
+            showFilters(genresContainer, genresRecyclerView, genresAdapter, viewModel.getGameGenres(game))
+            showFilters(developersContainer, developersRecyclerView, developersAdapter, viewModel.getGameDevelopers(game))
+            showFilters(publisherContainer, publishersRecyclerView, publishersAdapter, viewModel.getGamePublishers(game))
+            showFilters(releasedInContainer, releasedInRecyclerView, platformsAdapter, viewModel.getReleasedInPlatforms(game))
+        }
+    }
+
+    private fun showFilters(
+        title: ViewGroup,
+        container: RecyclerView,
+        adapter: BaseRecyclerViewAdapter,
+        filters: List<BaseRecyclerViewType>
+    ) {
+        if (filters.isEmpty()) {
+            title.visibility = View.GONE
+            return
+        }
+        container.adapter = adapter
+        container.layoutManager = if (filters.size > AVERAGE_FILTERS_LIST_SIZE)
+            StaggeredGridLayoutManager(DEFAULT_SPAN_COUNT, StaggeredGridLayoutManager.HORIZONTAL)
+        else LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        adapter.submitList(filters)
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun showRatings(game: Game) {
+        if (game.gameDetails?.ratings.isNullOrEmpty()) return
+        val largestValue = game.gameDetails?.ratings?.first()?.count?.toFloat() ?: return
+        logD(game.gameDetails?.ratings.toString())
+        game.gameDetails?.ratings?.forEach { rating ->
+            val ratingLayout = LayoutRatingBinding.inflate(layoutInflater, binding!!.root, false)
+            ratingLayout.ratingTitle.text = "${rating.title}$COLON_SIGN"
+            ratingLayout.ratingCount.text = rating.count.toString()
+            ratingLayout.root.doOnPreDraw {
+                val width = ratingLayout.progress.width / (largestValue / if (rating.count == 0) 1 else rating.count)
+                ratingLayout.progress.layoutParams = LinearLayout.LayoutParams(
+                    width.toInt(), ratingLayout.progress.height
+                )
+            }
+            binding!!.progressContainer.addView(ratingLayout.root)
         }
     }
 
     private fun getPostImagesList(): List<GameScreenshot> = listOf(
-        GameScreenshot(BitmapFactory.decodeResource(resources, R.drawable.im_game_test)),
-        GameScreenshot(BitmapFactory.decodeResource(resources, R.drawable.im_game_test)),
-        GameScreenshot(BitmapFactory.decodeResource(resources, R.drawable.im_game_test)),
-        GameScreenshot(BitmapFactory.decodeResource(resources, R.drawable.im_game_test)),
-        GameScreenshot(BitmapFactory.decodeResource(resources, R.drawable.im_game_test)),
+        GameScreenshot(
+            BitmapFactory.decodeResource(resources, com.example.core.R.drawable.ic_screenshot_placeholder)
+        )
     )
 
 }

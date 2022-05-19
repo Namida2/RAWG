@@ -8,11 +8,10 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.core.domain.tools.constants.StringConstants.DEFAULT_START_DATE
 import com.example.core.domain.tools.constants.StringConstants.EMPTY_STRING
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewAdapter
 import com.example.featureFiltersDialog.databinding.DialogFiltersBinding
 import com.example.featureFiltersDialog.domain.ViewModelFactory
 import com.example.featureFiltersDialog.domain.entities.toDateString

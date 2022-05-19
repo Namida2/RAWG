@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FeatureGameDetails</string>
+    <string name="showLess">Show less</string>
+    <string name="showMore">Show more</string>
 </resources>

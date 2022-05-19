@@ -1,8 +1,9 @@
 package com.example.core_game.domain
 
 import android.graphics.Bitmap
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.core_game.data.rawGameResponse.*
+import java.util.*
 import javax.inject.Inject
 
 data class Game(
@@ -11,14 +12,9 @@ data class Game(
     var released: String?,
     var rating: Double = 0.0,
     var ratingTop: Int = 0,
-    var ratings: List<Rating>?,
     var added: Int = 0,
     var addedByStatus: AddedByStatus?,
     var metacritic: Int = 0,
-    var platformsInfo: List<PlatformInfo>?,
-    var genres: List<Genre>?,
-    var stores: List<StoreInfo>?,
-    var tags: List<Tag>?,
     var shortScreenshots: MutableMap<String, Bitmap?>?,
     var backgroundImage: Bitmap? = null,
     var isLiked: Boolean = false,
@@ -28,19 +24,19 @@ data class Game(
         override fun map(rawGame: RAWGame): Game =
             with(rawGame) {
                 Game(
-                    id, name, released, rating,
-                    ratingTop, ratings, added,
-                    addedByStatus, metacritic,
-                    platformsInfo, genres,
-                    stores, tags, kotlin.run {
-                        val screenshots = mutableMapOf<String, Bitmap?>()
-                        rawGame.shortScreenshots?.forEach() { screenshot ->
-                            val ulr = screenshot.image ?: return@forEach
-                            screenshots[ulr] = null
-                        }
-                        screenshots
-                    }
+                    id, name, released, rating, ratingTop,
+                    added, addedByStatus, metacritic,
+                    getMapScreenshots(shortScreenshots)
                 )
             }
+
+        private fun getMapScreenshots(screenshots: List<ShortScreenshot>?): MutableMap<String, Bitmap?>? {
+            val result = mutableMapOf<String, Bitmap?>()
+            screenshots?.forEach() { screenshot ->
+                val ulr = screenshot.image ?: return@forEach
+                result[ulr] = null
+            }
+            return result
+        }
     }
 }

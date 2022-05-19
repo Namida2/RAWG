@@ -1,6 +1,6 @@
 package com.example.core.domain.entities.filters
 
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 
 data class FilterCategory(
     val categoryName: String,

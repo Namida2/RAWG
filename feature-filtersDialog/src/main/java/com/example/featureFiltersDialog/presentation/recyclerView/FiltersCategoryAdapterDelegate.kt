@@ -6,12 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.core.domain.entities.filters.FilterCategory
 import com.example.core.domain.tools.constants.Constants.FILTERS_SPAN_COUNT
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewAdapter
-import com.example.core.presentaton.recyclerView.BaseRecyclerViewType
-import com.example.core.presentaton.recyclerView.BaseViewHolder
-import com.example.core.presentaton.recyclerView.RecyclerViewAdapterDelegate
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewAdapter
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
+import com.example.core.presentaton.recyclerView.base.BaseViewHolder
+import com.example.core.presentaton.recyclerView.base.RecyclerViewAdapterDelegate
+import com.example.core.presentaton.recyclerView.delegates.FilterAdapterDelegateCallback
+import com.example.core.presentaton.recyclerView.delegates.FiltersAdapterDelegate
 import com.example.featureFiltersDialog.R
-import com.example.featureFiltersDialog.databinding.LayoutFiltersContainerBinding
+import com.example.featureFiltersDialog.databinding.LayoutFiltersCategoryBinding
 
 fun interface FiltersContainerAdapterDelegateCallback {
     fun onNewFilter(filterCategory: FilterCategory)
@@ -19,21 +21,21 @@ fun interface FiltersContainerAdapterDelegateCallback {
 
 class FiltersCategoryAdapterDelegate(
     private val callback: FiltersContainerAdapterDelegateCallback
-) : RecyclerViewAdapterDelegate<FilterCategory, LayoutFiltersContainerBinding> {
+) : RecyclerViewAdapterDelegate<FilterCategory, LayoutFiltersCategoryBinding> {
     override val layoutId: Int
-        get() = R.layout.layout_filter
+        get() = R.layout.layout_filters_category
 
     override fun isItMe(item: BaseRecyclerViewType): Boolean = item is FilterCategory
 
     override fun getViewHolder(
         inflater: LayoutInflater,
         container: ViewGroup
-    ): BaseViewHolder<FilterCategory, LayoutFiltersContainerBinding> =
+    ): BaseViewHolder<FilterCategory, LayoutFiltersCategoryBinding> =
         FiltersCategoryViewHolder(
             com.example.core.R.drawable.bg_black_lite_stroke_gradient_blue_to_pink_90,
             com.example.core.R.drawable.bg_black_lite_rounded,
             callback,
-            LayoutFiltersContainerBinding.inflate(inflater, container, false)
+            LayoutFiltersCategoryBinding.inflate(inflater, container, false)
         )
 
     override fun getDiffItemCallback(): DiffUtil.ItemCallback<FilterCategory> =
@@ -56,8 +58,8 @@ class FiltersCategoryViewHolder(
     selectedBackground: Int,
     defaultDrawable: Int,
     private val callback: FiltersContainerAdapterDelegateCallback,
-    private val binding: LayoutFiltersContainerBinding
-) : BaseViewHolder<FilterCategory, LayoutFiltersContainerBinding>(binding) {
+    private val binding: LayoutFiltersCategoryBinding
+) : BaseViewHolder<FilterCategory, LayoutFiltersCategoryBinding>(binding) {
     private var filterCategory: FilterCategory? = null
     private var positionOfLastSelectedFilter = -1
     private val onFilterSelectedCallback = FilterAdapterDelegateCallback { filter ->
@@ -70,7 +72,7 @@ class FiltersCategoryViewHolder(
                 if (this.isSingleSelectable) {
                     funDeselectLastFilter()
                     positionOfLastSelectedFilter =
-                        if(position == positionOfLastSelectedFilter) -1 else position
+                        if (position == positionOfLastSelectedFilter) -1 else position
                 }
                 callback.onNewFilter(this)
                 adapter.submitList(this.filters as List<BaseRecyclerViewType>)

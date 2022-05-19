@@ -1,4 +1,4 @@
-package com.example.core.presentaton.recyclerView
+package com.example.core.presentaton.recyclerView.base
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

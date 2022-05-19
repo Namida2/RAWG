@@ -1,4 +1,4 @@
-package com.example.core.presentaton.recyclerView
+package com.example.core.presentaton.recyclerView.base
 
 import androidx.recyclerview.widget.RecyclerView
 
