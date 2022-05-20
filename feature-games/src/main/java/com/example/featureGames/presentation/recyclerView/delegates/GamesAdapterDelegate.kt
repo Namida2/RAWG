@@ -3,13 +3,14 @@ package com.example.featureGames.presentation.recyclerView.delegates
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
+import com.example.core.domain.games.Game
 import com.example.core.domain.tools.extensions.precomputeAndSetText
 import com.example.core.domain.tools.extensions.startDefaultRecyclerViewItemAnimation
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.base.BaseViewHolder
 import com.example.core.presentaton.recyclerView.base.RecyclerViewAdapterDelegate
-import com.example.core_game.domain.Game
 import com.example.featureGames.R
 import com.example.featureGames.databinding.LayoutGameBinding
 
@@ -41,7 +42,9 @@ class GamesAdapterDelegate(
                     view?.tag?.let { tag -> callback.onGameClick(tag as ClickedGameInfo) }
                 }
                 it.likeButtonContainer.setOnClickListener { view ->
-                    view?.tag?.let { tag -> callback.onGameLikeButtonClick(tag as Game) }
+                    view?.tag?.let { tag ->
+                        callback.onGameLikeButtonClick((tag as Game))
+                    }
                 }
             }
         )
@@ -50,7 +53,7 @@ class GamesAdapterDelegate(
     override fun getDiffItemCallback(): DiffUtil.ItemCallback<Game> = diffItemCallback
     private val diffItemCallback = object : DiffUtil.ItemCallback<Game>() {
         override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean =
-            newItem.id == oldItem.id
+            newItem.gameEntity.id == oldItem.gameEntity.id
 
         override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean =
             newItem == oldItem
@@ -62,16 +65,30 @@ class GamesViewGolder(
 ) : BaseViewHolder<Game, LayoutGameBinding>(binding) {
     override fun onBind(item: Game) {
         with(binding) {
-            val tag = ClickedGameInfo(root, item.id)
+            val tag = ClickedGameInfo(root, item.gameEntity.id)
             root.tag = tag
             gamePreviewImage.tag = tag
-            root.transitionName = item.id.toString()
-            gameName.precomputeAndSetText(item.name)
-            addedCount.precomputeAndSetText(item.added.toString())
-            metacriticRating.precomputeAndSetText(item.metacritic.toString())
+            likeButtonContainer.tag = item
+            root.transitionName = item.gameEntity.id.toString()
+            gameName.precomputeAndSetText(item.gameEntity.name)
+            addedCount.precomputeAndSetText(item.gameDetails?.gameDetailsEntity?.added.toString())
+            metacriticRating.precomputeAndSetText(item.gameEntity.metacritic.toString())
             gamePreviewImage.setImageBitmap(item.backgroundImage)
+            if (item.gameEntity.isLiked)
+                likeIcon.setColorFilter(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        com.example.core.R.color.rad
+                    ), android.graphics.PorterDuff.Mode.SRC_IN
+                )
+            else likeIcon.setColorFilter(
+                ContextCompat.getColor(
+                    binding.root.context,
+                    com.example.core.R.color.grayLite
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
         }
-        if(item.backgroundImage == null)
+        if (item.backgroundImage == null)
             binding.root.startDefaultRecyclerViewItemAnimation()
     }
 }

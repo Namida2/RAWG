@@ -4,7 +4,7 @@ import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.entities.tools.GameNetworkExceptions
 import com.example.core.domain.tools.enums.ResponseCodes
 import com.example.core.domain.tools.extensions.logD
-import com.example.core_game.data.rawGameResponse.GamesResponse
+import com.example.core.data.games.rawGameResponse.GamesResponse
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueue
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueueResultHandler
 import com.example.featureGames.data.requestQueue.interfaces.RequestsQueueChanges
@@ -20,7 +20,6 @@ import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.log
 
 class GamesRequestQueue @Inject constructor(
     private val gamesService: RAWGamesService

@@ -2,7 +2,7 @@ package com.example.featureGames.domain.di.modules
 
 import com.example.core.domain.entities.tools.GameNetworkExceptions
 import com.example.core.domain.entities.requests.GamesGetRequest
-import com.example.core_game.data.rawGameResponse.GamesResponse
+import com.example.core.data.games.rawGameResponse.GamesResponse
 import com.example.featureGames.data.requestQueue.GamesRequestQueue
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueue
 import dagger.Binds

@@ -1,7 +1,7 @@
 package com.example.featureGameDetails.domain.di.modules
 
-import com.example.core_game.data.gameDetailsResponce.GameDetailsResponse
-import com.example.core_game.domain.GameDetails
+import com.example.core.data.games.gameDetailsResponce.GameDetailsResponse
+import com.example.core.domain.games.GameDetails
 import dagger.Binds
 import dagger.Module
 

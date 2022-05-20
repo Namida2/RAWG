@@ -14,7 +14,8 @@ class ViewModelFactory(private val screenTag: GameScreenTags) : ViewModelProvide
             GamesViewModel::class.java -> {
                 GamesViewModel(
                     screenTag,
-                    gamesAppComponent!!.provideAllGamesFactory()
+                    gamesAppComponent!!.provideAllGamesFactory(),
+                    gamesAppComponent!!.provideLikeGameUseCase()
                 )
             }
             else -> throw IllegalArgumentException(StringConstants.UNKNOWN_VIEW_MODEL_CLASS + modelClass)

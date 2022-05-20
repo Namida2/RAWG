@@ -3,7 +3,7 @@ package com.example.featureGames.domain.entities
 import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.interfaces.remoteRepository.GetRequest
 import com.example.core.domain.interfaces.remoteRepository.Response
-import com.example.core_game.data.rawGameResponse.GamesResponse
+import com.example.core.data.games.rawGameResponse.GamesResponse
 
 sealed class RequestSates {
     object Completed : RequestSates()

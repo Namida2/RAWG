@@ -8,10 +8,10 @@ import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.entities.tools.GameNetworkExceptions
 import com.example.core.domain.tools.enums.GameScreenTags
 import com.example.core.domain.tools.extensions.logD
-import com.example.core_game.data.rawGameResponse.GamesResponse
-import com.example.core_game.data.rawGameResponse.RAWGame
-import com.example.core_game.domain.*
-import com.example.core_game.domain.interfaces.GameScreenItemType
+import com.example.core.data.games.rawGameResponse.GamesResponse
+import com.example.core.data.games.rawGameResponse.RAWGame
+import com.example.core.domain.games.*
+import com.example.core.domain.games.interfaces.GameScreenItemType
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueue
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueueResultHandler
 import com.example.featureGames.data.requestQueue.interfaces.RequestsQueueChanges
@@ -61,7 +61,7 @@ class AllGamesUseCase @AssistedInject constructor(
         logD("gamesCount: ${games.size}")
         gamesHolder.addGames(
             screenTag, games,
-            GameScreenItemType.GameType(result.page, games.map { it.id })
+            GameScreenItemType.GameType(result.page, games.map { it.gameEntity.id })
         )
         readImages(result.page, gamesResponse)
     }
@@ -80,7 +80,7 @@ class AllGamesUseCase @AssistedInject constructor(
     override fun getScreenInfo(): GameScreenInfo =
         gamesHolder.getScreenInfo(screenTag)
 
-    override fun getGamesByPage(page: Int): List<com.example.core_game.domain.Game> =
+    override fun getGamesByPage(page: Int): List<Game> =
         gamesHolder.getGamesByScreenTagAndPage(screenTag, page)
 
     override fun onNetworkConnected(coroutineScope: CoroutineScope) {

@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
@@ -32,7 +31,7 @@ import com.example.core.presentaton.fragments.BaseFragment
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewAdapter
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.delegates.FiltersAdapterDelegate
-import com.example.core_game.domain.Game
+import com.example.core.domain.games.Game
 import com.example.featureGameDetails.R
 import com.example.featureGameDetails.databinding.FragmentGameDetailsBinding
 import com.example.featureGameDetails.databinding.LayoutRatingBinding
@@ -44,7 +43,8 @@ import com.example.featureGameDetails.presentation.viewPager.itemDecorations.Gam
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import kotlin.properties.Delegates
 
-// TODO: Complete the GameDetailsScreen, implement the likes of games and saving them to the local storage //STOPPED//
+// TODO: Complete the GameDetailsScreen, add saving gameDetails
+//  if the game liked on the FragmentGames screen, add the MyLikes screen //STOPPED//
 class GameDetailsFragment : BaseFragment() {
     private var defaultScale by Delegates.notNull<Float>()
     private var currentPageMargin by Delegates.notNull<Int>()
@@ -85,6 +85,7 @@ class GameDetailsFragment : BaseFragment() {
         currentPageMargin = resources.getDimensionPixelSize(R.dimen.current_page_margin)
         viewModel =
             ViewModelProvider(this, ViewModelFactory(gameId))[GameDetailsViewModel::class.java]
+        viewModel.getDetails(gameId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,7 +108,6 @@ class GameDetailsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         observeViewModelEvents()
         observeViewModelStates()
-        viewModel.getDetails(gameId)
         initViewPager()
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition(); animateFirstVisit() }
@@ -193,14 +193,14 @@ class GameDetailsFragment : BaseFragment() {
     @SuppressLint("SetTextI18n")
     private fun iniViews(game: Game) {
         with(binding!!) {
-            gameName.text =             game.name.toString()
-            ratingTextView.text =       game.rating.toString()
-            releasedInTextViw.text =    game.released.toString()
-            metacriticTextView.text =   game.metacritic.toString()
-            twitchCountTextView.text =  game.gameDetails?.twitchCount.toString()
-            redditCountTextView.text =  game.gameDetails?.redditCount.toString()
-            youtubeCountTextView.text = game.gameDetails?.youtubeCount.toString()
-            descriptionTextView.text =  game.gameDetails?.description
+            gameName.text =             game.gameEntity.name.toString()
+            ratingTextView.text =       game.gameEntity.rating.toString()
+            releasedInTextViw.text =    game.gameEntity.released.toString()
+            metacriticTextView.text =   game.gameEntity.metacritic.toString()
+            twitchCountTextView.text =  game.gameDetails?.gameDetailsEntity?.twitchCount.toString()
+            redditCountTextView.text =  game.gameDetails?.gameDetailsEntity?.redditCount.toString()
+            youtubeCountTextView.text = game.gameDetails?.gameDetailsEntity?.youtubeCount.toString()
+            descriptionTextView.text =  game.gameDetails?.gameDetailsEntity?.description
             showMoreButton.setOnClickListener {
                 descriptionMaxLines = if(descriptionMaxLines == DESCRIPTION_MAX_LINES) {
                     showMoreButton.text = resources.getString(R.string.showLess)
@@ -218,29 +218,21 @@ class GameDetailsFragment : BaseFragment() {
             playingStatusCount.text =   game.addedByStatus?.playing.toString()
             droppeStatusdCount.text =   game.addedByStatus?.dropped.toString()
 
-            ratingTop.text =         game.ratingTop.toString()
-            addedCount.text =        game.gameDetails?.added.toString()
-            reviewsCount.text =      game.gameDetails?.reviewsCount.toString()
-            playtime.text =          game.gameDetails?.playtime.toString() + HOURS
-            textReviewsCount.text =  game.gameDetails?.reviewsTextCount.toString()
-            achievementsCount.text = game.gameDetails?.achievementsCount.toString()
+            ratingTop.text =         game.gameEntity.ratingTop.toString()
+            addedCount.text =        game.gameDetails?.gameDetailsEntity?.added.toString()
+            reviewsCount.text =      game.gameDetails?.gameDetailsEntity?.reviewsCount.toString()
+            playtime.text =          game.gameDetails?.gameDetailsEntity?.playtime.toString() + HOURS
+            textReviewsCount.text =  game.gameDetails?.gameDetailsEntity?.reviewsTextCount.toString()
+            achievementsCount.text = game.gameDetails?.gameDetailsEntity?.achievementsCount.toString()
             game.gameDetails?.platforms?.find {
-                it.platform?.slug == PC_SLUG
+                it.slug == PC_SLUG
             }.let {
                 if(it == null) {
                     requirementsContainer.visibility = View.GONE
                     return@let
                 }
-                it.requirements?.minimum?.let { requirements ->
-                    requirementsMin.text = Html.fromHtml(
-                        requirements, Html.FROM_HTML_MODE_LEGACY
-                    ).toString().trim()
-                }
-                it.requirements?.recommended?.let { requirements ->
-                    requirementsRec.text = Html.fromHtml(
-                        requirements, Html.FROM_HTML_MODE_LEGACY
-                    ).toString().trim()
-                }
+                it.requirementsMinimum?.let { it -> requirementsMin.text = it }
+                it.requirementsRecommended?.let { it -> requirementsRec.text = it }
             }
             showRatings(game)
             showFilters(game)

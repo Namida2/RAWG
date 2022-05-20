@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.core.R
 import com.example.core.domain.entities.requests.GamesGetRequest
+import com.example.core.domain.games.Game
 import com.example.core.domain.interfaces.OnNewGetRequestCallback
 import com.example.core.domain.tools.constants.Constants.DEFAULT_SPAN_COUNT
 import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
@@ -26,7 +27,6 @@ import com.example.featureGameDetails.presentation.GameDetailsFragment.Companion
 import com.example.featureGames.databinding.FragmentGamesBinding
 import com.example.featureGames.domain.ViewModelFactory
 import com.example.featureGames.domain.di.GamesDepsStore
-import com.example.core_game.domain.Game
 import com.example.featureGames.presentation.recyclerView.RecyclerViewScrollListener
 import com.example.featureGames.presentation.recyclerView.delegates.*
 import com.example.featureGames.presentation.recyclerView.itemDecorations.GamesItemDecorations
@@ -156,11 +156,6 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
             }).setTextColor(ContextCompat.getColor(requireContext(), R.color.white)).show()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
-    }
-
     override fun onGameClick(clickedGameInfo: ClickedGameInfo) {
         GamesDepsStore.navigationCallback?.navigateTo(
             GameDetailsFragment().also {
@@ -172,7 +167,11 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
     }
 
     override fun onGameLikeButtonClick(game: Game) {
-        TODO("Not yet implemented")
+        viewModel.onLikeButtonClick(game)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
 }

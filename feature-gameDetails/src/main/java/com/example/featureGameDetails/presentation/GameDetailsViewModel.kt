@@ -13,7 +13,9 @@ import com.example.core.domain.interfaces.Stateful
 import com.example.core.domain.tools.constants.Messages.defaultErrorMessage
 import com.example.core.domain.tools.extensions.logD
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
-import com.example.core_game.domain.Game
+import com.example.core.domain.games.Game
+import com.example.core.domain.games.useCases.LikeGameUseCase
+import com.example.core.domain.games.useCases.LikeGameUseCaseImpl
 import com.example.featureGameDetails.domain.entities.GameScreenshot
 import com.example.featureGameDetails.domain.useCases.GetGameDetailsUseCaseFactory
 import kotlinx.coroutines.*
@@ -92,9 +94,10 @@ class GameDetailsViewModel(
         }
     }
 
+    // TODO: Remove this
     fun getReleasedInPlatforms(game: Game): List<BaseRecyclerViewType> =
         game.gameDetails?.platforms?.map {
-            Filter(it.platform?.id.toString(), it.platform?.name ?: return@map null)
+            Filter(it.id.toString(), it.name ?: return@map null)
         }?.filterNotNull() ?: emptyList()
     fun getGameGenres(game: Game): List<BaseRecyclerViewType> =
         game.gameDetails?.genres?.map {

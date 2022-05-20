@@ -46,9 +46,10 @@
                 android:focusable="true"
                 app:cardBackgroundColor="@color/blackAlpha70"
                 app:cardCornerRadius="8dp"
-                app:rippleColor="@color/white">
+                app:rippleColor="@color/rad">
 
                 <ImageView
+                    android:id="@+id/likeIcon"
                     android:layout_width="14dp"
                     android:layout_height="14dp"
                     android:layout_margin="6dp"

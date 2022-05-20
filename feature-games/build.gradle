@@ -31,7 +31,6 @@ android {
 
 dependencies {
     implementation project(':core')
-    implementation project(":core-game")
     implementation project(':feature-gameDetails')
     implementation project(':dependencyDescription')
     implementation 'com.facebook.shimmer:shimmer:0.5.0'

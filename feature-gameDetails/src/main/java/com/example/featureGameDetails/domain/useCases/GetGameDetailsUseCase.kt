@@ -5,17 +5,16 @@ import com.example.core.data.imageLoaders.GameScreenshotUrlInfo
 import com.example.core.data.imageLoaders.interfaces.ImagesLoader
 import com.example.core.data.imageLoaders.interfaces.ImagesLoaderResultHandler
 import com.example.core.data.imageLoaders.interfaces.LoadedImageInfo
-import com.example.core_game.data.gameDetailsResponce.GameDetailsResponse
-import com.example.core_game.domain.Game
-import com.example.core_game.domain.GamesHolder
-import com.example.core_game.domain.GameDetails
+import com.example.core.data.games.gameDetailsResponce.GameDetailsResponse
+import com.example.core.domain.games.Game
+import com.example.core.domain.games.GamesHolder
+import com.example.core.domain.games.GameDetails
 import com.example.featureGameDetails.domain.repositories.GameDetailsService
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -66,7 +65,7 @@ class GetGameDetailsUseCaseImpl @AssistedInject constructor(
         game.shortScreenshots?.forEach { (url, bitmap) ->
             if(bitmap != null) return@forEach
             imagesLoader.loadImage(
-                GameScreenshotUrlInfo(url, 0, game.id),
+                GameScreenshotUrlInfo(url, 0, game.gameEntity?.id),
                 coroutineScope
             )
         }
