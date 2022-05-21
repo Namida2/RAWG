@@ -8,8 +8,8 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.example.core.R
 import com.example.core.databinding.DialogMessageBinding
-import com.example.core.domain.tools.extensions.logD
-import com.example.core.domain.tools.extensions.logE
+import com.example.core.domain.entities.tools.extensions.logD
+import com.example.core.domain.entities.tools.extensions.logE
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main

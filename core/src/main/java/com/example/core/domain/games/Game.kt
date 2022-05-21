@@ -13,12 +13,12 @@ import javax.inject.Inject
 data class GameEntity(
     @PrimaryKey
     var id: Int,
-    var name: String?,
-    var released: String?,
+    var name: String? = null,
+    var released: String? = null,
     var rating: Double = 0.0,
     var ratingTop: Int = 0,
     var metacritic: Int = 0,
-    var backgroundImageUrl: String?,
+    var backgroundImageUrl: String? = null,
     var isLiked: Boolean = false,
 )
 
@@ -27,13 +27,17 @@ data class Game(
     var gameEntity: GameEntity,
     @Relation(parentColumn = "id", entityColumn = "gameId")
     var addedByStatus: AddedByStatus? = null,
+    @Ignore
     var shortScreenshots: MutableMap<String, Bitmap?>? = null,
     @Relation(parentColumn = "id", entityColumn = "gameId")
     var shortScreenshotsUrls: List<ScreenshotsForGame>? = null,
-    @Relation(parentColumn = "id", entityColumn = "gameId")
+    @Relation(parentColumn = "id", entityColumn = "gameId", entity = GameDetailsEntity::class )
     var gameDetails: GameDetails? = null,
+    @Ignore
     var backgroundImage: Bitmap? = null
 ) : BaseRecyclerViewType {
+
+    constructor(): this(GameEntity(0))
 
     class GameMapper @Inject constructor() : RAWGame.Mapper<Game> {
         override fun map(rawGame: RAWGame): Game =

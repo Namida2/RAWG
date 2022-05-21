@@ -1,4 +1,4 @@
-package com.example.core.domain.tools.extensions
+package com.example.core.domain.entities.tools.extensions
 
 import android.widget.TextView
 import androidx.core.text.PrecomputedTextCompat

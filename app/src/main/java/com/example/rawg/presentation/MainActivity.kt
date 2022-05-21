@@ -6,9 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.core.domain.interfaces.NavigationCallback
-import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
-import com.example.core.domain.tools.extensions.createMessageAlertDialog
-import com.example.core.domain.tools.extensions.logD
+import com.example.core.domain.entities.tools.constants.Messages.checkNetworkConnectionMessage
+import com.example.core.domain.entities.tools.extensions.createMessageAlertDialog
+import com.example.core.domain.entities.tools.extensions.logD
 import com.example.featureGamesViewPager.domain.di.GamesViewPagerDepsStore
 import com.example.featureGamesViewPager.presentation.GamesViewPagerFragment
 import com.example.rawg.databinding.ActivityMainBinding
@@ -22,12 +22,10 @@ class MainActivity : AppCompatActivity(), NavigationCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater).also {
-            setContentView(it.root)
-        }
+        binding = ActivityMainBinding.inflate(layoutInflater)
         getViewModel()
         observeViewModelStates()
-        viewModel.readFilters()
+        viewModel.readFiltersAndMyLikes()
     }
 
     private fun getViewModel() {
@@ -43,6 +41,7 @@ class MainActivity : AppCompatActivity(), NavigationCallback {
                     createMessageAlertDialog(checkNetworkConnectionMessage)
                         ?.show(supportFragmentManager, "")
                 is MainVMStates.FiltersLoadedSuccessfully -> {
+                    setContentView(binding.root)
                     GamesViewPagerDepsStore.navigationCallback = this
                     supportFragmentManager.beginTransaction()
                         .replace(binding.root.id, GamesViewPagerFragment()).commitNow()

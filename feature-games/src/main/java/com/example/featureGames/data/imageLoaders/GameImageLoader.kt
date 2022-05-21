@@ -4,10 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.core.domain.tools.constants.Constants.GAME_IMAGE_HEIGHT
-import com.example.core.domain.tools.constants.Constants.GAME_IMAGE_WIDTH
-import com.example.core.domain.tools.extensions.logE
-import com.example.core.data.imageLoaders.GameScreenshotUrlInfo
+import com.example.core.domain.entities.tools.constants.Constants.GAME_IMAGE_HEIGHT
+import com.example.core.domain.entities.tools.constants.Constants.GAME_IMAGE_WIDTH
+import com.example.core.domain.entities.tools.extensions.logE
 import com.example.core.data.imageLoaders.interfaces.ImageUrlInfo
 import com.example.core.data.imageLoaders.interfaces.ImagesLoader
 import com.example.core.data.imageLoaders.interfaces.ImagesLoaderResultHandler

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.example.core.R
 import com.example.core.databinding.LayoutFilterBinding
 import com.example.core.domain.entities.filters.Filter
-import com.example.core.domain.tools.extensions.precomputeAndSetText
+import com.example.core.domain.entities.tools.extensions.precomputeAndSetText
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.base.BaseViewHolder
 import com.example.core.presentaton.recyclerView.base.RecyclerViewAdapterDelegate

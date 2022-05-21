@@ -5,10 +5,15 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.core.data.games.gameDetailsResponce.Platform
-import com.example.core.domain.games.MyRating
 
 @Dao
 interface PlatformsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(vararg platform: Platform)
+    suspend fun insert(vararg platform: Platform)
+
+    @Query(
+        "SELECT * FROM platforms WHERE id IN " +
+                "( SELECT platformId FROM platforms_for_games WHERE gameId = :gameId)"
+    )
+    suspend fun readByGameId(gameId: Int): List<Platform>
 }

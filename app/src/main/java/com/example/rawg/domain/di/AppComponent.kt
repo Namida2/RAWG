@@ -1,6 +1,5 @@
 package com.example.rawg.domain.di
 
-
 import android.content.Context
 import com.example.core.data.database.Database
 import com.example.core.domain.di.modules.DatabaseModule
@@ -10,6 +9,8 @@ import com.example.rawg.domain.di.modules.MappersModule
 import com.example.rawg.domain.di.modules.RetrofitModule
 import com.example.rawg.domain.di.modules.UseCasesModule
 import com.example.rawg.domain.useCases.ReadFiltersUseCase
+import com.example.rawg.domain.useCases.ReadGamesFromLocalStorageUseCase
+import com.example.rawg.domain.useCases.ReadGamesFromLocalStorageUseCaseFactory
 import dagger.BindsInstance
 import dagger.Component
 import retrofit2.Retrofit
@@ -28,6 +29,6 @@ interface AppComponent : FeatureGamesViewPagerDeps {
         fun putDatabase(@BindsInstance database: Database): Builder
         fun build(): AppComponent
     }
-
     fun provideReadFiltersUseCase(): ReadFiltersUseCase
+    fun provideReadGamesFromLocalStorageUseCaseFactory(): ReadGamesFromLocalStorageUseCaseFactory
 }

@@ -1,20 +1,22 @@
-package com.example.featureGames.domain.useCase
+package com.example.featureGames.domain.useCases
 
+import com.example.core.data.games.rawGameResponse.GamesResponse
+import com.example.core.data.games.rawGameResponse.RAWGame
 import com.example.core.data.imageLoaders.GameScreenshotUrlInfo
 import com.example.core.data.imageLoaders.interfaces.ImagesLoader
 import com.example.core.data.imageLoaders.interfaces.ImagesLoaderResultHandler
 import com.example.core.data.imageLoaders.interfaces.LoadedImageInfo
 import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.entities.tools.GameNetworkExceptions
-import com.example.core.domain.tools.enums.GameScreenTags
-import com.example.core.domain.tools.extensions.logD
-import com.example.core.data.games.rawGameResponse.GamesResponse
-import com.example.core.data.games.rawGameResponse.RAWGame
 import com.example.core.domain.games.*
 import com.example.core.domain.games.interfaces.GameScreenItemType
+import com.example.core.domain.entities.tools.enums.GameScreenTags
+import com.example.core.domain.entities.tools.extensions.logD
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueue
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueueResultHandler
 import com.example.featureGames.data.requestQueue.interfaces.RequestsQueueChanges
+import com.example.featureGames.domain.useCases.interfaces.ReadGamesUseCase
+import com.example.featureGames.domain.useCases.interfaces.ReadGamesUseCaseFactory
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -24,18 +26,21 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @AssistedFactory
-interface GamesUseCaseFactory {
-    fun create(screenTag: GameScreenTags, coroutineScope: CoroutineScope): AllGamesUseCase
+interface DefaultGamesUseCaseFactory : ReadGamesUseCaseFactory {
+    override fun create(
+        screenTag: GameScreenTags,
+        coroutineScope: CoroutineScope
+    ): ReadGamesFromRemoteRepositoryUseCase
 }
 
-class AllGamesUseCase @AssistedInject constructor(
+class ReadGamesFromRemoteRepositoryUseCase @AssistedInject constructor(
     @Assisted override var screenTag: GameScreenTags,
     @Assisted private var coroutineScope: CoroutineScope,
     private val gamesHolder: GamesHolder,
     private val gamesMapper: Game.GameMapper,
     private val imagesLoader: ImagesLoader<GameScreenshotUrlInfo>,
     private val requestsQueueGames: RequestQueue<GamesGetRequest, GamesResponse, GameNetworkExceptions>
-) : GamesUseCase, RequestQueueResultHandler<GamesResponse>,
+) : ReadGamesUseCase, RequestQueueResultHandler<GamesResponse>,
     ImagesLoaderResultHandler<GameScreenshotUrlInfo> {
 
     init {
@@ -61,9 +66,9 @@ class AllGamesUseCase @AssistedInject constructor(
         logD("gamesCount: ${games.size}")
         gamesHolder.addGames(
             screenTag, games,
-            GameScreenItemType.GameType(result.page, games.map { it.gameEntity.id })
+            GameScreenItemType.GameType(result.page, games.map { it.gameEntity.id }.toMutableList())
         )
-        readImages(result.page, gamesResponse)
+        loadImages(result.page, gamesResponse)
     }
 
     override suspend fun onImageLoaded(loadedImageInfo: LoadedImageInfo<GameScreenshotUrlInfo>) {
@@ -88,7 +93,7 @@ class AllGamesUseCase @AssistedInject constructor(
         imagesLoader.onNetworkConnected(coroutineScope)
     }
 
-    private fun readImages(page: Int, response: GamesResponse) {
+    private fun loadImages(page: Int, response: GamesResponse) {
         val newScope = CoroutineScope(IO)
         response.rawGames?.forEach { game ->
             newScope.launch {
@@ -106,8 +111,7 @@ class AllGamesUseCase @AssistedInject constructor(
         imagesLoader.loadImage(
             GameScreenshotUrlInfo(
                 game.backgroundImage!!,
-                page,
-                game.id
+                page, game.id
             ), coroutineScope
         )
     }

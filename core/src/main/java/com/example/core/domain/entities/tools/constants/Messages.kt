@@ -1,4 +1,4 @@
-package com.example.core.domain.tools.constants
+package com.example.core.domain.entities.tools.constants
 
 import com.example.core.R
 import com.example.core.domain.entities.tools.Message

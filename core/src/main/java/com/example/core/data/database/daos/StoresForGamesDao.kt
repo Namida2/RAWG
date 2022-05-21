@@ -5,11 +5,13 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.core.data.games.entities.StoresFoeGames
+import com.example.core.data.games.gameDetailsResponce.Platform
+import com.example.core.data.games.gameDetailsResponce.Store
 
 @Dao
 interface StoresForGamesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(vararg store: StoresFoeGames)
+    suspend fun insert(vararg store: StoresFoeGames)
     @Query("DELETE FROM stores_for_games WHERE gameId = :gameId")
-    fun delete(gameId: Int)
+    suspend fun delete(gameId: Int)
 }

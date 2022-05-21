@@ -6,9 +6,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.example.core.domain.tools.constants.Constants
-import com.example.core.domain.tools.enums.GameScreenTags
-import com.example.core.domain.tools.extensions.logD
+import com.example.core.domain.entities.tools.constants.Constants
+import com.example.core.domain.entities.tools.enums.GameScreenTags
+import com.example.core.domain.entities.tools.extensions.logD
 import com.example.featureGames.presentation.GamesFragment
 
 class GamePagerAdapter(fa: FragmentActivity, private val gameScreenTags: Array<GameScreenTags>) : FragmentStateAdapter(fa) {

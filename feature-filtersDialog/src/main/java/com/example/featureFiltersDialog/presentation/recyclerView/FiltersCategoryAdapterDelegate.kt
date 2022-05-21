@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.core.domain.entities.filters.FilterCategory
-import com.example.core.domain.tools.constants.Constants.FILTERS_SPAN_COUNT
+import com.example.core.domain.entities.tools.constants.Constants.FILTERS_SPAN_COUNT
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewAdapter
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.base.BaseViewHolder

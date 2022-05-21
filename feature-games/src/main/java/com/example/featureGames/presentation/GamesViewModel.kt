@@ -14,15 +14,16 @@ import com.example.core.domain.games.Game
 import com.example.core.domain.interfaces.OnNewGetRequestCallback
 import com.example.core.domain.interfaces.OnPositionChangeListener
 import com.example.core.domain.interfaces.Stateful
-import com.example.core.domain.tools.constants.Constants
-import com.example.core.domain.tools.constants.Constants.MIN_ITEMS_COUNT_FOR_NEXT_PAGE
-import com.example.core.domain.tools.constants.Messages.allGamesHaveBeenLoadedMessage
-import com.example.core.domain.tools.constants.Messages.defaultErrorMessage
-import com.example.core.domain.tools.constants.StringConstants.GAME_NOT_FOUND
-import com.example.core.domain.tools.enums.GameScreenTags
-import com.example.core.domain.tools.enums.ResponseCodes
-import com.example.core.domain.tools.extensions.logD
-import com.example.core.domain.tools.extensions.logE
+import com.example.core.domain.entities.tools.constants.Constants
+import com.example.core.domain.entities.tools.constants.Constants.MIN_ITEMS_COUNT_FOR_NEXT_PAGE
+import com.example.core.domain.entities.tools.constants.Messages.allGamesHaveBeenLoadedMessage
+import com.example.core.domain.entities.tools.constants.Messages.defaultErrorMessage
+import com.example.core.domain.entities.tools.constants.StringConstants.GAME_NOT_FOUND
+import com.example.core.domain.entities.tools.constants.StringConstants.PAGE_NOT_FOUND
+import com.example.core.domain.entities.tools.enums.GameScreenTags
+import com.example.core.domain.entities.tools.enums.ResponseCodes
+import com.example.core.domain.entities.tools.extensions.logD
+import com.example.core.domain.entities.tools.extensions.logE
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.core.domain.games.GameBackgroundImageChanges
 import com.example.core.domain.games.GameScreenInfo
@@ -31,8 +32,8 @@ import com.example.core.domain.games.interfaces.GameScreenItemType
 import com.example.core.domain.games.useCases.LikeGameUseCase
 import com.example.featureGames.domain.entities.GameErrorPagePlaceHolder
 import com.example.featureGames.domain.entities.GamePlaceHolder
-import com.example.featureGames.domain.useCase.GamesUseCase
-import com.example.featureGames.domain.useCase.GamesUseCaseFactory
+import com.example.featureGames.domain.useCases.interfaces.ReadGamesUseCase
+import com.example.featureGames.domain.useCases.interfaces.ReadGamesUseCaseFactory
 import com.example.featureGames.presentation.recyclerView.delegates.GameErrorPageAdapterDelegateCallback
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main
@@ -62,15 +63,15 @@ sealed interface GamesVMSingleEvents<out T> {
 
 class GamesViewModel(
     screenTag: GameScreenTags,
-    gamesUseCaseFactory: GamesUseCaseFactory,
+    gamesUseCaseFactory: ReadGamesUseCaseFactory,
     private val likeGameUseCase: LikeGameUseCase,
     private val scopeForAsyncWork: CoroutineScope = CoroutineScope(SupervisorJob() + Main.immediate)
 ) : ViewModel(), OnPositionChangeListener, Stateful,
     GameScreenInfo.Mapper<PageToListRecyclerViewItems>, GameErrorPageAdapterDelegateCallback,
     OnNewGetRequestCallback<GamesGetRequest> {
     var snackBarIsShowing = false
-    private var gamesUseCase: GamesUseCase = gamesUseCaseFactory.create(screenTag, scopeForAsyncWork)
-    private var gameScreenInfo = gamesUseCase.getScreenInfo()
+    private var readGamesUseCase: ReadGamesUseCase = gamesUseCaseFactory.create(screenTag, scopeForAsyncWork)
+    private var gameScreenInfo = readGamesUseCase.getScreenInfo()
     private var currentScreenItems = mutableMapOf<Int, MutableList<BaseRecyclerViewType>>()
     private val _singleEvents = MutableLiveData<GamesVMSingleEvents<Any>>()
     val singleEvents: LiveData<GamesVMSingleEvents<Any>> = _singleEvents
@@ -82,7 +83,7 @@ class GamesViewModel(
         viewModelScope.launch {
             networkConnectionChanges.collect { isConnected ->
                 logD(screenTag.toString())
-                if (isConnected) gamesUseCase.onNetworkConnected(scopeForAsyncWork)
+                if (isConnected) readGamesUseCase.onNetworkConnected(scopeForAsyncWork)
                 else {
                     scopeForAsyncWork.coroutineContext.job.cancelChildren()
                     _singleEvents.value = GamesVMSingleEvents.NetworkConnectionLostEvent()
@@ -94,10 +95,10 @@ class GamesViewModel(
     fun getGames() {
         logD("getGames: ${gameScreenInfo.tag}")
         if (gameScreenInfo.screenItems.isEmpty()) {
-            scopeForAsyncWork.launch {
-                gamesUseCase.readGames(gameScreenInfo.request.copy())
-            }
             currentScreenItems[gameScreenInfo.request.getPage()] = getPlaceholders().toMutableList()
+            scopeForAsyncWork.launch {
+                readGamesUseCase.readGames(gameScreenInfo.request.copy())
+            }
         } else currentScreenItems = mapGameScreenInfo(gameScreenInfo)
         onNewGameScreenItemsEvent()
     }
@@ -114,7 +115,7 @@ class GamesViewModel(
             logD("currentScreenItems: ${currentScreenItems.keys}")
             onNewGameScreenItemsEvent()
             scopeForAsyncWork.launch {
-                gamesUseCase.readGames(gameScreenInfo.request.copy(page = page))
+                readGamesUseCase.readGames(gameScreenInfo.request.copy(page = page))
             }
         }
     }
@@ -126,7 +127,7 @@ class GamesViewModel(
         gameScreenInfo.screenItems.forEach { (key, value) ->
             newMap[key] = when (value) {
                 is GameScreenItemType.GameType ->
-                    gamesUseCase.getGamesByPage(value.page)
+                    readGamesUseCase.getGamesByPage(value.page)
                 is GameScreenItemType.GamePlaceHolderType ->
                     getPlaceholders(value.placeholderCount)
                 is GameScreenItemType.GameErrorPageType ->
@@ -156,13 +157,13 @@ class GamesViewModel(
 
     private fun listenChanges() {
         viewModelScope.launch {
-            gamesUseCase.newGamesForScreen.collect(::onNewGamesForScreen)
+            readGamesUseCase.newGamesForScreen.collect(::onNewGamesForScreen)
         }
         viewModelScope.launch {
-            gamesUseCase.responseHttpExceptions.collect(::onHttpException)
+            readGamesUseCase.responseHttpExceptions.collect(::onHttpException)
         }
         viewModelScope.launch {
-            gamesUseCase.gamesBackgroundImageChanges.collect(::onNewGamesBackgroundImageChanges)
+            readGamesUseCase.gamesBackgroundImageChanges.collect(::onNewGamesBackgroundImageChanges)
         }
     }
 
@@ -174,7 +175,7 @@ class GamesViewModel(
         scopeForAsyncWork.launch {
             //Use copy to create a new request with the same params but different link
             //to don't change the page after adding new placeholders
-            gamesUseCase.readGames(gameScreenInfo.request.copy())
+            readGamesUseCase.readGames(gameScreenInfo.request.copy())
         }
     }
 
@@ -226,19 +227,17 @@ class GamesViewModel(
 
 
     private fun removeLastPageOfPlaceHolders(page: Int) {
-//        logE("IllegalArgumentException, page+++: $page")
-        if (currentScreenItems.remove(page) == null) {
-            logE("IllegalArgumentException, page: $page")
-            throw IllegalArgumentException()
-        } else onNewGameScreenItemsEvent()
+        if (currentScreenItems.remove(page) == null)
+            throw IllegalArgumentException(PAGE_NOT_FOUND + page)
+        else onNewGameScreenItemsEvent()
 
     }
 
     private fun onNewGamesForScreen(changes: NewGamesForScreen) {
-//        logD("GamesViewModel.init. page: ${changes.page}")
         if (this.gameScreenInfo.tag != changes.screenTag) return
+        logE("collect: onNewGamesForScreen, tag: ${gameScreenInfo.tag}")
         currentScreenItems[changes.page] =
-            gamesUseCase.getGamesByPage(changes.page).toMutableList()
+            readGamesUseCase.getGamesByPage(changes.page).toMutableList()
         onNewGameScreenItemsEvent()
     }
 
@@ -263,7 +262,7 @@ class GamesViewModel(
             GameScreenItemType.GamePlaceHolderType(request.getPage())
         currentScreenItems[request.getPage()] = getPlaceholders().toMutableList()
         scopeForAsyncWork.launch {
-            gamesUseCase.readGames(gameScreenInfo.request.copy())
+            readGamesUseCase.readGames(gameScreenInfo.request.copy())
         }
         resetState()
         onNewGameScreenItemsEvent()

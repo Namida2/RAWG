@@ -61,4 +61,7 @@ class DatabaseModule {
     @Provides
     fun provideTagsForGamesDao(database: Database): TagsForGamesDao =
         database.getTagsForGamesDao()
+    @Provides
+    fun providePublishersForGamesDao(database: Database): PublishersForGamesDao =
+        database.getPublishersForGamesDao()
 }

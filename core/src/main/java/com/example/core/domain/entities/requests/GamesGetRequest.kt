@@ -1,10 +1,10 @@
 package com.example.core.domain.entities.requests
 
 import com.example.core.domain.interfaces.remoteRepository.GetRequest
-import com.example.core.domain.tools.constants.Constants.FIRST_PAGE
-import com.example.core.domain.tools.constants.Constants.PAGE_SIZE
-import com.example.core.domain.tools.enums.RequestParams
-import com.example.core.domain.tools.enums.RequestParams.PAGE
+import com.example.core.domain.entities.tools.constants.Constants.FIRST_PAGE
+import com.example.core.domain.entities.tools.constants.Constants.PAGE_SIZE
+import com.example.core.domain.entities.tools.enums.RequestParams
+import com.example.core.domain.entities.tools.enums.RequestParams.PAGE
 import java.text.SimpleDateFormat
 import java.util.*
 

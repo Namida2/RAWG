@@ -28,17 +28,24 @@ data class GameDetailsEntity(
 
 data class GameDetails(
     @Embedded
-    val gameDetailsEntity: GameDetailsEntity,
+    var gameDetailsEntity: GameDetailsEntity,
     // Always sorted
     @Relation(parentColumn = "gameId", entityColumn = "gameId")
     var ratings: List<MyRating>? = null,
+    @Ignore
     var platforms: List<Platform>? = null,
+    @Ignore
     var stores: List<Store>? = null,
+    @Ignore
     var developers: List<Developer>? = null,
+    @Ignore
     var genres: List<Genre>? = null,
+    @Ignore
     var tags: List<Tag>? = null,
+    @Ignore
     var publishers: List<Publisher>? = null,
 ) {
+    constructor(): this(GameDetailsEntity(0))
     class GameDetailsMapper @Inject constructor() :
         GameDetailsResponse.Mapper<GameDetails> {
         override fun map(gameDetailsResponse: GameDetailsResponse): GameDetails =

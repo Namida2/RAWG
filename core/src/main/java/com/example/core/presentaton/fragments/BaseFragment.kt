@@ -4,8 +4,8 @@ import android.view.View
 import android.view.animation.Interpolator
 import android.view.animation.OvershootInterpolator
 import androidx.fragment.app.Fragment
-import com.example.core.domain.tools.extensions.prepareDefaultSpringAnimation
-import com.example.core.domain.tools.extensions.prepareScaleAnimation
+import com.example.core.domain.entities.tools.extensions.prepareDefaultSpringAnimation
+import com.example.core.domain.entities.tools.extensions.prepareScaleAnimation
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

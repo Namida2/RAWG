@@ -1,7 +1,7 @@
 package com.example.featureFiltersDialog.domain.entities
 
 import android.icu.util.Calendar
-import com.example.core.domain.tools.constants.StringConstants.DASH_SIGN
+import com.example.core.domain.entities.tools.constants.StringConstants.DASH_SIGN
 
 fun Long.toDateString(separator: String = DASH_SIGN): String = run {
     val calendar = Calendar.getInstance()

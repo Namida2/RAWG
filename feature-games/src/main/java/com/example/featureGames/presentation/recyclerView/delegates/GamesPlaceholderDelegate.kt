@@ -3,7 +3,7 @@ package com.example.featureGames.presentation.recyclerView.delegates
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import com.example.core.domain.tools.extensions.startDefaultRecyclerViewItemAnimation
+import com.example.core.domain.entities.tools.extensions.startDefaultRecyclerViewItemAnimation
 import com.example.core.presentaton.recyclerView.base.RecyclerViewAdapterDelegate
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.base.BaseViewHolder

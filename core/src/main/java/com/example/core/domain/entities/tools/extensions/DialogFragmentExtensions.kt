@@ -1,4 +1,4 @@
-package com.example.core.domain.tools.extensions
+package com.example.core.domain.entities.tools.extensions
 
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager

@@ -1,12 +1,12 @@
 package com.example.core.domain.games.interfaces
 
-import com.example.core.domain.tools.constants.Constants.PAGE_SIZE
+import com.example.core.domain.entities.tools.constants.Constants.PAGE_SIZE
 
 sealed interface GameScreenItemType {
     val page: Int
 
     class GameType(
-        override val page: Int, val gameIds: List<Int> = emptyList()
+        override val page: Int, val gameIds: MutableList<Int> = mutableListOf()
     ) : GameScreenItemType
 
     class GamePlaceHolderType(

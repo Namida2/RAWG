@@ -3,7 +3,7 @@ package com.example.featureGames.presentation.recyclerView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.core.domain.interfaces.OnPositionChangeListener
-import com.example.core.domain.tools.constants.Constants.DEFAULT_SPAN_COUNT
+import com.example.core.domain.entities.tools.constants.Constants.DEFAULT_SPAN_COUNT
 
 class RecyclerViewScrollListener(
     recyclerView: RecyclerView,

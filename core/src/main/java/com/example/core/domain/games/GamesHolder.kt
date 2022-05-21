@@ -2,12 +2,13 @@ package com.example.core.domain.games
 
 import android.graphics.Bitmap
 import com.example.core.domain.entities.requests.GamesGetRequest
+import com.example.core.domain.entities.tools.constants.Constants.PAGE_SIZE
+import com.example.core.domain.entities.tools.constants.StringConstants.GAME_NOT_FOUND
+import com.example.core.domain.entities.tools.constants.StringConstants.GAME_SCREEN_TYPE_MISMATCH
+import com.example.core.domain.entities.tools.constants.StringConstants.PAGE_NOT_FOUND
+import com.example.core.domain.entities.tools.enums.GameScreenTags
+import com.example.core.domain.entities.tools.extensions.logD
 import com.example.core.domain.games.interfaces.GameScreenItemType
-import com.example.core.domain.tools.constants.StringConstants.GAME_NOT_FOUND
-import com.example.core.domain.tools.constants.StringConstants.GAME_SCREEN_TYPE_MISMATCH
-import com.example.core.domain.tools.constants.StringConstants.PAGE_NOT_FOUND
-import com.example.core.domain.tools.enums.GameScreenTags
-import com.example.core.domain.tools.extensions.logD
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -27,13 +28,13 @@ data class GameBackgroundImageChanges(
 class GamesHolder @Inject constructor() {
     private val games = mutableListOf<Game>()
     private val screensInfo = mutableMapOf<GameScreenTags, GameScreenInfo>()
-    private val _gameScreenChanges =
-        MutableSharedFlow<NewGamesForScreen>(onBufferOverflow = BufferOverflow.SUSPEND)
+    private val _gameScreenChanges = MutableSharedFlow<NewGamesForScreen>(onBufferOverflow = BufferOverflow.SUSPEND)
     val newGamesForScreen: SharedFlow<NewGamesForScreen> = _gameScreenChanges
-    private val _gamesBackgroundImageChanges =
-        MutableSharedFlow<GameBackgroundImageChanges>(onBufferOverflow = BufferOverflow.SUSPEND)
-    val gamesBackgroundImageChanges: SharedFlow<GameBackgroundImageChanges> =
-        _gamesBackgroundImageChanges
+    private val _gamesBackgroundImageChanges = MutableSharedFlow<GameBackgroundImageChanges>(onBufferOverflow = BufferOverflow.SUSPEND)
+    val gamesBackgroundImageChanges: SharedFlow<GameBackgroundImageChanges> = _gamesBackgroundImageChanges
+
+    private val _onGameUnliked = MutableSharedFlow<NewGamesForScreen>(onBufferOverflow = BufferOverflow.SUSPEND)
+    val onGameUnliked: SharedFlow<NewGamesForScreen> = _onGameUnliked
 
     fun getScreenInfo(screenTag: GameScreenTags): GameScreenInfo =
         screensInfo[screenTag] ?: run {
@@ -83,8 +84,37 @@ class GamesHolder @Inject constructor() {
         }.let {
             if (it == -1) throw IllegalArgumentException(GAME_NOT_FOUND + game.gameEntity.id)
             games[it] = game.copy(gameEntity = games[it].gameEntity.copy(isLiked = isLiked))
+            onGameLikeStatusChanged(game, isLiked)
             notifyGameChanged(game)
         }
+    }
+
+    private fun onGameLikeStatusChanged(game: Game, isLiked: Boolean) {
+        val gameScreenInfo = getScreenInfo(GameScreenTags.MY_LIKES)
+        if (isLiked) {
+            gameScreenInfo.screenItems.keys.sorted().reversed().indexOfFirst { index ->
+                if (gameScreenInfo.screenItems[index] !is GameScreenItemType.GameType) return@indexOfFirst false
+                else (gameScreenInfo.screenItems[index] as GameScreenItemType.GameType).gameIds.size < PAGE_SIZE
+            }.also { lastPage ->
+                if (lastPage != -1) (gameScreenInfo.screenItems[lastPage] as GameScreenItemType.GameType).gameIds.add(
+                    game.gameEntity.id
+                )
+                else {
+                    val newPage = gameScreenInfo.request.getPage() + 1
+                    gameScreenInfo.screenItems[newPage] = GameScreenItemType.GameType(
+                        newPage, mutableListOf(game.gameEntity.id)
+                    )
+                }
+            }
+        } else if (gameScreenInfo.screenItems.values.first() is GameScreenItemType.GameType) {
+            gameScreenInfo.screenItems.forEach { (page, gameScreenItem) ->
+                if ((gameScreenItem as GameScreenItemType.GameType).gameIds.contains(game.gameEntity.id)) {
+                    gameScreenItem.gameIds.remove(game.gameEntity.id)
+                    MainScope().launch { _onGameUnliked.emit(NewGamesForScreen(GameScreenTags.MY_LIKES, page)) }
+                }
+            }
+        }
+
     }
 
     suspend fun addGames(
@@ -95,14 +125,13 @@ class GamesHolder @Inject constructor() {
         newGames.forEach { newGame ->
             val indexOnExistingGame =
                 games.indexOfFirst { it.gameEntity.id == newGame.gameEntity.id }
-            if (indexOnExistingGame == -1) {
-                games.add(newGame)
-            } else {
-                games[indexOnExistingGame] =
-                    newGame.copy(gameEntity = games[indexOnExistingGame].gameEntity.copy(isLiked = games[indexOnExistingGame].gameEntity.isLiked))
-            }
+            if (indexOnExistingGame == -1) games.add(newGame)
+            else games[indexOnExistingGame] = newGame.copy(
+                gameEntity =
+                games[indexOnExistingGame].gameEntity.copy(isLiked = games[indexOnExistingGame].gameEntity.isLiked)
+            )
         }
-//        logD("gamesCollectionSize: ${games.size}")
+        logD("gamesCollectionSize: ${games.size}")
         getScreenInfo(screenTag).screenItems[gameType.page] = gameType
         notifyGameScreensAboutNewGames(screenTag, gameType.page)
     }
@@ -126,16 +155,18 @@ class GamesHolder @Inject constructor() {
         games.find { it.gameEntity.id == gameId }
             ?: throw IllegalArgumentException(GAME_NOT_FOUND + gameId)
 
-    private suspend fun notifyGameScreensAboutNewGames(screenTag: GameScreenTags, page: Int) {
+    suspend fun notifyGameScreensAboutNewGames(screenTag: GameScreenTags, page: Int) {
         _gameScreenChanges.emit(NewGamesForScreen(screenTag, page))
     }
 
     private fun notifyGameChanged(newGame: Game) {
         screensInfo.values.forEach { gameScreenInfo ->
             if (gameScreenInfo.screenItems.values.first() is GameScreenItemType.GameType) {
-                gameScreenInfo.screenItems.forEach { page, gameScreenItem ->
+                gameScreenInfo.screenItems.forEach { (page, gameScreenItem) ->
                     if ((gameScreenItem as GameScreenItemType.GameType).gameIds.contains(newGame.gameEntity.id))
-                        MainScope().launch { notifyGameScreensAboutNewGames(gameScreenInfo.tag, page) }
+                        MainScope().launch {
+                            notifyGameScreensAboutNewGames(gameScreenInfo.tag, page)
+                        }
                 }
             }
         }

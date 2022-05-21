@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.text.Html
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -16,16 +15,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.core.domain.tools.constants.Constants.AVERAGE_FILTERS_LIST_SIZE
-import com.example.core.domain.tools.constants.Constants.DEFAULT_SPAN_COUNT
-import com.example.core.domain.tools.constants.Constants.DESCRIPTION_MAX_LINES
-import com.example.core.domain.tools.constants.Messages.checkNetworkConnectionMessage
-import com.example.core.domain.tools.constants.StringConstants.COLON_SIGN
-import com.example.core.domain.tools.constants.StringConstants.HOURS
-import com.example.core.domain.tools.constants.StringConstants.PC_SLUG
-import com.example.core.domain.tools.extensions.createMessageAlertDialog
-import com.example.core.domain.tools.extensions.logD
-import com.example.core.domain.tools.extensions.showIfNotAdded
+import com.example.core.domain.entities.tools.constants.Constants.AVERAGE_FILTERS_LIST_SIZE
+import com.example.core.domain.entities.tools.constants.Constants.DEFAULT_SPAN_COUNT
+import com.example.core.domain.entities.tools.constants.Constants.DESCRIPTION_MAX_LINES
+import com.example.core.domain.entities.tools.constants.Messages.checkNetworkConnectionMessage
+import com.example.core.domain.entities.tools.constants.StringConstants.COLON_SIGN
+import com.example.core.domain.entities.tools.constants.StringConstants.HOURS
+import com.example.core.domain.entities.tools.constants.StringConstants.PC_SLUG
+import com.example.core.domain.entities.tools.extensions.createMessageAlertDialog
+import com.example.core.domain.entities.tools.extensions.logD
+import com.example.core.domain.entities.tools.extensions.showIfNotAdded
 import com.example.core.presentaton.dialogs.ClosedQuestionDialog
 import com.example.core.presentaton.fragments.BaseFragment
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewAdapter
@@ -43,8 +42,8 @@ import com.example.featureGameDetails.presentation.viewPager.itemDecorations.Gam
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import kotlin.properties.Delegates
 
-// TODO: Complete the GameDetailsScreen, add saving gameDetails
-//  if the game liked on the FragmentGames screen, add the MyLikes screen //STOPPED//
+// TODO: Complete the GameDetailsScreen, add liking on the GameDetailsFragment,
+//  complete filtering and searching //STOPPED//
 class GameDetailsFragment : BaseFragment() {
     private var defaultScale by Delegates.notNull<Float>()
     private var currentPageMargin by Delegates.notNull<Int>()

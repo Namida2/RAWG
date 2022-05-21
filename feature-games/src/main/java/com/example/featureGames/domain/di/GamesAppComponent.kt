@@ -9,7 +9,8 @@ import com.example.core.domain.games.GamesHolder
 import com.example.core.domain.games.useCases.LikeGameUseCase
 import com.example.dependencyDescription.domain.GameDetailsDeps
 import com.example.featureGames.domain.repositories.RAWGamesService
-import com.example.featureGames.domain.useCase.GamesUseCaseFactory
+import com.example.featureGames.domain.useCases.DefaultGamesUseCaseFactory
+import com.example.featureGames.domain.useCases.MyLikesGamesUseCaseFactory
 import dagger.Component
 import javax.inject.Singleton
 
@@ -21,6 +22,7 @@ import javax.inject.Singleton
 interface GamesAppComponent: GameDetailsDeps {
     fun provideRAWGamesService(): RAWGamesService
     fun provideGamesHolder(): GamesHolder
-    fun provideAllGamesFactory(): GamesUseCaseFactory
+    fun provideDefaultGamesUseCaseFactory(): DefaultGamesUseCaseFactory
+    fun provideMyLikesGamesUseCaseFactory(): MyLikesGamesUseCaseFactory
     fun provideLikeGameUseCase(): LikeGameUseCase
 }

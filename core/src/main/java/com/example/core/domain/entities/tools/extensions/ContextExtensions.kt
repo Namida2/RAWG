@@ -1,4 +1,4 @@
-package com.example.core.domain.tools.extensions
+package com.example.core.domain.entities.tools.extensions
 
 import android.content.Context
 import com.example.core.domain.entities.tools.Message

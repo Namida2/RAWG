@@ -6,7 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.doOnPreDraw
-import com.example.core.domain.tools.enums.GameScreenTags
+import com.example.core.domain.entities.tools.constants.Constants
+import com.example.core.domain.entities.tools.enums.GameScreenTags
 import com.example.core.presentaton.fragments.BaseFragment
 import com.example.featureFiltersDialog.domain.di.FiltersDepsStore
 import com.example.featureFiltersDialog.presentation.FiltersBottomSheetDialog
@@ -92,7 +93,7 @@ class GamesViewPagerFragment : BaseFragment(), View.OnClickListener {
     private fun initViewPager() {
         with(binding!!) {
             viewPager.adapter = GamePagerAdapter(requireActivity(), gameScreenTags)
-//            viewPager.offscreenPageLimit = Constants.NUM_PAGES
+            viewPager.offscreenPageLimit = Constants.NUM_PAGES
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                 tab.text = gameScreenTags[position].screenTag
             }.attach()

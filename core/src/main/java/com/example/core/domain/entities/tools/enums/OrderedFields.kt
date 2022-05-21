@@ -1,7 +1,7 @@
-package com.example.core.domain.tools.enums
+package com.example.core.domain.entities.tools.enums
 
 import com.example.core.domain.entities.filters.Filter
-import com.example.core.domain.tools.constants.StringConstants.DASH_SIGN
+import com.example.core.domain.entities.tools.constants.StringConstants.DASH_SIGN
 
 enum class OrderedFields(val orderingField: String) {
     NAME(RequestParams.NAME.slug),

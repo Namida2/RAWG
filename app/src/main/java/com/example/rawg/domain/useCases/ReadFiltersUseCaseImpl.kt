@@ -7,8 +7,8 @@ import com.example.core.data.entities.FilterEntity
 import com.example.core.domain.entities.filters.FilterCategory
 import com.example.core.domain.entities.filters.FiltersHolder
 import com.example.core.domain.interfaces.Mapper
-import com.example.core.domain.tools.enums.RequestParams
-import com.example.core.domain.tools.extensions.logD
+import com.example.core.domain.entities.tools.enums.RequestParams
+import com.example.core.domain.entities.tools.extensions.logD
 import com.example.rawg.domain.mappers.FilterParamsToFiltersMapper
 import com.example.rawg.domain.repositories.FiltersService
 import kotlinx.coroutines.CoroutineScope

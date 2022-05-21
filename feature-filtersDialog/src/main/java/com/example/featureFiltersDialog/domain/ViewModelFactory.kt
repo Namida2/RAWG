@@ -2,8 +2,7 @@ package com.example.featureFiltersDialog.domain
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.core.domain.tools.constants.StringConstants.UNKNOWN_VIEW_MODEL_CLASS
-import com.example.featureFiltersDialog.domain.di.FiltersDepsStore
+import com.example.core.domain.entities.tools.constants.StringConstants.UNKNOWN_VIEW_MODEL_CLASS
 import com.example.featureFiltersDialog.domain.di.FiltersDepsStore.appComponent
 import com.example.featureFiltersDialog.presentation.FiltersViewModel
 

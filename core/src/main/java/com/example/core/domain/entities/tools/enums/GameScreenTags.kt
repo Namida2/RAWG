@@ -1,4 +1,4 @@
-package com.example.core.domain.tools.enums
+package com.example.core.domain.entities.tools.enums
 
 enum class GameScreenTags(val screenTag: String) {
     TOP_PICKS("Top picks"),

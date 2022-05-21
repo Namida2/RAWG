@@ -29,9 +29,10 @@ import com.example.core.domain.games.MyRating
         GenresForGames::class,
         StoresFoeGames::class,
         PlatformsForGames::class,
-        ScreenshotsForGame::class,
         GameDetailsEntity::class,
         DevelopersForGames::class,
+        PublishersForGames::class,
+        ScreenshotsForGame::class,
     ], version = 1, exportSchema = false
 )
 abstract class Database : RoomDatabase() {
@@ -51,6 +52,7 @@ abstract class Database : RoomDatabase() {
     abstract fun getStoresForGamesDao(): StoresForGamesDao
     abstract fun getGameDetailsEntityDao(): GameDetailsEntityDao
     abstract fun getPlatformsForGamesDao(): PlatformsForGamesDao
+    abstract fun getPublishersForGamesDao(): PublishersForGamesDao
     abstract fun getDevelopersForGamesDao(): DevelopersForGamesDao
     abstract fun getScreenshotsForGamesDao(): ScreenshotsForGamesDao
 }

@@ -1,4 +1,4 @@
-package com.example.core.domain.tools.enums
+package com.example.core.domain.entities.tools.enums
 
 enum class RequestParams(val myName: String, val slug: String) {
     PARAM_KEY("Key","key"),

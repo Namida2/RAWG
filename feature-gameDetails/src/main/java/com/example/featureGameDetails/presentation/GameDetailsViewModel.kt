@@ -10,12 +10,10 @@ import com.example.core.domain.entities.tools.Message
 import com.example.core.domain.entities.tools.NetworkConnectionListener
 import com.example.core.domain.entities.tools.SingleEvent
 import com.example.core.domain.interfaces.Stateful
-import com.example.core.domain.tools.constants.Messages.defaultErrorMessage
-import com.example.core.domain.tools.extensions.logD
+import com.example.core.domain.entities.tools.constants.Messages.defaultErrorMessage
+import com.example.core.domain.entities.tools.extensions.logD
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.core.domain.games.Game
-import com.example.core.domain.games.useCases.LikeGameUseCase
-import com.example.core.domain.games.useCases.LikeGameUseCaseImpl
 import com.example.featureGameDetails.domain.entities.GameScreenshot
 import com.example.featureGameDetails.domain.useCases.GetGameDetailsUseCaseFactory
 import kotlinx.coroutines.*

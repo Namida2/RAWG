@@ -2,8 +2,8 @@ package com.example.core.domain.games
 
 import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.entities.requests.GamesGetRequest.Builder.Companion.defaultTimeZone
-import com.example.core.domain.tools.enums.OrderedFields
-import com.example.core.domain.tools.enums.reverseOrder
+import com.example.core.domain.entities.tools.enums.OrderedFields
+import com.example.core.domain.entities.tools.enums.reverseOrder
 import java.util.*
 
 interface GameScreensSettings {

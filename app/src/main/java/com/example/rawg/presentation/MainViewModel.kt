@@ -7,10 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.core.domain.entities.tools.Message
 import com.example.core.domain.entities.tools.NetworkConnectionListener
 import com.example.core.domain.interfaces.Stateful
-import com.example.core.domain.tools.constants.Messages.defaultErrorMessage
-import com.example.core.domain.tools.extensions.logD
-import com.example.core.domain.tools.extensions.logE
+import com.example.core.domain.entities.tools.constants.Messages.defaultErrorMessage
+import com.example.core.domain.entities.tools.enums.GameScreenTags
+import com.example.core.domain.entities.tools.extensions.logE
 import com.example.rawg.domain.useCases.ReadFiltersUseCase
+import com.example.rawg.domain.useCases.ReadGamesFromLocalStorageUseCaseFactory
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -28,9 +29,10 @@ sealed class MainVMStates : Stateful.State {
 }
 
 class MainViewModel @Inject constructor(
-    private val readFiltersUseCase: ReadFiltersUseCase
+    private val readFiltersUseCase: ReadFiltersUseCase,
+    readGamesFromLocalStorageUseCaseFactory: ReadGamesFromLocalStorageUseCaseFactory
 ) : ViewModel(), Stateful {
-
+    private val readGamesUseCase = readGamesFromLocalStorageUseCaseFactory.create(GameScreenTags.MY_LIKES)
     private val _state = MutableLiveData<MainVMStates>(MainVMStates.Default)
     val state: LiveData<MainVMStates> = _state
     private val coroutineExceptionHandler =
@@ -43,23 +45,20 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             NetworkConnectionListener.networkConnectionChanges.collect { isConnected ->
                 if (isConnected && state.value is MainVMStates.LostNetworkConnection)
-                    readFilters()
+                    readFiltersAndMyLikes()
                 else if (!isConnected)
                     setNewState(MainVMStates.LostNetworkConnection)
             }
         }
     }
 
-    fun readFilters() {
-        if(state.value is MainVMStates.FiltersLoadedSuccessfully ||
-            state.value == MainVMStates.ReadingFilters) return
+    fun readFiltersAndMyLikes() {
+        if(state.value is MainVMStates.FiltersLoadedSuccessfully || state.value == MainVMStates.ReadingFilters) return
         _state.value = MainVMStates.ReadingFilters
         viewModelScope.launch(IO + coroutineExceptionHandler) {
-            logD("readFiltersUseCase")
+            readGamesUseCase.readGames()
             readFiltersUseCase.getFilters(this)
-            logD("isALive: $isActive")
             withContext(Main) {
-                logD("withContext(Main)")
                 setNewState(MainVMStates.FiltersLoadedSuccessfully)
                 //Stop listen for network changes
                 viewModelScope.coroutineContext.job.cancelChildren()

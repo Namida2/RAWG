@@ -1,4 +1,4 @@
-package com.example.core.domain.tools.constants
+package com.example.core.domain.entities.tools.constants
 
 object StringConstants {
     const val EMPTY_STRING = ""

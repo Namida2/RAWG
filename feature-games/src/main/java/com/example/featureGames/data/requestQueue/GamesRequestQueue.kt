@@ -2,8 +2,8 @@ package com.example.featureGames.data.requestQueue
 
 import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.entities.tools.GameNetworkExceptions
-import com.example.core.domain.tools.enums.ResponseCodes
-import com.example.core.domain.tools.extensions.logD
+import com.example.core.domain.entities.tools.enums.ResponseCodes
+import com.example.core.domain.entities.tools.extensions.logD
 import com.example.core.data.games.rawGameResponse.GamesResponse
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueue
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueueResultHandler

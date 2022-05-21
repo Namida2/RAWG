@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import androidx.recyclerview.widget.DiffUtil
-import com.example.core.domain.tools.extensions.prepareScaleAnimation
+import com.example.core.domain.entities.tools.extensions.prepareScaleAnimation
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.base.BaseViewHolder
 import com.example.core.presentaton.recyclerView.base.RecyclerViewAdapterDelegate
