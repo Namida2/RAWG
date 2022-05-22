@@ -10,26 +10,25 @@ import com.example.core.domain.entities.tools.Message
 import com.example.core.domain.entities.tools.NetworkConnectionListener.isNetworkConnected
 import com.example.core.domain.entities.tools.NetworkConnectionListener.networkConnectionChanges
 import com.example.core.domain.entities.tools.SingleEvent
-import com.example.core.domain.games.Game
-import com.example.core.domain.interfaces.OnNewGetRequestCallback
-import com.example.core.domain.interfaces.OnPositionChangeListener
-import com.example.core.domain.interfaces.Stateful
 import com.example.core.domain.entities.tools.constants.Constants
 import com.example.core.domain.entities.tools.constants.Constants.MIN_ITEMS_COUNT_FOR_NEXT_PAGE
 import com.example.core.domain.entities.tools.constants.Messages.allGamesHaveBeenLoadedMessage
-import com.example.core.domain.entities.tools.constants.Messages.defaultErrorMessage
 import com.example.core.domain.entities.tools.constants.StringConstants.GAME_NOT_FOUND
 import com.example.core.domain.entities.tools.constants.StringConstants.PAGE_NOT_FOUND
 import com.example.core.domain.entities.tools.enums.GameScreenTags
 import com.example.core.domain.entities.tools.enums.ResponseCodes
 import com.example.core.domain.entities.tools.extensions.logD
 import com.example.core.domain.entities.tools.extensions.logE
-import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
+import com.example.core.domain.games.Game
 import com.example.core.domain.games.GameBackgroundImageChanges
 import com.example.core.domain.games.GameScreenInfo
 import com.example.core.domain.games.NewGamesForScreen
 import com.example.core.domain.games.interfaces.GameScreenItemType
 import com.example.core.domain.games.useCases.LikeGameUseCase
+import com.example.core.domain.interfaces.OnNewGetRequestCallback
+import com.example.core.domain.interfaces.OnPositionChangeListener
+import com.example.core.domain.interfaces.Stateful
+import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.featureGames.domain.entities.GameErrorPagePlaceHolder
 import com.example.featureGames.domain.entities.GamePlaceHolder
 import com.example.featureGames.domain.useCases.interfaces.ReadGamesUseCase
@@ -41,15 +40,18 @@ import kotlinx.coroutines.Dispatchers.Main
 private typealias NewGamesListEvent = SingleEvent<List<BaseRecyclerViewType>>
 private typealias PageToListRecyclerViewItems = MutableMap<Int, MutableList<BaseRecyclerViewType>>
 
-sealed class GamesVMStats : Stateful.State {
-    object Default : GamesVMStats()
-    class AllGamesFromRequestHaveBeenLoaded(
-        val message: Message = allGamesHaveBeenLoadedMessage
-    ) : GamesVMStats()
+sealed interface GamesVMStats<out T> : Stateful.State {
+    val value: SingleEvent<out T>
 
-    class Error(
-        val message: Message = defaultErrorMessage
-    ) : GamesVMStats(), Stateful.TerminatingState
+    class Default(override val value: SingleEvent<out Unit> = SingleEvent(Unit)) :
+        GamesVMStats<Unit>
+
+    class AllGamesFromRequestHaveBeenLoaded(
+        override val value: SingleEvent<out Message> = SingleEvent(allGamesHaveBeenLoadedMessage)
+    ) : GamesVMStats<Message>
+
+    class Error(override val value: SingleEvent<out Message>) : GamesVMStats<Message>,
+        Stateful.TerminatingState
 }
 sealed interface GamesVMSingleEvents<out T> {
     val event: SingleEvent<out T>
@@ -62,7 +64,7 @@ sealed interface GamesVMSingleEvents<out T> {
 }
 
 class GamesViewModel(
-    screenTag: GameScreenTags,
+    val screenTag: GameScreenTags,
     gamesUseCaseFactory: ReadGamesUseCaseFactory,
     private val likeGameUseCase: LikeGameUseCase,
     private val scopeForAsyncWork: CoroutineScope = CoroutineScope(SupervisorJob() + Main.immediate)
@@ -70,13 +72,14 @@ class GamesViewModel(
     GameScreenInfo.Mapper<PageToListRecyclerViewItems>, GameErrorPageAdapterDelegateCallback,
     OnNewGetRequestCallback<GamesGetRequest> {
     var snackBarIsShowing = false
-    private var readGamesUseCase: ReadGamesUseCase = gamesUseCaseFactory.create(screenTag, scopeForAsyncWork)
+    private var readGamesUseCase: ReadGamesUseCase =
+        gamesUseCaseFactory.create(screenTag, scopeForAsyncWork)
     private var gameScreenInfo = readGamesUseCase.getScreenInfo()
     private var currentScreenItems = mutableMapOf<Int, MutableList<BaseRecyclerViewType>>()
     private val _singleEvents = MutableLiveData<GamesVMSingleEvents<Any>>()
     val singleEvents: LiveData<GamesVMSingleEvents<Any>> = _singleEvents
-    private val _state = MutableLiveData<GamesVMStats>()
-    val state: LiveData<GamesVMStats> = _state
+    private val _state = MutableLiveData<GamesVMStats<Any>>()
+    val state: LiveData<GamesVMStats<Any>> = _state
 
     init {
         listenChanges()
@@ -104,7 +107,7 @@ class GamesViewModel(
     }
 
     fun onLikeButtonClick(game: Game) {
-        if(game.gameEntity.isLiked) likeGameUseCase.unlikeGame(game)
+        if (game.gameEntity.isLiked) likeGameUseCase.unlikeGame(game)
         else likeGameUseCase.likeGame(game)
     }
 
@@ -147,12 +150,12 @@ class GamesViewModel(
     }
 
     override fun setNewState(newState: Stateful.State) {
-        _state.value = newState as? GamesVMStats ?: throw TypeCastException()
+        _state.value = newState as? GamesVMStats<Any> ?: throw TypeCastException()
         if (newState is Stateful.TerminatingState) resetState()
     }
 
     override fun resetState() {
-        _state.value = GamesVMStats.Default
+        _state.value = GamesVMStats.Default()
     }
 
     private fun listenChanges() {
@@ -180,9 +183,8 @@ class GamesViewModel(
     }
 
     private fun getPlaceholders(count: Int = Constants.PAGE_SIZE): List<GamePlaceHolder> {
-        val placeHolder = GamePlaceHolder()
         val result = mutableListOf<GamePlaceHolder>()
-        repeat(count) { result.add(placeHolder) }
+        repeat(count) { result.add(GamePlaceHolder()) }
         return result
     }
 
@@ -228,9 +230,9 @@ class GamesViewModel(
 
     private fun removeLastPageOfPlaceHolders(page: Int) {
         if (currentScreenItems.remove(page) == null)
-            throw IllegalArgumentException(PAGE_NOT_FOUND + page)
+            logE("removeLastPageOfPlaceHolders:$PAGE_NOT_FOUND$page")
+//            throw IllegalArgumentException(PAGE_NOT_FOUND + page)
         else onNewGameScreenItemsEvent()
-
     }
 
     private fun onNewGamesForScreen(changes: NewGamesForScreen) {
@@ -242,18 +244,22 @@ class GamesViewModel(
     }
 
     private fun onNewGamesBackgroundImageChanges(changes: GameBackgroundImageChanges) {
-//        logD("gamesBackgroundImageChanges, page: ${changes.page}")
-        if (this.gameScreenInfo.tag != changes.screenTag) return
+        if (this.gameScreenInfo.tag != changes.screenTag || currentScreenItems.isEmpty()) return
         currentScreenItems[changes.page]!!.indexOfFirst { type ->
             if (type is Game) type.gameEntity.id == changes.game.gameEntity.id else false
         }.also { index ->
-            if (index == -1) throw IllegalArgumentException(GAME_NOT_FOUND + changes.game.gameEntity.id)
+            if (index == -1) {
+                // onNewRequest but pictures from ald request
+                logE("onNewGamesBackgroundImageChanges: game not fond: ${changes.game.gameEntity.name}")
+                return
+            }
             currentScreenItems[changes.page]!![index] = changes.game
             onNewGameScreenItemsEvent()
         }
     }
 
     override fun onNewRequest(request: GamesGetRequest) {
+        scopeForAsyncWork.coroutineContext.job.cancelChildren()
         currentScreenItems.clear()
         onNewGameScreenItemsEvent()
         gameScreenInfo.screenItems.clear()

@@ -14,9 +14,11 @@ import com.example.core.domain.entities.tools.constants.Messages.defaultErrorMes
 import com.example.core.domain.entities.tools.extensions.logD
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.core.domain.games.Game
+import com.example.core.domain.games.useCases.LikeGameUseCase
 import com.example.featureGameDetails.domain.entities.GameScreenshot
 import com.example.featureGameDetails.domain.useCases.GetGameDetailsUseCaseFactory
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 
 sealed interface GameDetailsVMEvents<T> {
     val value: SingleEvent<out T>
@@ -43,11 +45,14 @@ sealed class GameDetailsVMEStates : Stateful.State {
 class GameDetailsViewModel(
     gameId: Int,
     getGameDetailsUseCaseFactory: GetGameDetailsUseCaseFactory,
+    private val likeGameUseCase: LikeGameUseCase,
     private val scopeForAsyncWork: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 ) : ViewModel(), Stateful {
-    private var currentGame: Game? = null
+    var currentGame: Game? = null
     private val currentGameScreenshots = mutableListOf<GameScreenshot>()
-    private val getGameDetailsUseCase = getGameDetailsUseCaseFactory.create(scopeForAsyncWork)
+    private val getGameDetailsUseCase = getGameDetailsUseCaseFactory.create(
+        scopeForAsyncWork, ::onNewLikedGameDetails
+    )
     private val _events = MutableLiveData<GameDetailsVMEvents<out Any>>()
     private val _state = MutableLiveData<GameDetailsVMEStates>(GameDetailsVMEStates.Default)
     private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
@@ -73,12 +78,16 @@ class GameDetailsViewModel(
                 if (isConnected)
                     if (currentGame == null) getDetails(gameId)
                     else getGameDetailsUseCase.onNetworkConnected(gameId)
-                else {
-                    scopeForAsyncWork.coroutineContext.job.cancelChildren()
-                    _events.value = GameDetailsVMEvents.LostNetworkConnectionEvent()
-                }
+                else scopeForAsyncWork.coroutineContext.job.cancelChildren()
+
             }
         }
+    }
+
+    fun onLikeButtonClick() {
+        currentGame ?: return
+        if (currentGame!!.gameEntity.isLiked) likeGameUseCase.unlikeGame(currentGame!!)
+        else likeGameUseCase.likeGame(currentGame!!)
     }
 
     fun getDetails(gameId: Int) {
@@ -118,7 +127,6 @@ class GameDetailsViewModel(
             Filter(it.store?.id.toString(), it.store?.name ?: return@map null)
         }?.filterNotNull() ?: emptyList()
 
-
     private suspend fun addScreenshots(list: List<Bitmap?>) {
         withContext(viewModelScope.coroutineContext) {
             list.forEach { bitmap ->
@@ -130,6 +138,12 @@ class GameDetailsViewModel(
             _events.value = GameDetailsVMEvents.NewScreenshotsListEvent(
                 SingleEvent(currentGameScreenshots.toMutableList())
             )
+        }
+    }
+
+    private fun onNewLikedGameDetails(game: Game) {
+        scopeForAsyncWork.launch(IO) {
+            likeGameUseCase.insertDetails(this, game)
         }
     }
 

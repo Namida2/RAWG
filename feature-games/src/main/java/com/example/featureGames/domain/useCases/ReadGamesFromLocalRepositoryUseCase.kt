@@ -6,6 +6,8 @@ import com.example.core.data.imageLoaders.interfaces.ImagesLoaderResultHandler
 import com.example.core.data.imageLoaders.interfaces.LoadedImageInfo
 import com.example.core.domain.entities.requests.GamesGetRequest
 import com.example.core.domain.entities.tools.GameNetworkExceptions
+import com.example.core.domain.entities.tools.constants.Constants.GAME_SCREENSHOT_HEIGHT
+import com.example.core.domain.entities.tools.constants.Constants.GAME_SCREENSHOT_WIDTH
 import com.example.core.domain.games.*
 import com.example.core.domain.entities.tools.constants.StringConstants
 import com.example.core.domain.entities.tools.enums.GameScreenTags
@@ -91,7 +93,9 @@ class ReadGamesFromLocalRepositoryUseCase @AssistedInject constructor(
         imagesLoader.loadImage(
             GameScreenshotUrlInfo(
                 game.gameEntity.backgroundImageUrl!!,
-                page, game.gameEntity.id
+                page, game.gameEntity.id,
+                GAME_SCREENSHOT_WIDTH,
+                GAME_SCREENSHOT_HEIGHT
             ), coroutineScope
         )
     }

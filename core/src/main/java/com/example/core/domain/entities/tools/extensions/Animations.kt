@@ -25,6 +25,20 @@ fun View.prepareFadeInAnimation(
     }
 }
 
+fun View.prepareFadeOutAnimation(
+    duration: Long = 260,
+    startDelay: Long = 0,
+    doOnEnd: () -> Unit = {}
+): ObjectAnimator {
+    val alpha = PropertyValuesHolder.ofFloat(View.ALPHA, 1f, 0f)
+    return ObjectAnimator.ofPropertyValuesHolder(this, alpha).apply {
+        interpolator = LinearInterpolator()
+        this.duration = duration
+        this.startDelay = startDelay
+        doOnEnd { doOnEnd.invoke() }
+    }
+}
+
 fun View.prepareIncreaseHeightAnimation(
     duration: Long = 260,
     startDelay: Long = 0,
@@ -43,13 +57,14 @@ fun View.prepareIncreaseHeightAnimation(
 fun View.prepareScaleAnimation(
     duration: Long = 260,
     startDelay: Long = 0,
-    interpolator: Interpolator,
+    interpolator: Interpolator = LinearInterpolator(),
     startAlpha: Float = 0f,
-    scale: Float = 0.8f,
+    startScale: Float = 0.8f,
+    endScale: Float = 1f,
     doOnEnd: () -> Unit = {}
 ): ObjectAnimator {
-    val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, scale, 1f)
-    val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, scale, 1f)
+    val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, startScale, endScale)
+    val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, startScale, endScale)
     val alpha = PropertyValuesHolder.ofFloat(View.ALPHA, startAlpha, 1f)
     return ObjectAnimator.ofPropertyValuesHolder(this, scaleX, scaleY, alpha).apply {
         this.interpolator = interpolator
@@ -59,7 +74,7 @@ fun View.prepareScaleAnimation(
     }
 }
 
-fun View.startDefaultRecyclerViewItemAnimation(heightScale: Float = 16f) {
+fun View.startDefaultRecyclerViewItemAnimation(heightScale: Float = 24f) {
     this.prepareDefaultSpringAnimation(
         this.height / heightScale,
         springDampingRatio = SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY

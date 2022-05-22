@@ -6,7 +6,6 @@ import com.example.core.data.imageLoaders.GameScreenshotUrlInfo
 import com.example.core.data.imageLoaders.interfaces.ImagesLoader
 import com.example.core.data.imageLoaders.interfaces.ImagesLoaderResultHandler
 import com.example.core.data.imageLoaders.interfaces.LoadedImageInfo
-import com.example.core.domain.entities.tools.extensions.logE
 import com.example.core.domain.games.Game
 import com.example.core.domain.games.GameDetails
 import com.example.core.domain.games.GamesHolder
@@ -22,13 +21,14 @@ import kotlinx.coroutines.flow.SharedFlow
 
 @AssistedFactory
 interface GetGameDetailsUseCaseFactory {
-    fun create(coroutineScope: CoroutineScope): GetGameDetailsUseCaseImpl
+    fun create(coroutineScope: CoroutineScope, onNewLikeGameDetailsCallback: (game: Game) -> Unit): GetGameDetailsUseCaseImpl
 }
 
 class GetGameDetailsUseCaseImpl @AssistedInject constructor(
     private val gamesHolder: GamesHolder,
     private val gameDetailsService: GameDetailsService,
     @Assisted private var coroutineScope: CoroutineScope,
+    @Assisted private var onNewLikeGameDetailsCallback: (game: Game) -> Unit,
     private val imagesLoader: ImagesLoader<GameScreenshotUrlInfo>,
     private val mapper: GameDetailsResponse.Mapper<GameDetails>
 ) : GetGameDetailsUseCase, ImagesLoaderResultHandler<GameScreenshotUrlInfo> {
@@ -37,18 +37,18 @@ class GetGameDetailsUseCaseImpl @AssistedInject constructor(
         imagesLoader.onResultHandler = this
     }
 
-    private val _onNewScreenshotLoaded =
-        MutableSharedFlow<Bitmap>(onBufferOverflow = BufferOverflow.SUSPEND)
+    private val _onNewScreenshotLoaded = MutableSharedFlow<Bitmap>(onBufferOverflow = BufferOverflow.SUSPEND)
     override val onNewScreenshotLoaded: SharedFlow<Bitmap> = _onNewScreenshotLoaded
 
     override suspend fun getGameDetails(gameId: Int): Game {
         val game = gamesHolder.getGameById(gameId).also { loadImages(it) }
         if (game.gameDetails != null) return game
-        logE("LOADING DETAILS")
         return game.also {
             it.gameDetails = mapper.map(
                 gameDetailsService.getDetails(gameId)
             )
+            //save the first loaded details
+            if(it.gameEntity.isLiked) onNewLikeGameDetailsCallback.invoke(it)
         }
     }
 

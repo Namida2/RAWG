@@ -5,6 +5,7 @@ enum class RequestParams(val myName: String, val slug: String) {
     API_KEY("API_KEY","eb93975e53414766bd5b734fae1502eb"),
     RAWG_BASE_URL("RAWG_BASE_URL","https://api.rawg.io/api/"),
 
+    SEARCH("Search","search"),
     DATES("Dates","dates"),
     PLATFORMS("Platforms", "platforms"),
     STORES("Stores", "stores"),

@@ -60,7 +60,7 @@ class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             viewModel.getFilters()
             applyButton.setOnClickListener {
-                viewModel.onAcceptButtonClick()
+                viewModel.onAcceptButtonClick(searchEditText.text.toString())
                 this@FiltersBottomSheetDialog.dismiss()
             }
             clearButton.setOnClickListener { viewModel.onClearButtonClick() }

@@ -4,6 +4,7 @@ object StringConstants {
     const val EMPTY_STRING = ""
     const val DASH_SIGN = "-"
     const val DOT_SIGN = "."
+    const val COMMA_SIGN = ","
     const val COLON_SIGN = ":"
     const val HOURS = "h"
     const val PC_SLUG = "pc"

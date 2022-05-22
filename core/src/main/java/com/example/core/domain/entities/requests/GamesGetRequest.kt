@@ -3,6 +3,7 @@ package com.example.core.domain.entities.requests
 import com.example.core.domain.interfaces.remoteRepository.GetRequest
 import com.example.core.domain.entities.tools.constants.Constants.FIRST_PAGE
 import com.example.core.domain.entities.tools.constants.Constants.PAGE_SIZE
+import com.example.core.domain.entities.tools.constants.StringConstants.COMMA_SIGN
 import com.example.core.domain.entities.tools.enums.RequestParams
 import com.example.core.domain.entities.tools.enums.RequestParams.PAGE
 import java.text.SimpleDateFormat
@@ -28,7 +29,7 @@ class GamesGetRequest : GetRequest {
         }
 
     class Builder {
-        private val separator = ","
+        private var name: String? = null
         private var dates: String? = null
         private var platforms: String? = null
         private var stores: String? = null
@@ -47,43 +48,45 @@ class GamesGetRequest : GetRequest {
             val defaultTimeZone: TimeZone = TimeZone.getTimeZone(defaultTimeZoneName)
         }
 
+        fun setName(name: String) = apply { this.name = name }
+
         fun setDates(startDate: Calendar, endDate: Calendar, timeZone: TimeZone = defaultTimeZone) =
             apply {
                 dates = getDateString(endDate, timeZone) +
-                        separator + getDateString(startDate, timeZone)
+                        COMMA_SIGN + getDateString(startDate, timeZone)
             }
 
         fun setDates(startDate: String, endDate: String) =
             apply {
-                dates = "$startDate$separator$endDate"
+                dates = "$startDate$COMMA_SIGN$endDate"
             }
 
         fun addPlatform(vararg platforms: String) = apply {
-            this.platforms = platforms.joinToString(separator = separator)
+            this.platforms = platforms.joinToString(separator = COMMA_SIGN)
         }
 
         fun addStores(vararg stores: String) = apply {
-            this.stores = stores.joinToString(separator = separator)
+            this.stores = stores.joinToString(separator = COMMA_SIGN)
         }
 
         fun addGenres(vararg genres: String) = apply {
-            this.genres = genres.joinToString(separator = separator)
+            this.genres = genres.joinToString(separator = COMMA_SIGN)
         }
 
         fun addDevelopers(vararg developers: String) = apply {
-            this.developers = developers.joinToString(separator = separator)
+            this.developers = developers.joinToString(separator = COMMA_SIGN)
         }
 
         fun addPublishers(vararg publishers: String) = apply {
-            this.publishers = publishers.joinToString(separator = separator)
+            this.publishers = publishers.joinToString(separator = COMMA_SIGN)
         }
 
         fun addTags(vararg tags: String) = apply {
-            this.tags = tags.joinToString(separator = separator)
+            this.tags = tags.joinToString(separator = COMMA_SIGN)
         }
 
         fun setMetacritic(minRating: String, maxRating: String) = apply {
-            metacritic = "$minRating$separator$maxRating"
+            metacritic = "$minRating$COMMA_SIGN$maxRating"
         }
 
         fun setPageSize(size: Int) = apply {
@@ -100,6 +103,7 @@ class GamesGetRequest : GetRequest {
 
         fun build(): GamesGetRequest {
             val request = mutableMapOf<String, Any>()
+            name?.let { request[RequestParams.SEARCH.slug] = it }
             dates?.let { request[RequestParams.DATES.slug] = it }
             platforms?.let { request[RequestParams.PLATFORMS.slug] = it }
             stores?.let { request[RequestParams.STORES.slug] = it }

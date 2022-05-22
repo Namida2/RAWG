@@ -8,6 +8,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
@@ -22,15 +23,13 @@ import com.example.core.domain.entities.tools.constants.Messages.checkNetworkCon
 import com.example.core.domain.entities.tools.constants.StringConstants.COLON_SIGN
 import com.example.core.domain.entities.tools.constants.StringConstants.HOURS
 import com.example.core.domain.entities.tools.constants.StringConstants.PC_SLUG
-import com.example.core.domain.entities.tools.extensions.createMessageAlertDialog
-import com.example.core.domain.entities.tools.extensions.logD
-import com.example.core.domain.entities.tools.extensions.showIfNotAdded
+import com.example.core.domain.entities.tools.extensions.*
+import com.example.core.domain.games.Game
 import com.example.core.presentaton.dialogs.ClosedQuestionDialog
 import com.example.core.presentaton.fragments.BaseFragment
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewAdapter
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.delegates.FiltersAdapterDelegate
-import com.example.core.domain.games.Game
 import com.example.featureGameDetails.R
 import com.example.featureGameDetails.databinding.FragmentGameDetailsBinding
 import com.example.featureGameDetails.databinding.LayoutRatingBinding
@@ -42,8 +41,6 @@ import com.example.featureGameDetails.presentation.viewPager.itemDecorations.Gam
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import kotlin.properties.Delegates
 
-// TODO: Complete the GameDetailsScreen, add liking on the GameDetailsFragment,
-//  complete filtering and searching //STOPPED//
 class GameDetailsFragment : BaseFragment() {
     private var defaultScale by Delegates.notNull<Float>()
     private var currentPageMargin by Delegates.notNull<Int>()
@@ -59,15 +56,10 @@ class GameDetailsFragment : BaseFragment() {
     private var descriptionMaxLines = DESCRIPTION_MAX_LINES
     private var binding: FragmentGameDetailsBinding? = null
     private lateinit var viewModel: GameDetailsViewModel
+    private var isLiked = false
     private val adapter = BaseRecyclerViewAdapter(
         listOf(GameScreenshotAdapterDelegate())
     )
-    private var closedQuestionDialog = ClosedQuestionDialog<Unit>(
-        onNegative = {
-
-        }, onPositive = {
-
-        })
 
     companion object {
         const val GAME_ID_TAG = "GAME_ID_TAG"
@@ -109,9 +101,16 @@ class GameDetailsFragment : BaseFragment() {
         observeViewModelStates()
         initViewPager()
         postponeEnterTransition()
-        view.doOnPreDraw { startPostponedEnterTransition(); animateFirstVisit() }
-        binding!!.ratingsContainer.setOnClickListener {
-            animateFirstVisit()
+        view.doOnPreDraw {
+            startPostponedEnterTransition(); animateFirstVisit(
+            preparePlaceholderViews()
+        )
+        }
+        binding!!.likeCardView.setOnClickListener {
+            viewModel.currentGame ?: return@setOnClickListener
+            viewModel.onLikeButtonClick()
+            isLiked = !isLiked
+            setLikeColorFilters(binding!!.likeIcon, isLiked)
         }
     }
 
@@ -135,22 +134,18 @@ class GameDetailsFragment : BaseFragment() {
         adapter.submitList(getPostImagesList())
     }
 
-    private fun animateFirstVisit() {
+    private fun animateFirstVisit(views: List<View>) {
         startEnterSpringAnimation(
-            listOf(
-                binding!!.appBar, binding!!.screenshotViewPager,
-                binding!!.ratingsContainer, binding!!.progressContainer,
-                binding!!.releasedInContainer, binding!!.aboutContainer,
-                binding!!.addedStatusContainer, binding!!.goToButtonsContainer,
-                binding!!.genresRecyclerView, binding!!.tagsRecyclerView,
-                binding!!.requirementsContainer, binding!!.storesRecyclerView,
-            ).onEach { view -> view.alpha = 0f },
-            springStartPosition = resources.getInteger(com.example.core.R.integer.smallSpringStartPosition)
-                .toFloat(),
-            delayBetweenAnimations = resources.getInteger(com.example.core.R.integer.smallAnimationDelay)
-                .toLong(),
-            startDelay = resources.getInteger(com.example.core.R.integer.defaultStartDelay)
-                .toLong(),
+            views.onEach { view -> view.alpha = 0f },
+            springStartPosition = resources.getInteger(
+                com.example.core.R.integer.smallSpringStartPosition
+            ).toFloat(),
+            delayBetweenAnimations = resources.getInteger(
+                com.example.core.R.integer.smallAnimationDelay
+            ).toLong(),
+            startDelay = resources.getInteger(
+                com.example.core.R.integer.defaultStartDelay
+            ).toLong(),
         )
     }
 
@@ -172,7 +167,9 @@ class GameDetailsFragment : BaseFragment() {
                 }
                 is GameDetailsVMEvents.OnError -> {
                     it.value.getData() ?: return@observe
-                    closedQuestionDialog.showIfNotAdded(parentFragmentManager, "")
+                    ClosedQuestionDialog<Unit> {
+                        viewModel.getDetails(gameId)
+                    }.show(parentFragmentManager, "")
                 }
             }
         }
@@ -181,7 +178,7 @@ class GameDetailsFragment : BaseFragment() {
     private fun observeViewModelStates() {
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
-                is GameDetailsVMEStates.GameDetailsExists -> iniViews(it.game)
+                is GameDetailsVMEStates.GameDetailsExists -> onGameDetailsExists(it.game)
                 is GameDetailsVMEStates.ReadingGameDetails -> Unit
                 is GameDetailsVMEStates.Default -> Unit
             }
@@ -190,18 +187,20 @@ class GameDetailsFragment : BaseFragment() {
 
     // TODO: Continue to visualise the game details data //STOPPED//
     @SuppressLint("SetTextI18n")
-    private fun iniViews(game: Game) {
+    private fun onGameDetailsExists(game: Game) {
         with(binding!!) {
-            gameName.text =             game.gameEntity.name.toString()
-            ratingTextView.text =       game.gameEntity.rating.toString()
-            releasedInTextViw.text =    game.gameEntity.released.toString()
-            metacriticTextView.text =   game.gameEntity.metacritic.toString()
-            twitchCountTextView.text =  game.gameDetails?.gameDetailsEntity?.twitchCount.toString()
-            redditCountTextView.text =  game.gameDetails?.gameDetailsEntity?.redditCount.toString()
+            isLiked = game.gameEntity.isLiked
+            setLikeColorFilters(likeIcon, game.gameEntity.isLiked)
+            gameName.text = game.gameEntity.name.toString()
+            ratingTextView.text = game.gameEntity.rating.toString()
+            releasedInTextViw.text = game.gameEntity.released.toString()
+            metacriticTextView.text = game.gameEntity.metacritic.toString()
+            twitchCountTextView.text = game.gameDetails?.gameDetailsEntity?.twitchCount.toString()
+            redditCountTextView.text = game.gameDetails?.gameDetailsEntity?.redditCount.toString()
             youtubeCountTextView.text = game.gameDetails?.gameDetailsEntity?.youtubeCount.toString()
-            descriptionTextView.text =  game.gameDetails?.gameDetailsEntity?.description
+            descriptionTextView.text = game.gameDetails?.gameDetailsEntity?.description
             showMoreButton.setOnClickListener {
-                descriptionMaxLines = if(descriptionMaxLines == DESCRIPTION_MAX_LINES) {
+                descriptionMaxLines = if (descriptionMaxLines == DESCRIPTION_MAX_LINES) {
                     showMoreButton.text = resources.getString(R.string.showLess)
                     Int.MAX_VALUE
                 } else {
@@ -210,42 +209,77 @@ class GameDetailsFragment : BaseFragment() {
                 }
                 descriptionTextView.maxLines = descriptionMaxLines
             }
-            yetStatusCount.text =       game.addedByStatus?.yet.toString()
-            ownedStatusCount.text =     game.addedByStatus?.owned.toString()
-            beatenStatusCount.text =    game.addedByStatus?.beaten.toString()
-            toPlayStatusCount.text =    game.addedByStatus?.toplay.toString()
-            playingStatusCount.text =   game.addedByStatus?.playing.toString()
-            droppeStatusdCount.text =   game.addedByStatus?.dropped.toString()
+            yetStatusCount.text = game.addedByStatus?.yet.toString()
+            ownedStatusCount.text = game.addedByStatus?.owned.toString()
+            beatenStatusCount.text = game.addedByStatus?.beaten.toString()
+            toPlayStatusCount.text = game.addedByStatus?.toplay.toString()
+            playingStatusCount.text = game.addedByStatus?.playing.toString()
+            droppeStatusdCount.text = game.addedByStatus?.dropped.toString()
 
-            ratingTop.text =         game.gameEntity.ratingTop.toString()
-            addedCount.text =        game.gameDetails?.gameDetailsEntity?.added.toString()
-            reviewsCount.text =      game.gameDetails?.gameDetailsEntity?.reviewsCount.toString()
-            playtime.text =          game.gameDetails?.gameDetailsEntity?.playtime.toString() + HOURS
-            textReviewsCount.text =  game.gameDetails?.gameDetailsEntity?.reviewsTextCount.toString()
-            achievementsCount.text = game.gameDetails?.gameDetailsEntity?.achievementsCount.toString()
+            ratingTop.text = game.gameEntity.ratingTop.toString()
+            addedCount.text = game.gameDetails?.gameDetailsEntity?.added.toString()
+            reviewsCount.text = game.gameDetails?.gameDetailsEntity?.reviewsCount.toString()
+            playtime.text = game.gameDetails?.gameDetailsEntity?.playtime.toString() + HOURS
+            textReviewsCount.text = game.gameDetails?.gameDetailsEntity?.reviewsTextCount.toString()
+            achievementsCount.text =
+                game.gameDetails?.gameDetailsEntity?.achievementsCount.toString()
             game.gameDetails?.platforms?.find {
                 it.slug == PC_SLUG
             }.let {
-                if(it == null) {
+                if (it == null) {
                     requirementsContainer.visibility = View.GONE
                     return@let
                 }
-                it.requirementsMinimum?.let { it -> requirementsMin.text = it }
-                it.requirementsRecommended?.let { it -> requirementsRec.text = it }
+                it.requirementsMinimum?.let { rec -> requirementsMin.text = rec }
+                it.requirementsRecommended?.let { rec -> requirementsRec.text = rec }
             }
             showRatings(game)
             showFilters(game)
+            placeholdersContainer.prepareFadeOutAnimation {
+                placeholdersContainer.visibility = View.GONE
+            }.start()
+            animateFirstVisit(prepareContentViews())
         }
+    }
+
+    private fun setLikeColorFilters(likeIcon: ImageView, isLiked: Boolean) {
+        if (isLiked) likeIcon.setIconColorFilter(requireContext(), com.example.core.R.color.rad)
+        else likeIcon.setIconColorFilter(requireContext(), com.example.core.R.color.grayLite)
     }
 
     private fun showFilters(game: Game) {
         with(binding!!) {
             showFilters(tagsContainer, tagsRecyclerView, tagsAdapter, viewModel.getGameTags(game))
-            showFilters(storesContainer, storesRecyclerView, storesAdapter, viewModel.getGameStores(game))
-            showFilters(genresContainer, genresRecyclerView, genresAdapter, viewModel.getGameGenres(game))
-            showFilters(developersContainer, developersRecyclerView, developersAdapter, viewModel.getGameDevelopers(game))
-            showFilters(publisherContainer, publishersRecyclerView, publishersAdapter, viewModel.getGamePublishers(game))
-            showFilters(releasedInContainer, releasedInRecyclerView, platformsAdapter, viewModel.getReleasedInPlatforms(game))
+            showFilters(
+                storesContainer,
+                storesRecyclerView,
+                storesAdapter,
+                viewModel.getGameStores(game)
+            )
+            showFilters(
+                genresContainer,
+                genresRecyclerView,
+                genresAdapter,
+                viewModel.getGameGenres(game)
+            )
+            showFilters(
+                developersContainer,
+                developersRecyclerView,
+                developersAdapter,
+                viewModel.getGameDevelopers(game)
+            )
+            showFilters(
+                publisherContainer,
+                publishersRecyclerView,
+                publishersAdapter,
+                viewModel.getGamePublishers(game)
+            )
+            showFilters(
+                releasedInContainer,
+                releasedInRecyclerView,
+                platformsAdapter,
+                viewModel.getReleasedInPlatforms(game)
+            )
         }
     }
 
@@ -276,10 +310,12 @@ class GameDetailsFragment : BaseFragment() {
             ratingLayout.ratingTitle.text = "${rating.title}$COLON_SIGN"
             ratingLayout.ratingCount.text = rating.count.toString()
             ratingLayout.root.doOnPreDraw {
-                val width = ratingLayout.progress.width / (largestValue / if (rating.count == 0) 1 else rating.count)
+                val width =
+                    ratingLayout.progress.width / (largestValue / if (rating.count == 0) 1 else rating.count)
                 ratingLayout.progress.layoutParams = LinearLayout.LayoutParams(
                     width.toInt(), ratingLayout.progress.height
                 )
+                ratingLayout.root.prepareFadeInAnimation().start()
             }
             binding!!.progressContainer.addView(ratingLayout.root)
         }
@@ -287,8 +323,36 @@ class GameDetailsFragment : BaseFragment() {
 
     private fun getPostImagesList(): List<GameScreenshot> = listOf(
         GameScreenshot(
-            BitmapFactory.decodeResource(resources, com.example.core.R.drawable.ic_screenshot_placeholder)
+            BitmapFactory.decodeResource(
+                resources,
+                com.example.core.R.drawable.ic_screenshot_placeholder
+            )
         )
+    )
+
+    private fun preparePlaceholderViews(): List<View> = listOf(
+        binding!!.appBarPlaceholder,
+        binding!!.viewPagerPlaceholder,
+        binding!!.ratingsPlaceholder,
+        binding!!.progressPlaceholders,
+        binding!!.releasedInPlaceholder,
+        binding!!.aboutPlaceholder,
+        binding!!.addedByStatusPlaceholder,
+        binding!!.genresPlaceholder,
+        binding!!.tagsPlaceholder,
+    )
+
+    private fun prepareContentViews(): List<View> = listOf(
+        binding!!.detailsContainer,
+        binding!!.appBar,
+        binding!!.screenshotViewPager,
+        binding!!.ratingsContainer,
+        binding!!.progressContainer,
+        binding!!.releasedInContainer,
+        binding!!.aboutContainer,
+        binding!!.addedByStatusContainer,
+        binding!!.genresContainer,
+        binding!!.tagsContainer,
     )
 
 }

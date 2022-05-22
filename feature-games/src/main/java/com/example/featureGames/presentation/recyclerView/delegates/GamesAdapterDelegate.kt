@@ -1,12 +1,16 @@
 package com.example.featureGames.presentation.recyclerView.delegates
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
+import com.example.core.domain.entities.tools.enums.GameScreenTags
 import com.example.core.domain.games.Game
 import com.example.core.domain.entities.tools.extensions.precomputeAndSetText
+import com.example.core.domain.entities.tools.extensions.setIconColorFilter
 import com.example.core.domain.entities.tools.extensions.startDefaultRecyclerViewItemAnimation
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.base.BaseViewHolder
@@ -22,6 +26,8 @@ interface GamesAdapterDelegateCallback {
 data class ClickedGameInfo(val gameRootView: View, val gameId: Int)
 
 class GamesAdapterDelegate(
+    // screenTag for transition name for material containerTransform
+    private val screenTag: GameScreenTags,
     private val callback: GamesAdapterDelegateCallback
 ) : RecyclerViewAdapterDelegate<Game, LayoutGameBinding> {
     override val layoutId: Int
@@ -34,6 +40,7 @@ class GamesAdapterDelegate(
         container: ViewGroup
     ): BaseViewHolder<Game, LayoutGameBinding> {
         return GamesViewGolder(
+            screenTag,
             LayoutGameBinding.inflate(inflater, container, false).also {
                 it.root.setOnClickListener { view ->
                     view?.tag?.let { tag -> callback.onGameClick(tag as ClickedGameInfo) }
@@ -61,6 +68,7 @@ class GamesAdapterDelegate(
 }
 
 class GamesViewGolder(
+    private val screenTag: GameScreenTags,
     private val binding: LayoutGameBinding
 ) : BaseViewHolder<Game, LayoutGameBinding>(binding) {
     override fun onBind(item: Game) {
@@ -69,27 +77,16 @@ class GamesViewGolder(
             root.tag = tag
             gamePreviewImage.tag = tag
             likeButtonContainer.tag = item
-            root.transitionName = item.gameEntity.id.toString()
+            root.transitionName = item.gameEntity.id.toString() + screenTag
             gameName.precomputeAndSetText(item.gameEntity.name)
             addedCount.precomputeAndSetText(item.gameDetails?.gameDetailsEntity?.added.toString())
             metacriticRating.precomputeAndSetText(item.gameEntity.metacritic.toString())
             gamePreviewImage.setImageBitmap(item.backgroundImage)
-            if (item.gameEntity.isLiked)
-                likeIcon.setColorFilter(
-                    ContextCompat.getColor(
-                        binding.root.context,
-                        com.example.core.R.color.rad
-                    ), android.graphics.PorterDuff.Mode.SRC_IN
-                )
-            else likeIcon.setColorFilter(
-                ContextCompat.getColor(
-                    binding.root.context,
-                    com.example.core.R.color.grayLite
-                ), android.graphics.PorterDuff.Mode.SRC_IN
-            )
+            if (item.gameEntity.isLiked) likeIcon.setIconColorFilter(root.context,  com.example.core.R.color.rad)
+            else likeIcon.setIconColorFilter(root.context, com.example.core.R.color.grayLite)
         }
-        if (item.backgroundImage == null)
-            binding.root.startDefaultRecyclerViewItemAnimation()
+        binding.root.startDefaultRecyclerViewItemAnimation()
     }
+
 }
 

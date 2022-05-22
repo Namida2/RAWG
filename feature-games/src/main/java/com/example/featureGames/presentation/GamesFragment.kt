@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.core.R
@@ -43,6 +44,21 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
     private lateinit var viewModel: GamesViewModel
     private lateinit var screenTag: GameScreenTags
     private lateinit var adapter: BaseRecyclerViewAdapter
+    // Equal false only after onResume
+    private var isOnPauseState = true
+    private var isFirstVisit = true
+
+    private val viewModelStatesObserver = object: Observer<GamesVMStats<Any>> {
+        override fun onChanged(state: GamesVMStats<Any>?) {
+            if(state == null || isOnPauseState) return
+            handleViewModelStateChanged(state)
+        }
+    }
+    private val singleEventsObserver = object: Observer<GamesVMSingleEvents<Any>> {
+        override fun onChanged(event: GamesVMSingleEvents<Any>?) {
+            handleViewModelSingleEvent(event ?: return)
+        }
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -53,24 +69,40 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
         smallMargin = resources.getDimensionPixelSize(R.dimen.small_margin)
         largeMargin = resources.getDimensionPixelSize(R.dimen.large_margin)
         topMargin = resources.getDimensionPixelSize(R.dimen.games_top_margin)
-        viewModel = ViewModelProvider(
-            this, ViewModelFactory(screenTag)
-        )[GamesViewModel::class.java].also { it.getGames() }
+        viewModel = ViewModelProvider(this, ViewModelFactory(screenTag))[GamesViewModel::class.java]
         adapter = BaseRecyclerViewAdapter(
             listOf(
-                GamesAdapterDelegate(this),
+                GamesAdapterDelegate(screenTag, this),
                 GamesPlaceholderDelegate(),
                 GameErrorPageAdapterDelegate(viewModel)
             )
         )
     }
 
+    // TODO: Complete the GameDetailsScreen, add liking on the GameDetailsFragment,
+    //  complete filtering and searching, save current tag to bundle //STOPPED//
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+    }
+
     override fun onResume() {
+        isOnPauseState = false
+        if(isFirstVisit) {
+            viewModel.getGames()
+            isFirstVisit = false
+        }
+        viewModel.singleEvents.value?.let { handleViewModelSingleEvent(it) }
+        viewModel.state.value?.let { handleViewModelStateChanged(it) }
         logE("onResume: $screenTag")
         super.onResume()
     }
 
     override fun onPause() {
+        isOnPauseState = true
         logE("onPause: $screenTag")
         super.onPause()
     }
@@ -101,46 +133,24 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
             )
             RecyclerViewScrollListener(gamesRecyclerView, viewModel)
         }
-        observeSingleEventsEvent()
-        observeOnStateChangedEvent()
+        viewModel.state.observe(viewLifecycleOwner, viewModelStatesObserver)
+        viewModel.singleEvents.observe(viewLifecycleOwner, singleEventsObserver)
     }
 
-    fun getOnNewRequestCallback(): OnNewGetRequestCallback<GamesGetRequest> = viewModel.also {
-        logD(screenTag.toString())
-    }
+    fun getOnNewRequestCallback(): OnNewGetRequestCallback<GamesGetRequest> = viewModel
+    fun makeNewRequest(request: GamesGetRequest) { viewModel.onNewRequest(request) }
 
-    private fun observeSingleEventsEvent() {
-        viewModel.singleEvents.observe(viewLifecycleOwner) {
-//            logD(screenTag.toString())
-//            logE("$this: observeSingleEventsEvent, screenTag: $screenTag")
-            when (it) {
-                is GamesVMSingleEvents.NewGamesEvent -> {
-                    // TODO: Submit list after debounce
-                    // TODO: Add a tabsLayout, filters and search bar //STOPPED//
-                    adapter.submitList(it.event.getData() ?: return@observe)
-                }
-                is GamesVMSingleEvents.NetworkConnectionLostEvent -> {
-                    it.event.getData() ?: return@observe
-                    requireContext().createMessageAlertDialog(checkNetworkConnectionMessage)
-                        ?.show(parentFragmentManager, "")
-                }
+    private fun handleViewModelStateChanged(state: GamesVMStats<Any>) {
+        when (state) {
+            is GamesVMStats.AllGamesFromRequestHaveBeenLoaded -> {
+                if (state.value.getData() == null || viewModel.snackBarIsShowing) return
+                showSnackBar(R.string.pageNotFoundMessage)
             }
-        }
-    }
-
-    private fun observeOnStateChangedEvent() {
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is GamesVMStats.AllGamesFromRequestHaveBeenLoaded -> {
-                    if (viewModel.snackBarIsShowing) return@observe
-                    showSnackBar(R.string.pageNotFoundMessage)
-                }
-                is GamesVMStats.Error -> {
-                    requireContext().createMessageAlertDialog(state.message)
-                        ?.show(parentFragmentManager, "")
-                }
-                is GamesVMStats.Default -> {}
+            is GamesVMStats.Error -> {
+                requireContext().createMessageAlertDialog(state.value.getData() ?: return)
+                    ?.show(parentFragmentManager, "")
             }
+            is GamesVMStats.Default -> Unit
         }
     }
 
@@ -156,13 +166,25 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
             }).setTextColor(ContextCompat.getColor(requireContext(), R.color.white)).show()
     }
 
+    private fun handleViewModelSingleEvent(event: GamesVMSingleEvents<Any>) {
+        when (event) {
+            is GamesVMSingleEvents.NewGamesEvent -> {
+                if(screenTag == GameScreenTags.MY_LIKES && isOnPauseState) return
+                adapter.submitList(event.event.getData() ?: return)
+            }
+            is GamesVMSingleEvents.NetworkConnectionLostEvent -> {
+                if(isOnPauseState || event.event.getData() == null) return
+                requireContext().createMessageAlertDialog(checkNetworkConnectionMessage)
+                    ?.show(parentFragmentManager, "")
+            }
+        }
+    }
+
     override fun onGameClick(clickedGameInfo: ClickedGameInfo) {
         GamesDepsStore.navigationCallback?.navigateTo(
             GameDetailsFragment().also {
                 it.arguments = bundleOf(GAME_ID_TAG to clickedGameInfo.gameId)
-            },
-            clickedGameInfo.gameRootView,
-            resources.getString(R.string.defaultEndTransitionName)
+            }, clickedGameInfo.gameRootView, resources.getString(R.string.defaultEndTransitionName)
         )
     }
 

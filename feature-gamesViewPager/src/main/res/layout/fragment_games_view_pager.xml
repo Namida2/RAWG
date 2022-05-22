@@ -28,10 +28,11 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
+                android:id="@+id/searchTools"
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/textInputEditText"
+                    android:id="@+id/searchEditText"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginTop="16dp"
@@ -66,11 +67,12 @@
                     app:cardBackgroundColor="@color/blackLite"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="8dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/textInputEditText"
+                    app:layout_constraintBottom_toBottomOf="@+id/searchEditText"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/textInputEditText">
+                    app:layout_constraintTop_toTopOf="@+id/searchEditText">
 
                     <ImageView
+                        android:id="@+id/filterIcon"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_gravity="center"

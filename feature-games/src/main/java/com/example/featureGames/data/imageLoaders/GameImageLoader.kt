@@ -4,8 +4,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.core.domain.entities.tools.constants.Constants.GAME_IMAGE_HEIGHT
-import com.example.core.domain.entities.tools.constants.Constants.GAME_IMAGE_WIDTH
+import com.example.core.domain.entities.tools.constants.Constants.GAME_PREVIEW_IMAGE_HEIGHT
+import com.example.core.domain.entities.tools.constants.Constants.GAME_PREVIEW_IMAGE_WIDTH
 import com.example.core.domain.entities.tools.extensions.logE
 import com.example.core.data.imageLoaders.interfaces.ImageUrlInfo
 import com.example.core.data.imageLoaders.interfaces.ImagesLoader
@@ -46,7 +46,7 @@ class GameImageLoader<T: ImageUrlInfo> @Inject constructor(
     ) {
         coroutineScope.launch(IO + coroutineExceptionHandler) {
             val bitmap = Glide.with(context).asBitmap()
-                .apply(RequestOptions().override(GAME_IMAGE_WIDTH, GAME_IMAGE_HEIGHT))
+                .apply(RequestOptions().override(imageUrlInfo.width, imageUrlInfo.width))
                 .load(imageUrlInfo.url).submit().get()
 //            logE("getImage: ${imageUrlInfo.gameId}")
             onImageLoaded(imageUrlInfo, bitmap)

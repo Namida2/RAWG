@@ -8,8 +8,10 @@
     android:transitionName="@string/defaultEndTransitionName">
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/detailsContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:alpha="0"
         android:animateLayoutChanges="true">
 
         <LinearLayout
@@ -277,7 +279,7 @@
             </LinearLayout>
             <!--AddingStatuses-->
             <LinearLayout
-                android:id="@+id/addedStatusContainer"
+                android:id="@+id/added_by_status_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -850,6 +852,7 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
+        android:alpha="0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
@@ -867,7 +870,6 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
                 <TextView
                     android:id="@+id/gameName"
                     android:layout_width="0dp"
@@ -880,7 +882,7 @@
                     android:maxLines="2"
                     android:text="Bloodstained: Ritual of the Night"
                     android:textColor="@color/white"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/likeCardView"
                     app:layout_constraintStart_toStartOf="parent"
@@ -901,16 +903,190 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
+                        android:id="@+id/likeIcon"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_heart_fill" />
+                        android:src="@drawable/ic_heart_fill"
+                        app:tint="@color/grayLite" />
                 </com.google.android.material.card.MaterialCardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/placeholdersContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/appBarPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            app:shimmer_auto_start="true"
+            app:shimmer_dropoff="200"
+            app:shimmer_duration="1400">
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/blackLite"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:rippleColor="@color/white"/>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/viewPagerPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="192dp"
+            app:shimmer_auto_start="true"
+            app:shimmer_dropoff="200"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="24dp"
+            app:shimmer_duration="1400">
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/blackLite"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:rippleColor="@color/white"/>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/ratingsPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:shimmer_auto_start="true"
+            app:shimmer_dropoff="200"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="24dp"
+            app:shimmer_duration="1400">
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/blackLite"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:rippleColor="@color/white"/>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/progressPlaceholders"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            app:shimmer_auto_start="true"
+            app:shimmer_dropoff="200"
+            android:layout_marginTop="24dp"
+            app:shimmer_duration="1400">
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/blackLite"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:rippleColor="@color/white"/>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/releasedInPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:shimmer_auto_start="true"
+            app:shimmer_dropoff="200"
+            android:layout_marginTop="24dp"
+            app:shimmer_duration="1400">
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/blackLite"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:rippleColor="@color/white"/>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/aboutPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:shimmer_auto_start="true"
+            app:shimmer_dropoff="200"
+            android:layout_marginTop="24dp"
+            app:shimmer_duration="1400">
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/blackLite"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:rippleColor="@color/white"/>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/addedByStatusPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:shimmer_auto_start="true"
+            app:shimmer_dropoff="200"
+            android:layout_marginTop="24dp"
+            app:shimmer_duration="1400">
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/blackLite"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:rippleColor="@color/white"/>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/genresPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:shimmer_auto_start="true"
+            app:shimmer_dropoff="200"
+            android:layout_marginTop="24dp"
+            app:shimmer_duration="1400">
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/blackLite"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:rippleColor="@color/white"/>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/tagsPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:shimmer_auto_start="true"
+            app:shimmer_dropoff="200"
+            android:layout_marginTop="24dp"
+            app:shimmer_duration="1400">
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/blackLite"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:rippleColor="@color/white"/>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

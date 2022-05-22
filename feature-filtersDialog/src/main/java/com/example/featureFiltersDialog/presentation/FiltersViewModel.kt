@@ -21,6 +21,7 @@ import com.example.core.domain.entities.tools.constants.StringConstants.DASH_SIG
 import com.example.core.domain.entities.tools.constants.StringConstants.EMPTY_STRING
 import com.example.core.domain.entities.tools.enums.RequestParams
 import com.example.core.domain.entities.tools.enums.getOrderedFields
+import com.example.core.domain.entities.tools.extensions.isEmptyField
 import com.example.core.domain.entities.tools.extensions.logD
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.featureFiltersDialog.domain.di.FiltersDepsStore.onNewRequestCallback
@@ -67,8 +68,10 @@ class FiltersViewModel(
         else onNewFilterItemsEvent(currentFilterItems)
     }
 
-    fun onAcceptButtonClick() {
+    fun onAcceptButtonClick(search: String) {
+        val name = if(isEmptyField(search)) null else search
         val builder = GamesGetRequest.Builder()
+        name?.let { builder.setName(it) }
         builder.setMetacritic(
             if (minMetacriticLastSaved == EMPTY_STRING)
                 MIN_METACRITIC.toString() else minMetacriticLastSaved,

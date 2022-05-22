@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.core.domain.entities.tools.constants.StringConstants.UNKNOWN_VIEW_MODEL_CLASS
 import com.example.featureGameDetails.domain.di.GameDetailsDepsStore
+import com.example.featureGameDetails.domain.di.GameDetailsDepsStore.appComponent
 import com.example.featureGameDetails.presentation.GameDetailsViewModel
 
 class ViewModelFactory(private val gameId: Int) : ViewModelProvider.Factory {
@@ -12,7 +13,8 @@ class ViewModelFactory(private val gameId: Int) : ViewModelProvider.Factory {
             GameDetailsViewModel::class.java ->
                 GameDetailsViewModel(
                     gameId,
-                    GameDetailsDepsStore.appComponent!!.provideGetGameDetailsUseCaseImplFactory()
+                    appComponent!!.provideGetGameDetailsUseCaseImplFactory(),
+                    appComponent!!.provideLikeGameUseCase()
                 )
             else -> throw IllegalArgumentException(UNKNOWN_VIEW_MODEL_CLASS)
         } as T

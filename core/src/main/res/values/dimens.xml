@@ -8,6 +8,8 @@
     <item name="defaultSpringStartPosition" type="integer">160</item>
     <item name="smallSpringStartPosition" type="integer">100</item>
     <item name="defaultAnimationDuration" type="integer">360</item>
+    <item name="smallAnimationDuration" type="integer">100</item>
+
     <item name="defaultAnimationDelay" type="integer">120</item>
     <item name="smallAnimationDelay" type="integer">20</item>
     <item name="defaultStartDelay" type="integer">200</item>
