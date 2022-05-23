@@ -34,9 +34,7 @@ class GetGameDetailsUseCaseImpl @AssistedInject constructor(
     private val mapper: GameDetailsResponse.Mapper<GameDetails>
 ) : GetGameDetailsUseCase, ImagesLoaderResultHandler<GameScreenshotUrlInfo> {
 
-    init {
-        imagesLoader.onResultHandler = this
-    }
+    init { imagesLoader.onResultHandler = this }
 
     private val _onNewScreenshotLoaded = MutableSharedFlow<Bitmap>(onBufferOverflow = BufferOverflow.SUSPEND)
     override val onNewScreenshotLoaded: SharedFlow<Bitmap> = _onNewScreenshotLoaded

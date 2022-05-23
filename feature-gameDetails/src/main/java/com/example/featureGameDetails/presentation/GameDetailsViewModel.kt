@@ -80,7 +80,6 @@ class GameDetailsViewModel(
                     if (currentGame == null) getDetails(gameId)
                     else getGameDetailsUseCase.onNetworkConnected(gameId)
                 else scopeForAsyncWork.coroutineContext.job.cancelChildren()
-
             }
         }
     }
@@ -92,7 +91,13 @@ class GameDetailsViewModel(
     }
 
     fun getDetails(gameId: Int) {
-        if (state.value != GameDetailsVMEStates.Default) return
+        if (state.value !is GameDetailsVMEStates.Default) {
+            if(state.value is GameDetailsVMEStates.GameDetailsExists)
+                _events.value = GameDetailsVMEvents.NewScreenshotsListEvent(
+                    SingleEvent(currentGameScreenshots.toMutableList())
+                )
+            return
+        }
         setNewState(GameDetailsVMEStates.ReadingGameDetails)
         scopeForAsyncWork.launch(exceptionHandler) {
             currentGame = getGameDetailsUseCase.getGameDetails(gameId)
@@ -104,7 +109,6 @@ class GameDetailsViewModel(
         filters?.map {
             BaseFilter(it.id.toString(), it.name ?: return@map null, it.slug)
         }?.filterNotNull() ?: emptyList()
-
 
     private suspend fun addScreenshots(list: List<Bitmap?>) {
         withContext(viewModelScope.coroutineContext) {
