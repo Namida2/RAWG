@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 data class FilterEntity(
     val id: Int,
     val name: String,
+    val slug: String,
     @ColumnInfo(name = "category_name")
     val categoryName: String
 )

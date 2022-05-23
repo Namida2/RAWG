@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.core.domain.entities.tools.constants.StringConstants.DEFAULT_START_DATE
 import com.example.core.domain.entities.tools.constants.StringConstants.EMPTY_STRING
+import com.example.core.domain.entities.tools.extensions.startEnterSpringAnimation
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewAdapter
 import com.example.featureFiltersDialog.databinding.DialogFiltersBinding
 import com.example.featureFiltersDialog.domain.ViewModelFactory
@@ -24,7 +26,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
     private var binding: DialogFiltersBinding? = null
-    // TODO: game detailScreen and implement the myLikes //STOPPED//
     private val viewModel by activityViewModels<FiltersViewModel> { ViewModelFactory }
     private lateinit var adapter: BaseRecyclerViewAdapter
 
@@ -68,6 +69,7 @@ class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
             releaseEndDateTextView.text = viewModel.endDateLastSaved
             metacriticMinTexView.setText(viewModel.minMetacriticLastSaved)
             metacriticMaxTexView.setText(viewModel.maxMetacriticLastSaved)
+            searchEditText.setText(viewModel.search)
             setListeners()
         }
         observeViewModelEvents()
@@ -124,6 +126,7 @@ class FiltersBottomSheetDialog : BottomSheetDialogFragment() {
             }
         }
     }
+
 
     private fun onNewMetacriticValue(value: String?, field: EditText) {
         value?.let { collectValue ->

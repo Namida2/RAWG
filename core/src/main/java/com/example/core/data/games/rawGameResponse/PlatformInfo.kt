@@ -1,5 +1,6 @@
 package com.example.core.data.games.rawGameResponse
 
+import com.example.core.data.games.gameDetailsResponce.Platform
 import com.google.gson.annotations.SerializedName
 
 class PlatformInfo {

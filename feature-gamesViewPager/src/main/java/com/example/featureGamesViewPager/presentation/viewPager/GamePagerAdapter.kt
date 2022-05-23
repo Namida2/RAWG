@@ -10,6 +10,7 @@ import com.example.core.domain.entities.tools.constants.Constants
 import com.example.core.domain.entities.tools.enums.GameScreenTags
 import com.example.core.domain.entities.tools.extensions.logD
 import com.example.featureGames.presentation.GamesFragment
+import com.example.featureGames.presentation.GamesFragment.Companion.SCREEN_TAG
 
 class GamePagerAdapter(fa: FragmentActivity, private val gameScreenTags: Array<GameScreenTags>) : FragmentStateAdapter(fa) {
     override fun getItemCount(): Int = Constants.NUM_PAGES
@@ -17,7 +18,7 @@ class GamePagerAdapter(fa: FragmentActivity, private val gameScreenTags: Array<G
         logD("ScreenSlidePagerAdapter, screenTag: ${gameScreenTags[position]}")
         GamesFragment().also {
             it.arguments = bundleOf(
-                it.hashCode().toString() to gameScreenTags[position]
+                SCREEN_TAG to gameScreenTags[position]
             )
         }
     }

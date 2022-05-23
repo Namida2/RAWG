@@ -10,9 +10,11 @@ object Constants {
     const val DEFAULT_SPAN_COUNT = 2
     const val DESCRIPTION_MAX_LINES = 8
     const val FILTERS_SPAN_COUNT = 3
-    const val GAME_PREVIEW_IMAGE_WIDTH = 200
-    const val GAME_PREVIEW_IMAGE_HEIGHT = 300
-    const val GAME_SCREENSHOT_WIDTH = 600
-    const val GAME_SCREENSHOT_HEIGHT = 400
+    const val GAME_PREVIEW_IMAGE_WIDTH = 240
+    const val GAME_PREVIEW_IMAGE_HEIGHT = 340
+    const val GAME_SCREENSHOT_WIDTH = 800
+    const val GAME_SCREENSHOT_HEIGHT = 500
+    const val START_DAY = 1
+    const val START_MONTH = 0
     const val MIN_ITEMS_COUNT_FOR_NEXT_PAGE = 10
 }

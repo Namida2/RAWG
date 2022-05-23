@@ -2,16 +2,20 @@ package com.example.featureGameDetails.presentation
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,7 +30,6 @@ import com.example.core.domain.entities.tools.constants.StringConstants.PC_SLUG
 import com.example.core.domain.entities.tools.extensions.*
 import com.example.core.domain.games.Game
 import com.example.core.presentaton.dialogs.ClosedQuestionDialog
-import com.example.core.presentaton.fragments.BaseFragment
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewAdapter
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewType
 import com.example.core.presentaton.recyclerView.delegates.FiltersAdapterDelegate
@@ -41,7 +44,7 @@ import com.example.featureGameDetails.presentation.viewPager.itemDecorations.Gam
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import kotlin.properties.Delegates
 
-class GameDetailsFragment : BaseFragment() {
+class GameDetailsFragment : Fragment() {
     private var defaultScale by Delegates.notNull<Float>()
     private var currentPageMargin by Delegates.notNull<Int>()
     private var pageLargeMargin by Delegates.notNull<Int>()
@@ -85,6 +88,10 @@ class GameDetailsFragment : BaseFragment() {
             duration =
                 resources.getInteger(com.example.core.R.integer.defaultAnimationDuration).toLong()
             scrimColor = ContextCompat.getColor(requireContext(), com.example.core.R.color.black)
+            containerColor =
+                ContextCompat.getColor(requireContext(), com.example.core.R.color.black)
+            endContainerColor =
+                ContextCompat.getColor(requireContext(), com.example.core.R.color.black)
         }
     }
 
@@ -102,14 +109,15 @@ class GameDetailsFragment : BaseFragment() {
         initViewPager()
         postponeEnterTransition()
         view.doOnPreDraw {
-            startPostponedEnterTransition(); animateFirstVisit(
-            preparePlaceholderViews()
-        )
+            startPostponedEnterTransition()
+            animateFirstVisit(
+                preparePlaceholderViews()
+            )
         }
         binding!!.likeCardView.setOnClickListener {
             viewModel.currentGame ?: return@setOnClickListener
-            viewModel.onLikeButtonClick()
             isLiked = !isLiked
+            viewModel.onLikeButtonClick(isLiked)
             setLikeColorFilters(binding!!.likeIcon, isLiked)
         }
     }
@@ -185,7 +193,6 @@ class GameDetailsFragment : BaseFragment() {
         }
     }
 
-    // TODO: Continue to visualise the game details data //STOPPED//
     @SuppressLint("SetTextI18n")
     private fun onGameDetailsExists(game: Game) {
         with(binding!!) {
@@ -217,28 +224,52 @@ class GameDetailsFragment : BaseFragment() {
             droppeStatusdCount.text = game.addedByStatus?.dropped.toString()
 
             ratingTop.text = game.gameEntity.ratingTop.toString()
-            addedCount.text = game.gameDetails?.gameDetailsEntity?.added.toString()
+            addedCount.text = game.gameEntity.added.toString()
             reviewsCount.text = game.gameDetails?.gameDetailsEntity?.reviewsCount.toString()
             playtime.text = game.gameDetails?.gameDetailsEntity?.playtime.toString() + HOURS
             textReviewsCount.text = game.gameDetails?.gameDetailsEntity?.reviewsTextCount.toString()
             achievementsCount.text =
                 game.gameDetails?.gameDetailsEntity?.achievementsCount.toString()
-            game.gameDetails?.platforms?.find {
-                it.slug == PC_SLUG
-            }.let {
-                if (it == null) {
-                    requirementsContainer.visibility = View.GONE
-                    return@let
-                }
-                it.requirementsMinimum?.let { rec -> requirementsMin.text = rec }
-                it.requirementsRecommended?.let { rec -> requirementsRec.text = rec }
+            game.gameDetails?.gameDetailsEntity?.website?.let {
+                setGoToButtonVisibility(goToWebsiteButton, it)
             }
+            game.gameDetails?.gameDetailsEntity?.redditUrl?.let {
+                setGoToButtonVisibility(goToRedditButton, it)
+            }
+            game.gameDetails?.gameDetailsEntity?.metacriticUrl?.let {
+                setGoToButtonVisibility(goToMetacriticButton, it)
+            }
+            toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+            setRequirements(game)
             showRatings(game)
             showFilters(game)
             placeholdersContainer.prepareFadeOutAnimation {
                 placeholdersContainer.visibility = View.GONE
             }.start()
             animateFirstVisit(prepareContentViews())
+        }
+    }
+
+    private fun setGoToButtonVisibility(button: Button, url: String) {
+        if(isEmptyField(url)) return
+        button.visibility = View.VISIBLE
+        button.setOnClickListener { onGoToButtonClick(url) }
+    }
+
+    private fun onGoToButtonClick(url: String) {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    }
+
+    private fun setRequirements(game: Game) {
+        game.platforms?.find {
+            it.slug == PC_SLUG
+        }.let {
+            if (it == null) {
+                binding!!.requirementsContainer.visibility = View.GONE
+                return@let
+            }
+            it.requirementsMinimum?.let { rec -> binding!!.requirementsMin.text = rec }
+            it.requirementsRecommended?.let { rec -> binding!!.requirementsRec.text = rec }
         }
     }
 
@@ -249,36 +280,41 @@ class GameDetailsFragment : BaseFragment() {
 
     private fun showFilters(game: Game) {
         with(binding!!) {
-            showFilters(tagsContainer, tagsRecyclerView, tagsAdapter, viewModel.getGameTags(game))
+            showFilters(
+                tagsContainer,
+                tagsRecyclerView,
+                tagsAdapter,
+                viewModel.getFilters(game.gameDetails?.tags)
+            )
             showFilters(
                 storesContainer,
                 storesRecyclerView,
                 storesAdapter,
-                viewModel.getGameStores(game)
+                viewModel.getFilters(game.gameDetails?.stores?.mapNotNull { it.store })
             )
             showFilters(
                 genresContainer,
                 genresRecyclerView,
                 genresAdapter,
-                viewModel.getGameGenres(game)
+                viewModel.getFilters(game.gameDetails?.genres)
             )
             showFilters(
                 developersContainer,
                 developersRecyclerView,
                 developersAdapter,
-                viewModel.getGameDevelopers(game)
+                viewModel.getFilters(game.gameDetails?.developers)
             )
             showFilters(
                 publisherContainer,
                 publishersRecyclerView,
                 publishersAdapter,
-                viewModel.getGamePublishers(game)
+                viewModel.getFilters(game.gameDetails?.publishers)
             )
             showFilters(
                 releasedInContainer,
                 releasedInRecyclerView,
                 platformsAdapter,
-                viewModel.getReleasedInPlatforms(game)
+                viewModel.getFilters(game.platforms)
             )
         }
     }

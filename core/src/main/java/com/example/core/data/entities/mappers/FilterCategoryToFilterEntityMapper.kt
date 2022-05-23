@@ -12,7 +12,8 @@ class FilterCategoryToFilterEntityMapper @Inject constructor() :
             FilterEntity(
                 id = it.id.toInt(),
                 name = it.name,
-                categoryName = value.categoryName
+                categoryName = value.categoryName,
+                slug = it.slug ?: ""
             )
         }
 

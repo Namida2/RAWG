@@ -28,6 +28,7 @@
             android:fontFamily="@font/montserrat_medium"
             android:paddingStart="12dp"
             android:paddingTop="8dp"
+            android:layout_marginEnd="12dp"
             android:paddingBottom="8dp"
             android:text="Playstaiong 5"
             android:textColor="@color/white"
@@ -37,8 +38,8 @@
             android:id="@+id/filterIcon"
             android:layout_width="12dp"
             android:layout_height="12dp"
+            android:visibility="gone"
             android:layout_gravity="center"
-            android:layout_marginStart="8dp"
             android:layout_marginEnd="12dp"
             android:background="@drawable/ic_playstation" />
 

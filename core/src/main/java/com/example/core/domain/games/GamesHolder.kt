@@ -134,8 +134,10 @@ class GamesHolder @Inject constructor() {
                 games.indexOfFirst { it.gameEntity.id == newGame.gameEntity.id }
             if (indexOnExistingGame == -1) games.add(newGame)
             else games[indexOnExistingGame] = newGame.copy(
-                gameEntity =
-                games[indexOnExistingGame].gameEntity.copy(isLiked = games[indexOnExistingGame].gameEntity.isLiked)
+                backgroundImage = games[indexOnExistingGame].backgroundImage,
+                gameEntity = games[indexOnExistingGame].gameEntity.copy(
+                    isLiked = games[indexOnExistingGame].gameEntity.isLiked
+                )
             )
         }
         logD("gamesCollectionSize: ${games.size}")

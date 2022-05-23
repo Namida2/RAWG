@@ -12,6 +12,7 @@
         tools:background="@color/black">
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/line"
             android:layout_width="match_parent"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="90dp"
@@ -47,6 +48,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <LinearLayout
+            android:id="@+id/textFiltersContainer"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -150,8 +156,10 @@
                 android:textCursorDrawable="@null"
                 android:textSize="12sp" />
         </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/buttonsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -185,6 +193,7 @@
         </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/filtersLine"
             android:layout_width="match_parent"
             app:cardBackgroundColor="@color/blackLite"
             app:cardCornerRadius="90dp"

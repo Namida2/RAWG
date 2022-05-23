@@ -13,7 +13,6 @@ import com.example.core.domain.entities.tools.SingleEvent
 import com.example.core.domain.entities.tools.constants.Constants
 import com.example.core.domain.entities.tools.constants.Constants.MIN_ITEMS_COUNT_FOR_NEXT_PAGE
 import com.example.core.domain.entities.tools.constants.Messages.allGamesHaveBeenLoadedMessage
-import com.example.core.domain.entities.tools.constants.StringConstants.GAME_NOT_FOUND
 import com.example.core.domain.entities.tools.constants.StringConstants.PAGE_NOT_FOUND
 import com.example.core.domain.entities.tools.enums.GameScreenTags
 import com.example.core.domain.entities.tools.enums.ResponseCodes
@@ -53,6 +52,7 @@ sealed interface GamesVMStats<out T> : Stateful.State {
     class Error(override val value: SingleEvent<out Message>) : GamesVMStats<Message>,
         Stateful.TerminatingState
 }
+
 sealed interface GamesVMSingleEvents<out T> {
     val event: SingleEvent<out T>
 
@@ -85,7 +85,6 @@ class GamesViewModel(
         listenChanges()
         viewModelScope.launch {
             networkConnectionChanges.collect { isConnected ->
-                logD(screenTag.toString())
                 if (isConnected) readGamesUseCase.onNetworkConnected(scopeForAsyncWork)
                 else {
                     scopeForAsyncWork.coroutineContext.job.cancelChildren()
@@ -96,7 +95,6 @@ class GamesViewModel(
     }
 
     fun getGames() {
-        logD("getGames: ${gameScreenInfo.tag}")
         if (gameScreenInfo.screenItems.isEmpty()) {
             currentScreenItems[gameScreenInfo.request.getPage()] = getPlaceholders().toMutableList()
             scopeForAsyncWork.launch {
@@ -142,7 +140,6 @@ class GamesViewModel(
 
 
     override fun onNewPosition(positions: IntArray, itemCount: Int) {
-        logD("onNewPosition: ${positions.toList()}, size: ${currentScreenItems.values.sumOf { it.size }}")
         val isMinVisiblePosition =
             currentScreenItems.values.sumOf { it.size } - positions[0] <= MIN_ITEMS_COUNT_FOR_NEXT_PAGE
         if (state.value is GamesVMStats.AllGamesFromRequestHaveBeenLoaded) return
@@ -220,8 +217,6 @@ class GamesViewModel(
 
     private fun addGamePageErrorPlaceHolder(page: Int) =
         with(page) {
-            // TODO: Update the gameScreenInfo for saving current
-            //  gameScreenItem when current viewModel is destroyed
             gameScreenInfo.screenItems[this] = GameScreenItemType.GameErrorPageType(this)
             currentScreenItems[this] = listOf(GameErrorPagePlaceHolder(this)).toMutableList()
             onNewGameScreenItemsEvent()
@@ -249,7 +244,7 @@ class GamesViewModel(
             if (type is Game) type.gameEntity.id == changes.game.gameEntity.id else false
         }.also { index ->
             if (index == -1) {
-                // onNewRequest but pictures from ald request
+                // onNewRequest but pictures come from an ald request
                 logE("onNewGamesBackgroundImageChanges: game not fond: ${changes.game.gameEntity.name}")
                 return
             }

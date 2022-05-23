@@ -6,6 +6,7 @@ import com.example.core.data.imageLoaders.GameScreenshotUrlInfo
 import com.example.core.data.imageLoaders.interfaces.ImagesLoader
 import com.example.core.data.imageLoaders.interfaces.ImagesLoaderResultHandler
 import com.example.core.data.imageLoaders.interfaces.LoadedImageInfo
+import com.example.core.domain.entities.tools.constants.Constants
 import com.example.core.domain.games.Game
 import com.example.core.domain.games.GameDetails
 import com.example.core.domain.games.GamesHolder
@@ -73,7 +74,10 @@ class GetGameDetailsUseCaseImpl @AssistedInject constructor(
         game.shortScreenshots?.forEach { (url, bitmap) ->
             if (bitmap != null) return@forEach
             imagesLoader.loadImage(
-                GameScreenshotUrlInfo(url, 0, game.gameEntity.id),
+                GameScreenshotUrlInfo(
+                    url, 0, game.gameEntity.id,
+                    Constants.GAME_SCREENSHOT_WIDTH,
+                    Constants.GAME_SCREENSHOT_HEIGHT, false),
                 coroutineScope
             )
         }

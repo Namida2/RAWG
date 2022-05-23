@@ -464,6 +464,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="0dp"
+                        android:visibility="gone"
                         android:drawableEnd="@drawable/ic_reddit"
                         android:text="Go to reddit"
                         android:textSize="12sp" />
@@ -471,6 +472,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/goToWebsiteButton"
                         style="@style/buttonStyle"
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="0dp"
@@ -490,18 +492,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="0dp"
+                        android:visibility="gone"
                         android:drawableEnd="@drawable/ic_metacritic"
                         android:text="Go to metacritic"
-                        android:textSize="12sp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/goToTrailerButton"
-                        style="@style/buttonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="0dp"
-                        android:drawableEnd="@drawable/ic_you_tube"
-                        android:text="Go to trailer"
                         android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -933,11 +926,12 @@
             android:layout_height="40dp"
             app:shimmer_auto_start="true"
             app:shimmer_dropoff="200"
+            android:layout_marginTop="8dp"
             app:shimmer_duration="1400">
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:cardBackgroundColor="@color/blackLite"
+                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="8dp"
                 app:rippleColor="@color/white"/>
@@ -956,7 +950,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:cardBackgroundColor="@color/blackLite"
+                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="8dp"
                 app:rippleColor="@color/white"/>
@@ -975,7 +969,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:cardBackgroundColor="@color/blackLite"
+                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="8dp"
                 app:rippleColor="@color/white"/>
@@ -993,7 +987,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:cardBackgroundColor="@color/blackLite"
+                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="8dp"
                 app:rippleColor="@color/white"/>
@@ -1011,7 +1005,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:cardBackgroundColor="@color/blackLite"
+                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="8dp"
                 app:rippleColor="@color/white"/>
@@ -1028,7 +1022,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:cardBackgroundColor="@color/blackLite"
+                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="8dp"
                 app:rippleColor="@color/white"/>
@@ -1045,7 +1039,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:cardBackgroundColor="@color/blackLite"
+                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="8dp"
                 app:rippleColor="@color/white"/>
@@ -1062,7 +1056,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:cardBackgroundColor="@color/blackLite"
+                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="8dp"
                 app:rippleColor="@color/white"/>
@@ -1079,7 +1073,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:cardBackgroundColor="@color/blackLite"
+                app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="8dp"
                 app:rippleColor="@color/white"/>

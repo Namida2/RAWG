@@ -14,7 +14,6 @@ data class GameDetailsEntity(
     var description: String? = null,
     var released: String? = null,
     var website: String? = null,
-    var added: Int = 0,
     var playtime: Int = 0,
     var achievementsCount: Int = 0,
     var redditUrl: String? = null,
@@ -32,8 +31,6 @@ data class GameDetails(
     // Always sorted
     @Relation(parentColumn = "gameId", entityColumn = "gameId")
     var ratings: List<MyRating>? = null,
-    @Ignore
-    var platforms: List<Platform>? = null,
     @Ignore
     var stores: List<Store>? = null,
     @Ignore
@@ -55,25 +52,11 @@ data class GameDetails(
                         id, Html.fromHtml(
                             description, Html.FROM_HTML_MODE_LEGACY
                         ).toString().trim(), released,
-                        website, added,
-                        playtime, achievementsCount,
+                        website, playtime, achievementsCount,
                         redditUrl, redditCount,
                         twitchCount, youtubeCount
                     ),
                     getMyRatings(id, ratings),
-                    platforms?.mapNotNull { platformInfo ->
-                        platformInfo.requirements?.minimum?.let {
-                            platformInfo.platform?.requirementsMinimum = Html.fromHtml(
-                                it, Html.FROM_HTML_MODE_LEGACY
-                            ).toString().trim()
-                        }
-                        platformInfo.requirements?.recommended?.let {
-                            platformInfo.platform?.requirementsRecommended = Html.fromHtml(
-                                it, Html.FROM_HTML_MODE_LEGACY
-                            ).toString().trim()
-                        }
-                        platformInfo.platform
-                    },
                     stores?.onEach {
                         it.store?.let { store ->
                             it.id  = store.id

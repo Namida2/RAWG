@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.core.domain.entities.tools.SingleEvent
-import com.example.core.domain.entities.filters.Filter
+import com.example.core.domain.entities.filters.BaseFilter
 import com.example.core.domain.entities.filters.FilterCategory
 import com.example.core.domain.entities.filters.FilterCategoryName
 import com.example.core.domain.entities.filters.FiltersHolder
@@ -52,6 +52,7 @@ class FiltersViewModel(
     private val filtersHolder: FiltersHolder
 ) : ViewModel(), FiltersContainerAdapterDelegateCallback {
 
+    var search: String = ""
     lateinit var minMetacriticLastSaved: String
     lateinit var maxMetacriticLastSaved: String
     lateinit var startDateLastSaved: String
@@ -70,8 +71,11 @@ class FiltersViewModel(
 
     fun onAcceptButtonClick(search: String) {
         val name = if(isEmptyField(search)) null else search
+        this.search = name ?: EMPTY_STRING
         val builder = GamesGetRequest.Builder()
-        name?.let { builder.setName(it) }
+        name?.let {
+            builder.setName(it)
+        }
         builder.setMetacritic(
             if (minMetacriticLastSaved == EMPTY_STRING)
                 MIN_METACRITIC.toString() else minMetacriticLastSaved,
@@ -105,10 +109,10 @@ class FiltersViewModel(
             newList.add(
                 filterCategory.copy(
                     filters = run {
-                        val newFilters = mutableListOf<Filter>()
+                        val newFilters = mutableListOf<BaseFilter>()
                         filterCategory.filters.forEach { filter ->
                             newFilters.add(
-                                Filter(filter.categoryName, filter.name, filter.id)
+                                BaseFilter(filter.categoryName, filter.name, filter.id)
                             )
                         }; newFilters
                     }

@@ -1,6 +1,5 @@
 package com.example.featureGames.presentation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,14 +13,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.core.R
 import com.example.core.domain.entities.requests.GamesGetRequest
-import com.example.core.domain.games.Game
-import com.example.core.domain.interfaces.OnNewGetRequestCallback
 import com.example.core.domain.entities.tools.constants.Constants.DEFAULT_SPAN_COUNT
 import com.example.core.domain.entities.tools.constants.Messages.checkNetworkConnectionMessage
 import com.example.core.domain.entities.tools.enums.GameScreenTags
 import com.example.core.domain.entities.tools.extensions.createMessageAlertDialog
-import com.example.core.domain.entities.tools.extensions.logD
 import com.example.core.domain.entities.tools.extensions.logE
+import com.example.core.domain.games.Game
+import com.example.core.domain.interfaces.OnNewGetRequestCallback
 import com.example.core.presentaton.recyclerView.base.BaseRecyclerViewAdapter
 import com.example.featureGameDetails.presentation.GameDetailsFragment
 import com.example.featureGameDetails.presentation.GameDetailsFragment.Companion.GAME_ID_TAG
@@ -40,31 +38,31 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
     private var largeMargin by Delegates.notNull<Int>()
     private var topMargin by Delegates.notNull<Int>()
     private var binding: FragmentGamesBinding? = null
-
     private lateinit var viewModel: GamesViewModel
     private lateinit var screenTag: GameScreenTags
     private lateinit var adapter: BaseRecyclerViewAdapter
     // Equal false only after onResume
     private var isOnPauseState = true
     private var isFirstVisit = true
-
-    private val viewModelStatesObserver = object: Observer<GamesVMStats<Any>> {
+    private val viewModelStatesObserver = object : Observer<GamesVMStats<Any>> {
         override fun onChanged(state: GamesVMStats<Any>?) {
-            if(state == null || isOnPauseState) return
+            if (state == null || isOnPauseState) return
             handleViewModelStateChanged(state)
         }
     }
-    private val singleEventsObserver = object: Observer<GamesVMSingleEvents<Any>> {
+    private val singleEventsObserver = object : Observer<GamesVMSingleEvents<Any>> {
         override fun onChanged(event: GamesVMSingleEvents<Any>?) {
             handleViewModelSingleEvent(event ?: return)
         }
     }
+    companion object { const val SCREEN_TAG = "SCREEN_TAG" }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        screenTag = arguments?.get(
-            hashCode().toString()
-        ) as? GameScreenTags ?: throw IllegalArgumentException()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        screenTag = if (savedInstanceState == null) arguments?.get(SCREEN_TAG) as? GameScreenTags
+            ?: throw IllegalArgumentException()
+        else savedInstanceState.getSerializable(SCREEN_TAG) as? GameScreenTags
+            ?: throw IllegalArgumentException()
         logE("onAttach, screenTag: $screenTag")
         smallMargin = resources.getDimensionPixelSize(R.dimen.small_margin)
         largeMargin = resources.getDimensionPixelSize(R.dimen.large_margin)
@@ -77,39 +75,6 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
                 GameErrorPageAdapterDelegate(viewModel)
             )
         )
-    }
-
-    // TODO: Complete the GameDetailsScreen, add liking on the GameDetailsFragment,
-    //  complete filtering and searching, save current tag to bundle //STOPPED//
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onResume() {
-        isOnPauseState = false
-        if(isFirstVisit) {
-            viewModel.getGames()
-            isFirstVisit = false
-        }
-        viewModel.singleEvents.value?.let { handleViewModelSingleEvent(it) }
-        viewModel.state.value?.let { handleViewModelStateChanged(it) }
-        logE("onResume: $screenTag")
-        super.onResume()
-    }
-
-    override fun onPause() {
-        isOnPauseState = true
-        logE("onPause: $screenTag")
-        super.onPause()
-    }
-
-    override fun onStop() {
-        logE("onStop: $screenTag")
-        super.onStop()
     }
 
     override fun onCreateView(
@@ -138,7 +103,9 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
     }
 
     fun getOnNewRequestCallback(): OnNewGetRequestCallback<GamesGetRequest> = viewModel
-    fun makeNewRequest(request: GamesGetRequest) { viewModel.onNewRequest(request) }
+    fun makeNewRequest(request: GamesGetRequest) {
+        viewModel.onNewRequest(request)
+    }
 
     private fun handleViewModelStateChanged(state: GamesVMStats<Any>) {
         when (state) {
@@ -169,11 +136,11 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
     private fun handleViewModelSingleEvent(event: GamesVMSingleEvents<Any>) {
         when (event) {
             is GamesVMSingleEvents.NewGamesEvent -> {
-                if(screenTag == GameScreenTags.MY_LIKES && isOnPauseState) return
+                if (screenTag == GameScreenTags.MY_LIKES && isOnPauseState) return
                 adapter.submitList(event.event.getData() ?: return)
             }
             is GamesVMSingleEvents.NetworkConnectionLostEvent -> {
-                if(isOnPauseState || event.event.getData() == null) return
+                if (isOnPauseState || event.event.getData() == null) return
                 requireContext().createMessageAlertDialog(checkNetworkConnectionMessage)
                     ?.show(parentFragmentManager, "")
             }
@@ -191,6 +158,34 @@ class GamesFragment : Fragment(), GamesAdapterDelegateCallback {
     override fun onGameLikeButtonClick(game: Game) {
         viewModel.onLikeButtonClick(game)
     }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(SCREEN_TAG, screenTag)
+    }
+
+    override fun onResume() {
+        isOnPauseState = false
+        if (isFirstVisit) {
+            viewModel.getGames()
+            isFirstVisit = false
+        }
+        viewModel.singleEvents.value?.let { handleViewModelSingleEvent(it) }
+        viewModel.state.value?.let { handleViewModelStateChanged(it) }
+        logE("onResume: $screenTag")
+        super.onResume()
+    }
+
+    override fun onPause() {
+        isOnPauseState = true
+        logE("onPause: $screenTag")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        logE("onStop: $screenTag")
+        super.onStop()
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

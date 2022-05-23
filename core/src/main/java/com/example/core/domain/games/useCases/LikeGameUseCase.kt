@@ -47,7 +47,7 @@ class LikeGameUseCaseImpl @Inject constructor(
         coroutineScope.launch {
             game.gameDetails?.gameDetailsEntity?.let { gameDetailsEntityDao.insert(it) }
             game.gameDetails?.ratings?.let { myRatingDao.insert(*it.toTypedArray()) }
-            game.gameDetails?.platforms?.let { platformsDao.insert(*it.toTypedArray()) }
+            game.platforms?.let { platformsDao.insert(*it.toTypedArray()) }
             game.gameDetails?.stores?.let { storesDao.insert(*it.toTypedArray()) }
             game.gameDetails?.developers?.let { developersDao.insert(*it.toTypedArray()) }
             game.gameDetails?.developers?.let { developersDao.insert(*it.toTypedArray()) }
@@ -66,7 +66,7 @@ class LikeGameUseCaseImpl @Inject constructor(
                 if (it == null) return@also
                 genresForGamesDao.insert(*it.toTypedArray())
             }
-            game.gameDetails?.platforms?.map {
+            game.platforms?.map {
                 PlatformsForGames(game.gameEntity.id, it.id)
             }.also {
                 if (it == null) return@also

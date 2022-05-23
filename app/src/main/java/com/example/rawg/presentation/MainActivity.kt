@@ -11,19 +11,22 @@ import com.example.core.domain.entities.tools.extensions.createMessageAlertDialo
 import com.example.core.domain.entities.tools.extensions.logD
 import com.example.featureGamesViewPager.domain.di.GamesViewPagerDepsStore
 import com.example.featureGamesViewPager.presentation.GamesViewPagerFragment
+import com.example.featureGamesViewPager.presentation.GamesViewPagerFragment.Companion.GAMES_VIEW_PAGER_FRAGMENT_TAG
 import com.example.rawg.databinding.ActivityMainBinding
 import com.example.rawg.domain.ViewModelFactory
 import com.example.rawg.domain.tools.appComponent
 
-// TODO: Add a GameScreenDetails, like games and a localStorage //STOPPED//
 class MainActivity : AppCompatActivity(), NavigationCallback {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
         getViewModel()
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        GamesViewPagerDepsStore.navigationCallback = this
+        if(supportFragmentManager.findFragmentByTag(GAMES_VIEW_PAGER_FRAGMENT_TAG) != null) return
         observeViewModelStates()
         viewModel.readFiltersAndMyLikes()
     }
@@ -41,10 +44,9 @@ class MainActivity : AppCompatActivity(), NavigationCallback {
                     createMessageAlertDialog(checkNetworkConnectionMessage)
                         ?.show(supportFragmentManager, "")
                 is MainVMStates.FiltersLoadedSuccessfully -> {
-                    setContentView(binding.root)
-                    GamesViewPagerDepsStore.navigationCallback = this
-                    supportFragmentManager.beginTransaction()
-                        .replace(binding.root.id, GamesViewPagerFragment()).commitNow()
+                    supportFragmentManager.beginTransaction().replace(
+                        binding.root.id, GamesViewPagerFragment(), GAMES_VIEW_PAGER_FRAGMENT_TAG
+                    ).commitNow()
                 }
                 is MainVMStates.Error -> {
                     createMessageAlertDialog(it.message)

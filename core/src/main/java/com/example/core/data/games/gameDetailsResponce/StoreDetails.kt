@@ -1,11 +1,12 @@
 package com.example.core.data.games.gameDetailsResponce
 
+import com.example.core.domain.entities.filters.interfaces.Filter
 import com.google.gson.annotations.SerializedName
 
-class StoreDetails {
-    var id = 0
-    var name: String? = null
-    var slug: String? = null
+class StoreDetails: Filter {
+    override var id = 0
+    override var name: String? = null
+    override var slug: String? = null
     var domain: String? = null
     @SerializedName("games_count")
     var gamesCount = 0

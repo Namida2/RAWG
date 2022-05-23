@@ -34,7 +34,7 @@ class ReadGamesFromLocalStorageUseCaseImpl @AssistedInject constructor(
         if (currentJob != null) coroutineScope.coroutineContext.job.cancelChildren()
         currentJob = coroutineScope.launch {
             gameEntitiesDao.readAll()?.onEach { game ->
-                game.gameDetails?.platforms = platformsDao.readByGameId(game.gameEntity.id)
+                game.platforms = platformsDao.readByGameId(game.gameEntity.id)
                 game.gameDetails?.stores = storesDao.readByGameId(game.gameEntity.id)
                 game.gameDetails?.developers = developersDao.readByGameId(game.gameEntity.id)
                 game.gameDetails?.genres = genresDao.readByGameId(game.gameEntity.id)

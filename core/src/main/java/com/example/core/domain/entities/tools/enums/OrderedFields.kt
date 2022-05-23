@@ -1,6 +1,6 @@
 package com.example.core.domain.entities.tools.enums
 
-import com.example.core.domain.entities.filters.Filter
+import com.example.core.domain.entities.filters.BaseFilter
 import com.example.core.domain.entities.tools.constants.StringConstants.DASH_SIGN
 
 enum class OrderedFields(val orderingField: String) {
@@ -13,19 +13,21 @@ enum class OrderedFields(val orderingField: String) {
     METACRITIC(RequestParams.METACRITIC.slug)
 }
 
-fun getOrderedFields(): List<Filter> {
+fun getOrderedFields(): List<BaseFilter> {
     val orderedFiledTitle = RequestParams.ORDERING.myName
     return OrderedFields.values().flatMap {
         listOf(
-            Filter(
+            BaseFilter(
                 id = it.orderingField,
                 name = it.orderingField,
                 categoryName = orderedFiledTitle,
+                slug = it.orderingField,
             ),
-            Filter(
+            BaseFilter(
                 id = it.reverseOrder,
                 name = DASH_SIGN + it.orderingField,
                 categoryName = orderedFiledTitle,
+                slug = it.orderingField,
             )
         )
     }

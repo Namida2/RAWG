@@ -8,6 +8,7 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import com.example.core.domain.entities.tools.enums.GameScreenTags
+import com.example.core.domain.entities.tools.enums.PlatformsEnum
 import com.example.core.domain.games.Game
 import com.example.core.domain.entities.tools.extensions.precomputeAndSetText
 import com.example.core.domain.entities.tools.extensions.setIconColorFilter
@@ -79,13 +80,34 @@ class GamesViewGolder(
             likeButtonContainer.tag = item
             root.transitionName = item.gameEntity.id.toString() + screenTag
             gameName.precomputeAndSetText(item.gameEntity.name)
-            addedCount.precomputeAndSetText(item.gameDetails?.gameDetailsEntity?.added.toString())
+            addedCount.precomputeAndSetText(item.gameEntity.added.toString())
             metacriticRating.precomputeAndSetText(item.gameEntity.metacritic.toString())
             gamePreviewImage.setImageBitmap(item.backgroundImage)
             if (item.gameEntity.isLiked) likeIcon.setIconColorFilter(root.context,  com.example.core.R.color.rad)
             else likeIcon.setIconColorFilter(root.context, com.example.core.R.color.grayLite)
+            setIconVisibility(item)
         }
         binding.root.startDefaultRecyclerViewItemAnimation()
+    }
+
+    private fun setIconVisibility(game: Game) {
+        game.platforms?.forEach {
+            when(it.slug) {
+                PlatformsEnum.WINDOWS.slug ->         binding.icPc.visibility = View.VISIBLE
+                PlatformsEnum.PLAYSTATION5.slug ->    binding.icPlaystation.visibility = View.VISIBLE
+                PlatformsEnum.PLAYSTATION4.slug ->    binding.icPlaystation.visibility = View.VISIBLE
+                PlatformsEnum.PLAYSTATION3.slug ->    binding.icPlaystation.visibility = View.VISIBLE
+                PlatformsEnum.PLAYSTATION2.slug ->    binding.icPlaystation.visibility = View.VISIBLE
+                PlatformsEnum.PLAYSTATION.slug ->     binding.icPlaystation.visibility = View.VISIBLE
+                PlatformsEnum.XBOX_ONE.slug ->        binding.icXbox.visibility = View.VISIBLE
+                PlatformsEnum.XBOX_360.slug ->        binding.icXbox.visibility = View.VISIBLE
+                PlatformsEnum.XBOX.slug ->            binding.icXbox.visibility = View.VISIBLE
+                PlatformsEnum.XBOX_SERIES_X.slug ->   binding.icXbox.visibility = View.VISIBLE
+                PlatformsEnum.NINTENDO_SWITCH.slug -> binding.icNintendoSwitch.visibility = View.VISIBLE
+                PlatformsEnum.IOS.slug ->             binding.icIOS.visibility = View.VISIBLE
+                PlatformsEnum.ANDROID.slug ->         binding.icIOS.visibility = View.VISIBLE
+            }
+        }
     }
 
 }

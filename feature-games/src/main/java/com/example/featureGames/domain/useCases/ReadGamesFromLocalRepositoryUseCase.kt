@@ -88,21 +88,16 @@ class ReadGamesFromLocalRepositoryUseCase @AssistedInject constructor(
     }
 
     private fun loadImage(page: Int, game: Game) {
-//        logD("withContext.loadImage: $page, gameName: ${game.name}")
         if (game.backgroundImage != null || game.gameEntity.backgroundImageUrl == null) return
         imagesLoader.loadImage(
             GameScreenshotUrlInfo(
                 game.gameEntity.backgroundImageUrl!!,
                 page, game.gameEntity.id,
-                GAME_SCREENSHOT_WIDTH,
-                GAME_SCREENSHOT_HEIGHT
             ), coroutineScope
         )
     }
 
     override suspend fun onImageLoaded(loadedImageInfo: LoadedImageInfo<GameScreenshotUrlInfo>) {
-//        logD("loadImageFromPage: ${loadedImageInfo.imageUrlInfo.page}")
-//        logD("bitmap: ${loadedImageInfo.bitmap}")
         gamesHolder.setBitmapForGameById(
             screenTag,
             loadedImageInfo.imageUrlInfo.page,

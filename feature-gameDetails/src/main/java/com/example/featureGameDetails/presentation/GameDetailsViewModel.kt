@@ -5,7 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.core.domain.entities.filters.Filter
+import com.example.core.domain.entities.filters.BaseFilter
+import com.example.core.domain.entities.filters.interfaces.Filter
 import com.example.core.domain.entities.tools.Message
 import com.example.core.domain.entities.tools.NetworkConnectionListener
 import com.example.core.domain.entities.tools.SingleEvent
@@ -84,10 +85,10 @@ class GameDetailsViewModel(
         }
     }
 
-    fun onLikeButtonClick() {
+    fun onLikeButtonClick(isLiked: Boolean) {
         currentGame ?: return
-        if (currentGame!!.gameEntity.isLiked) likeGameUseCase.unlikeGame(currentGame!!)
-        else likeGameUseCase.likeGame(currentGame!!)
+        if (isLiked) likeGameUseCase.likeGame(currentGame!!)
+        else likeGameUseCase.unlikeGame(currentGame!!)
     }
 
     fun getDetails(gameId: Int) {
@@ -95,37 +96,15 @@ class GameDetailsViewModel(
         setNewState(GameDetailsVMEStates.ReadingGameDetails)
         scopeForAsyncWork.launch(exceptionHandler) {
             currentGame = getGameDetailsUseCase.getGameDetails(gameId)
-            getGameStores(currentGame!!)
             setNewState(GameDetailsVMEStates.GameDetailsExists(currentGame!!))
             addScreenshots(currentGame?.shortScreenshots?.values?.toList() ?: return@launch)
         }
     }
+    fun getFilters(filters: List<Filter>?): List<BaseRecyclerViewType> =
+        filters?.map {
+            BaseFilter(it.id.toString(), it.name ?: return@map null, it.slug)
+        }?.filterNotNull() ?: emptyList()
 
-    // TODO: Remove this
-    fun getReleasedInPlatforms(game: Game): List<BaseRecyclerViewType> =
-        game.gameDetails?.platforms?.map {
-            Filter(it.id.toString(), it.name ?: return@map null)
-        }?.filterNotNull() ?: emptyList()
-    fun getGameGenres(game: Game): List<BaseRecyclerViewType> =
-        game.gameDetails?.genres?.map {
-            Filter(it.id.toString(), it.name ?: return@map null)
-        }?.filterNotNull() ?: emptyList()
-    fun getGameTags(game: Game): List<BaseRecyclerViewType> =
-        game.gameDetails?.tags?.map {
-            Filter(it.id.toString(), it.name ?: return@map null)
-        }?.filterNotNull() ?: emptyList()
-    fun getGameDevelopers(game: Game): List<BaseRecyclerViewType> =
-        game.gameDetails?.tags?.map {
-            Filter(it.id.toString(), it.name ?: return@map null)
-        }?.filterNotNull() ?: emptyList()
-    fun getGamePublishers(game: Game): List<BaseRecyclerViewType> =
-        game.gameDetails?.publishers?.map {
-            Filter(it.id.toString(), it.name ?: return@map null)
-        }?.filterNotNull() ?: emptyList()
-    fun getGameStores(game: Game): List<BaseRecyclerViewType> =
-        game.gameDetails?.stores?.map {
-            Filter(it.store?.id.toString(), it.store?.name ?: return@map null)
-        }?.filterNotNull() ?: emptyList()
 
     private suspend fun addScreenshots(list: List<Bitmap?>) {
         withContext(viewModelScope.coroutineContext) {

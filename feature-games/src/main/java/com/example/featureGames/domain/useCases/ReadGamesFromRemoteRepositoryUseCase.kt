@@ -12,6 +12,7 @@ import com.example.core.domain.games.*
 import com.example.core.domain.games.interfaces.GameScreenItemType
 import com.example.core.domain.entities.tools.enums.GameScreenTags
 import com.example.core.domain.entities.tools.extensions.logD
+import com.example.core.domain.entities.tools.extensions.logE
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueue
 import com.example.featureGames.data.requestQueue.interfaces.RequestQueueResultHandler
 import com.example.featureGames.data.requestQueue.interfaces.RequestsQueueChanges
@@ -103,11 +104,8 @@ class ReadGamesFromRemoteRepositoryUseCase @AssistedInject constructor(
     }
 
     private fun loadImage(page: Int, game: RAWGame) {
-//        logD("withContext.loadImage: $page, gameName: ${game.name}")
-        game.backgroundImage ?: run {
-            logD("background is null for: ${game.name}")
-            return
-        }
+        val existingGame = gamesHolder.getGameById(game.id)
+        if(existingGame.backgroundImage != null || game.backgroundImage == null) return
         imagesLoader.loadImage(
             GameScreenshotUrlInfo(
                 game.backgroundImage!!,

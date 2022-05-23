@@ -10,4 +10,5 @@ data class GameScreenshotUrlInfo(
     val gameId: Int,
     override val width: Int = GAME_PREVIEW_IMAGE_HEIGHT,
     override val height: Int = GAME_PREVIEW_IMAGE_WIDTH,
+    override val needToCenterCrop: Boolean = true
 ) : ImageUrlInfo

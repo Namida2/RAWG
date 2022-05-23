@@ -45,11 +45,13 @@ class GameImageLoader<T: ImageUrlInfo> @Inject constructor(
         coroutineScope: CoroutineScope
     ) {
         coroutineScope.launch(IO + coroutineExceptionHandler) {
-            val bitmap = Glide.with(context).asBitmap()
+            var bitmap = Glide.with(context).asBitmap()
                 .apply(RequestOptions().override(imageUrlInfo.width, imageUrlInfo.width))
-                .load(imageUrlInfo.url).submit().get()
+                .load(imageUrlInfo.url)
+            if(imageUrlInfo.needToCenterCrop)
+                bitmap = bitmap.centerCrop()
 //            logE("getImage: ${imageUrlInfo.gameId}")
-            onImageLoaded(imageUrlInfo, bitmap)
+            onImageLoaded(imageUrlInfo, bitmap.submit().get())
         }
     }
 

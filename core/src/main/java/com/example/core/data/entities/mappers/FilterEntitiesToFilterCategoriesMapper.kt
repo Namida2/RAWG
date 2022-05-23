@@ -1,7 +1,7 @@
 package com.example.core.data.entities.mappers
 
 import com.example.core.data.entities.FilterEntity
-import com.example.core.domain.entities.filters.Filter
+import com.example.core.domain.entities.filters.BaseFilter
 import com.example.core.domain.entities.filters.FilterCategory
 import com.example.core.domain.interfaces.Mapper
 import javax.inject.Inject
@@ -12,10 +12,12 @@ class FilterEntitiesToFilterCategoriesMapper @Inject constructor():
         val filtersHolder = mutableListOf<FilterCategory>()
         value.forEach {
             getFilterCategory(it.categoryName, filtersHolder)
-                .filters.add(Filter(
+                .filters.add(BaseFilter(
                     id = it.id.toString(),
                     name = it.name,
-                    categoryName = it.categoryName))
+                    categoryName = it.categoryName,
+                    slug = it.slug
+                ))
 
         }
         return filtersHolder

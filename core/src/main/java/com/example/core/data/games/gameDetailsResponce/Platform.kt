@@ -3,14 +3,15 @@ package com.example.core.data.games.gameDetailsResponce
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.example.core.domain.entities.filters.interfaces.Filter
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "platforms")
-class Platform {
+class Platform: Filter {
     @PrimaryKey
-    var id = 0
-    var name: String? = null
-    var slug: String? = null
+    override var id = 0
+    override var name: String? = null
+    override var slug: String? = null
     var requirementsMinimum: String? = null
     var requirementsRecommended: String? = null
     @Ignore
