@@ -12,7 +12,10 @@ import com.example.core.domain.entities.tools.extensions.logD
 import com.example.rawg.domain.mappers.FilterParamsToFiltersMapper
 import com.example.rawg.domain.repositories.FiltersService
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Unconfined
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ReadFiltersUseCaseImpl @Inject constructor(
@@ -46,6 +49,7 @@ class ReadFiltersUseCaseImpl @Inject constructor(
         }
         return filtersHolder
     }
+
 
     private suspend fun readFiltersFromRemoteDataSource(coroutineScope: CoroutineScope) {
         val developersResult = coroutineScope.async { filtersService.getDevelopers() }

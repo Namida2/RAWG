@@ -20,6 +20,8 @@ import com.example.featureGameDetails.domain.entities.GameScreenshot
 import com.example.featureGameDetails.domain.useCases.GetGameDetailsUseCaseFactory
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 sealed interface GameDetailsVMEvents<T> {
     val value: SingleEvent<out T>
@@ -49,11 +51,13 @@ class GameDetailsViewModel(
     private val likeGameUseCase: LikeGameUseCase,
     private val scopeForAsyncWork: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 ) : ViewModel(), Stateful {
+
     var currentGame: Game? = null
     private val currentGameScreenshots = mutableListOf<GameScreenshot>()
     private val getGameDetailsUseCase = getGameDetailsUseCaseFactory.create(
         scopeForAsyncWork, ::onNewLikedGameDetails
     )
+
     private val _events = MutableLiveData<GameDetailsVMEvents<out Any>>()
     private val _state = MutableLiveData<GameDetailsVMEStates>(GameDetailsVMEStates.Default)
     private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->

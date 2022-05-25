@@ -44,7 +44,7 @@ class GamesRequestQueue @Inject constructor(
             try {
                 requests[request.getPage()]?.setResponse(gamesService.getGames(request.getParams()))
                 //Use a new job to avoid cancellation of passed coroutineContext's job
-                // when it is suspended in sharedFlow after using emit
+                // when it comes to the next suspend point (SharedFlow.send)
                 withContext(defaultContext) {
                     onRequestComplete(request)
                 }
@@ -57,8 +57,8 @@ class GamesRequestQueue @Inject constructor(
     }
 
     override fun onNetworkConnected(coroutineScope: CoroutineScope) {
-        //Use the defaultContext thread to avoid the concurrentModificationException
-        // when trying to remove a request from map
+        //Use the defaultContext to avoid the concurrentModificationException
+        // when trying to remove a request from map. (maybe use concurrentList)
         coroutineScope.launch(defaultContext) {
             requests.forEach { (_, requestInfo) ->
                 if (requestInfo.state == RequestSates.Completed) {

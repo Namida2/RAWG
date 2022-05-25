@@ -1,5 +1,6 @@
 package com.example.core.domain.entities.tools.enums
 
+// TODO: Protect the api key //STOPPED// 
 enum class RequestParams(val myName: String, val slug: String) {
     PARAM_KEY("Key","key"),
     API_KEY("API_KEY","eb93975e53414766bd5b734fae1502eb"),
