@@ -15,6 +15,10 @@ import com.example.featureGamesViewPager.presentation.GamesViewPagerFragment.Com
 import com.example.rawg.databinding.ActivityMainBinding
 import com.example.rawg.domain.ViewModelFactory
 import com.example.rawg.domain.tools.appComponent
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 class MainActivity : AppCompatActivity(), NavigationCallback {
     private lateinit var binding: ActivityMainBinding

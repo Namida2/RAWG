@@ -130,7 +130,7 @@ class GameDetailsViewModel(
 
     private fun onNewLikedGameDetails(game: Game) {
         scopeForAsyncWork.launch(IO) {
-            likeGameUseCase.insertDetails(this, game)
+            likeGameUseCase.insertDetails(game)
         }
     }
 

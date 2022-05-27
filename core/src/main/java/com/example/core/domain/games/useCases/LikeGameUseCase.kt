@@ -2,9 +2,9 @@ package com.example.core.domain.games.useCases
 
 import com.example.core.data.database.daos.*
 import com.example.core.data.games.entities.*
+import com.example.core.domain.entities.tools.extensions.logD
 import com.example.core.domain.games.Game
 import com.example.core.domain.games.GamesHolder
-import com.example.core.domain.entities.tools.extensions.logD
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import javax.inject.Inject
@@ -37,60 +37,59 @@ class LikeGameUseCaseImpl @Inject constructor(
             gameEntitiesDao.insert(game.gameEntity.copy(isLiked = true))
             game.addedByStatus?.let { addedByStatusDao.insert(it) }
             game.shortScreenshotsUrls?.let { screenshotsForGamesDao.insert(*it.toTypedArray()) }
-            insertDetails(coroutineScope, game)
+            insertDetails(game)
             gamesHolder.changeGameLikeStatus(game, true)
             logD("COMPLETED")
         }
     }
 
-    override suspend fun insertDetails(coroutineScope: CoroutineScope, game: Game) {
-        coroutineScope.launch {
-            game.gameDetails?.gameDetailsEntity?.let { gameDetailsEntityDao.insert(it) }
-            game.gameDetails?.ratings?.let { myRatingDao.insert(*it.toTypedArray()) }
-            game.platforms?.let { platformsDao.insert(*it.toTypedArray()) }
-            game.gameDetails?.stores?.let { storesDao.insert(*it.toTypedArray()) }
-            game.gameDetails?.developers?.let { developersDao.insert(*it.toTypedArray()) }
-            game.gameDetails?.developers?.let { developersDao.insert(*it.toTypedArray()) }
-            game.gameDetails?.genres?.let { genresDao.insert(*it.toTypedArray()) }
-            game.gameDetails?.tags?.let { tagsDao.insert(*it.toTypedArray()) }
-            game.gameDetails?.publishers?.let { publishersDao.insert(*it.toTypedArray()) }
-            game.gameDetails?.developers?.map {
-                DevelopersForGames(game.gameEntity.id, it.id)
-            }.also {
-                if (it == null) return@also
-                developersForGamesDao.insert(*it.toTypedArray())
-            }
-            game.gameDetails?.genres?.map {
-                GenresForGames(game.gameEntity.id, it.id)
-            }.also {
-                if (it == null) return@also
-                genresForGamesDao.insert(*it.toTypedArray())
-            }
-            game.platforms?.map {
-                PlatformsForGames(game.gameEntity.id, it.id)
-            }.also {
-                if (it == null) return@also
-                platformsForGamesDao.insert(*it.toTypedArray())
-            }
-            game.gameDetails?.stores?.map {
-                StoresFoeGames(game.gameEntity.id, it.id)
-            }.also {
-                if (it == null) return@also
-                storesForGamesDao.insert(*it.toTypedArray())
-            }
-            game.gameDetails?.tags?.map {
-                TagsForGames(game.gameEntity.id, it.id)
-            }.also {
-                if (it == null) return@also
-                tagsForGames.insert(*it.toTypedArray())
-            }
-            game.gameDetails?.publishers?.map {
-                PublishersForGames(game.gameEntity.id, it.id)
-            }.also {
-                if (it == null) return@also
-                publishersForGamesDao.insert(*it.toTypedArray())
-            }
+    override suspend fun insertDetails( game: Game) {
+        game.gameDetails?.gameDetailsEntity?.let { gameDetailsEntityDao.insert(it) }
+        game.gameDetails?.ratings?.let { myRatingDao.insert(*it.toTypedArray()) }
+        game.platforms?.let { platformsDao.insert(*it.toTypedArray()) }
+        game.gameDetails?.stores?.let { storesDao.insert(*it.toTypedArray()) }
+        game.gameDetails?.developers?.let { developersDao.insert(*it.toTypedArray()) }
+        game.gameDetails?.developers?.let { developersDao.insert(*it.toTypedArray()) }
+        game.gameDetails?.genres?.let { genresDao.insert(*it.toTypedArray()) }
+        game.gameDetails?.tags?.let { tagsDao.insert(*it.toTypedArray()) }
+        game.gameDetails?.publishers?.let { publishersDao.insert(*it.toTypedArray()) }
+        game.gameDetails?.developers?.map {
+            DevelopersForGames(game.gameEntity.id, it.id)
+        }.also {
+            if (it == null) return@also
+            developersForGamesDao.insert(*it.toTypedArray())
         }
+        game.gameDetails?.genres?.map {
+            GenresForGames(game.gameEntity.id, it.id)
+        }.also {
+            if (it == null) return@also
+            genresForGamesDao.insert(*it.toTypedArray())
+        }
+        game.platforms?.map {
+            PlatformsForGames(game.gameEntity.id, it.id)
+        }.also {
+            if (it == null) return@also
+            platformsForGamesDao.insert(*it.toTypedArray())
+        }
+        game.gameDetails?.stores?.map {
+            StoresFoeGames(game.gameEntity.id, it.id)
+        }.also {
+            if (it == null) return@also
+            storesForGamesDao.insert(*it.toTypedArray())
+        }
+        game.gameDetails?.tags?.map {
+            TagsForGames(game.gameEntity.id, it.id)
+        }.also {
+            if (it == null) return@also
+            tagsForGames.insert(*it.toTypedArray())
+        }
+        game.gameDetails?.publishers?.map {
+            PublishersForGames(game.gameEntity.id, it.id)
+        }.also {
+            if (it == null) return@also
+            publishersForGamesDao.insert(*it.toTypedArray())
+        }
+
     }
 
     override fun unlikeGame(game: Game) {
@@ -117,5 +116,5 @@ class LikeGameUseCaseImpl @Inject constructor(
 interface LikeGameUseCase {
     fun likeGame(game: Game)
     fun unlikeGame(game: Game)
-    suspend fun insertDetails(coroutineScope: CoroutineScope, game: Game)
+    suspend fun insertDetails(game: Game)
 }

@@ -240,10 +240,10 @@ class GamesViewModel(
 
     private fun onNewGamesBackgroundImageChanges(changes: GameBackgroundImageChanges) {
         if (this.gameScreenInfo.tag != changes.screenTag || currentScreenItems.isEmpty()) return
-        currentScreenItems[changes.page]!!.indexOfFirst { type ->
+        currentScreenItems[changes.page]?.indexOfFirst { type ->
             if (type is Game) type.gameEntity.id == changes.game.gameEntity.id else false
         }.also { index ->
-            if (index == -1) {
+            if (index == -1 || index == null) {
                 // onNewRequest but pictures come from an ald request
                 logE("onNewGamesBackgroundImageChanges: game not fond: ${changes.game.gameEntity.name}")
                 return
