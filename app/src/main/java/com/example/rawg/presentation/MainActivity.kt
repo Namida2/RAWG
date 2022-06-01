@@ -74,3 +74,150 @@ class MainActivity : AppCompatActivity(), NavigationCallback {
 
 }
 
+//
+//data class Name (
+//    var firstName: String = "",
+//    var secondName: String = ""
+//) {
+//    var other: String = ""
+//    operator fun component3() = other
+//}
+//
+//abstract class A {
+//    constructor( name: String) {
+//
+//    }
+//    constructor( name: String, age: Int) {
+//
+//    }
+//    abstract fun fromA()
+//}
+//
+//class Test private constructor(name: String): A(name) {
+//    constructor(name: String, age: Int): this(name)
+//    private fun doMagic() {
+//        println("private")
+//    }
+//    fun public() {
+//        println("public")
+//    }
+//    override fun fromA() {
+//        println("override")
+//    }
+//    fun fromA(string: String) {
+//        println("override")
+//    }
+//    companion object test {
+//
+//    }
+//}
+//
+//fun interface Printer {
+//    fun print()
+//}
+//
+//fun isOdd(x: Int) = x % 2 != 0
+//
+//class Ext {
+//    var name: String = ""
+//        get() = field
+//    set(value) { field = value }
+//
+//    private fun somePrivateMethod() {}
+//    fun somePublicMethod() {}
+//
+//    @JvmInline
+//    value class Password(private val sr: Password1) {
+//        init {
+//
+//        }
+//
+//        fun dosd() {
+//            println("+++++++=")
+//        }
+//
+//        var aaaa: Int
+//            get() = 1
+//            set(value) {}
+//    }
+//
+//    @JvmInline
+//    value class Password1(private val sr: Ext) {
+//        init {
+//
+//        }
+//
+//        fun dosd() {
+//            println("+++++++=")
+//        }
+//
+//        var aaaa: Int
+//            get() = 1
+//            set(value) {}
+//    }
+//
+//}
+//
+//var name: String = ""
+//    get() = ""
+//set(value) {field = value + ""}
+//
+//@JvmInline
+//value class Password(private val s: String)
+//
+//
+//class MyMap<K, V>(
+//    val map: MutableMap<K, V> = mutableMapOf()
+//): HashMap<K, V>() {
+//
+//}
+//
+fun main() {
+    val name by lazy(){
+        ""
+    }
+
+}
+//
+//class Resource
+//
+//class Owner {
+//    var varResource: Resource by ResourceDelegate()
+//}
+//
+//class ResourceDelegate(private var resource: Resource = Resource()) {
+//    operator fun getValue(thisRef: Owner, property: KProperty<*>): Resource {
+//        return resource
+//    }
+//    operator fun setValue(thisRef: Owner, property: KProperty<*>, value: Resource) {
+//        resource = value
+//    }
+//
+//}
+//
+//object Name0: Name1() {
+//    val name: String by lazy() {
+//        "asd"
+//    }
+//    val obs: String by Delegates.observable("") { prop, old, new ->
+//
+//    }
+//    val муе: String by Delegates.vetoable("") { property: KProperty<*>, oldValue: String, newValue: String ->
+//
+//        false || true
+//    }
+//    override fun printX() {
+//        super.printX()
+//    }
+//}
+//
+//open class Name1 {
+//    private fun getObject() = object {
+//        val x: String = "x"
+//    }
+//
+//    open fun printX() {
+//        println(getObject().x)
+//    }
+//}
+

@@ -92,19 +92,19 @@ class GamesViewGolder(
 
     private fun setIconVisibility(game: Game) {
         with(binding) {
-            icPc.visibility = View.INVISIBLE
-            icPlaystation.visibility = View.INVISIBLE
-            icPlaystation.visibility = View.INVISIBLE
-            icPlaystation.visibility = View.INVISIBLE
-            icPlaystation.visibility = View.INVISIBLE
-            icPlaystation.visibility = View.INVISIBLE
-            icXbox.visibility = View.INVISIBLE
-            icXbox.visibility = View.INVISIBLE
-            icXbox.visibility = View.INVISIBLE
-            icXbox.visibility = View.INVISIBLE
-            icNintendoSwitch.visibility = View.INVISIBLE
-            icIOS.visibility = View.INVISIBLE
-            icIOS.visibility = View.INVISIBLE
+            icPc.visibility = View.GONE
+            icPlaystation.visibility = View.GONE
+            icPlaystation.visibility = View.GONE
+            icPlaystation.visibility = View.GONE
+            icPlaystation.visibility = View.GONE
+            icPlaystation.visibility = View.GONE
+            icXbox.visibility = View.GONE
+            icXbox.visibility = View.GONE
+            icXbox.visibility = View.GONE
+            icXbox.visibility = View.GONE
+            icNintendoSwitch.visibility = View.GONE
+            icIOS.visibility = View.GONE
+            icIOS.visibility = View.GONE
             game.platforms?.forEach {
                 when(it.slug) {
                     PlatformsEnum.WINDOWS.slug ->         icPc.visibility = View.VISIBLE
