@@ -91,21 +91,36 @@ class GamesViewGolder(
     }
 
     private fun setIconVisibility(game: Game) {
-        game.platforms?.forEach {
-            when(it.slug) {
-                PlatformsEnum.WINDOWS.slug ->         binding.icPc.visibility = View.VISIBLE
-                PlatformsEnum.PLAYSTATION5.slug ->    binding.icPlaystation.visibility = View.VISIBLE
-                PlatformsEnum.PLAYSTATION4.slug ->    binding.icPlaystation.visibility = View.VISIBLE
-                PlatformsEnum.PLAYSTATION3.slug ->    binding.icPlaystation.visibility = View.VISIBLE
-                PlatformsEnum.PLAYSTATION2.slug ->    binding.icPlaystation.visibility = View.VISIBLE
-                PlatformsEnum.PLAYSTATION.slug ->     binding.icPlaystation.visibility = View.VISIBLE
-                PlatformsEnum.XBOX_ONE.slug ->        binding.icXbox.visibility = View.VISIBLE
-                PlatformsEnum.XBOX_360.slug ->        binding.icXbox.visibility = View.VISIBLE
-                PlatformsEnum.XBOX.slug ->            binding.icXbox.visibility = View.VISIBLE
-                PlatformsEnum.XBOX_SERIES_X.slug ->   binding.icXbox.visibility = View.VISIBLE
-                PlatformsEnum.NINTENDO_SWITCH.slug -> binding.icNintendoSwitch.visibility = View.VISIBLE
-                PlatformsEnum.IOS.slug ->             binding.icIOS.visibility = View.VISIBLE
-                PlatformsEnum.ANDROID.slug ->         binding.icIOS.visibility = View.VISIBLE
+        with(binding) {
+            icPc.visibility = View.INVISIBLE
+            icPlaystation.visibility = View.INVISIBLE
+            icPlaystation.visibility = View.INVISIBLE
+            icPlaystation.visibility = View.INVISIBLE
+            icPlaystation.visibility = View.INVISIBLE
+            icPlaystation.visibility = View.INVISIBLE
+            icXbox.visibility = View.INVISIBLE
+            icXbox.visibility = View.INVISIBLE
+            icXbox.visibility = View.INVISIBLE
+            icXbox.visibility = View.INVISIBLE
+            icNintendoSwitch.visibility = View.INVISIBLE
+            icIOS.visibility = View.INVISIBLE
+            icIOS.visibility = View.INVISIBLE
+            game.platforms?.forEach {
+                when(it.slug) {
+                    PlatformsEnum.WINDOWS.slug ->         icPc.visibility = View.VISIBLE
+                    PlatformsEnum.PLAYSTATION5.slug ->    icPlaystation.visibility = View.VISIBLE
+                    PlatformsEnum.PLAYSTATION4.slug ->    icPlaystation.visibility = View.VISIBLE
+                    PlatformsEnum.PLAYSTATION3.slug ->    icPlaystation.visibility = View.VISIBLE
+                    PlatformsEnum.PLAYSTATION2.slug ->    icPlaystation.visibility = View.VISIBLE
+                    PlatformsEnum.PLAYSTATION.slug ->     icPlaystation.visibility = View.VISIBLE
+                    PlatformsEnum.XBOX_ONE.slug ->        icXbox.visibility = View.VISIBLE
+                    PlatformsEnum.XBOX_360.slug ->        icXbox.visibility = View.VISIBLE
+                    PlatformsEnum.XBOX.slug ->            icXbox.visibility = View.VISIBLE
+                    PlatformsEnum.XBOX_SERIES_X.slug ->   icXbox.visibility = View.VISIBLE
+                    PlatformsEnum.NINTENDO_SWITCH.slug -> icNintendoSwitch.visibility = View.VISIBLE
+                    PlatformsEnum.IOS.slug ->             icIOS.visibility = View.VISIBLE
+                    PlatformsEnum.ANDROID.slug ->         icIOS.visibility = View.VISIBLE
+                }
             }
         }
     }
