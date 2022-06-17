@@ -15,5 +15,5 @@ enum class PlatformsEnum(val platformName: String, val slug: String, val iconId:
     XBOX_SERIES_X("Xbox Series S/X","xbox-series-x", R.drawable.ic_xbox),
     NINTENDO_SWITCH("Nintendo Switch","nintendo-switch", R.drawable.ic_nintendo_switch),
     IOS("iOS","ios", R.drawable.ic_ios),
-    ANDROID("Android","android", R.drawable.ic_android),
+    ANDROID("Android","android", R.drawable.ic_android),;
 }
