@@ -41,6 +41,9 @@ dependencies {
     implementation project(':feature-gamesViewPager')
     implementation project(':dependencyDescription')
 
+    implementation "io.reactivex.rxjava3:rxjava:3.1.5"
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+
 //    implementation project(':feature-filtersDialog')
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")

@@ -15,6 +15,9 @@ import com.example.featureGamesViewPager.presentation.GamesViewPagerFragment.Com
 import com.example.rawg.databinding.ActivityMainBinding
 import com.example.rawg.domain.ViewModelFactory
 import com.example.rawg.domain.tools.appComponent
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), NavigationCallback {
     private lateinit var binding: ActivityMainBinding
@@ -29,8 +32,40 @@ class MainActivity : AppCompatActivity(), NavigationCallback {
         if (supportFragmentManager.findFragmentByTag(GAMES_VIEW_PAGER_FRAGMENT_TAG) != null) return
         observeViewModelStates()
         viewModel.readFiltersAndMyLikes()
-
+        doMagic()
     }
+
+    private fun doMagic() {
+        getData()
+            .doOnEach {
+                println(it)
+                logD("Thread from on each: ${Thread.currentThread().name}")
+            }
+            .subscribeOn(Schedulers.newThread())
+            .delay(500L, TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.newThread())
+            .flatMap { Observable.just("1", "2", "3") }
+            .subscribe(
+                {
+                    logD(it)
+                    logD("Subscribe: ${Thread.currentThread().name}")
+                }, {
+                    logD(it.message.toString())
+                }, {
+                    logD("Success")
+                    logD("Thread from in onComplete: ${Thread.currentThread().name}")
+                }
+            )
+        logD("Done")
+    }
+
+    private fun getData(): Observable<Int> = Observable.create { emitter ->
+        repeat(5) {
+            emitter.onNext(it)
+        }
+        emitter.onComplete()
+    }
+
 
     private fun getViewModel() {
         viewModel = ViewModelProvider(
@@ -57,7 +92,6 @@ class MainActivity : AppCompatActivity(), NavigationCallback {
                 is MainVMStates.Default -> {}
             }
         }
-
     }
 
     override fun navigateTo(destination: Fragment, sharedEView: View?, tag: String) {
@@ -70,6 +104,5 @@ class MainActivity : AppCompatActivity(), NavigationCallback {
             }.commit()
     }
 }
-
 
 
